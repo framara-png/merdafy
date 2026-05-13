@@ -148,7 +148,7 @@ public class controladorDB {
 
 		String query = "SELECT a.idAudio,a.nombreAudio,a.archivo,a.duracion,a.Nreproduciones,"
 				+ "c.idAlbum ,c.artistasInvitados FROM audio a join cancion c on c.idCancion= a.IdAudio where idAlbum = (select idAlbum from album "
-				+ " where titulo = ' " + nombreAlbum + "')";
+				+ " where titulo = '"+ nombreAlbum+"')";
 
 		try {
 			Statement consulta = conexion.createStatement();
