@@ -44,6 +44,7 @@ public class prueba {
 		gestorCli.visualizarPlaylist(c);
 		
 		gestorCli.pasarPremium(c);
+
 		
 
 	}
