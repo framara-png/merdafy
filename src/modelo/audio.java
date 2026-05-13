@@ -7,9 +7,7 @@ public abstract class audio {
 	private String archivo;
 	private String nombreAudio,tipo;
 
-	public audio() {
-
-	}
+	
 
 	public audio(int id, String nombreAudio, String archivo ,int NumRep, int duratasecondi,String tipo) {
 		this.id = id;

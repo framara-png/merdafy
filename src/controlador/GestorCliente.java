@@ -48,7 +48,7 @@ public class GestorCliente {
 	}
 
 //cambiar print por return e usar los print para panales//
-	public void visualizarCanciones(String nombreAlbum) {
+	public void visualizarCancionesAlbum(String nombreAlbum) {
 		controladordb.iniciarConexion();
 		ArrayList<Cancion> canciones = controladordb.obtenerCanciones(nombreAlbum);
 		for (Cancion c : canciones) {
@@ -75,5 +75,22 @@ public class GestorCliente {
 
 	}
 
-	
+//cambiar con return//
+	public void visualizarPlaylist(cliente c) {
+		controladordb.iniciarConexion();
+		System.out.println(c.getPlaylistCliente().toString());
+	}
+
+//cambiar print con return//
+	public void visualizarCancionesPlaylist(String Titulo, cliente c) {
+		controladordb.iniciarConexion();
+		ArrayList<Cancion> cancionesPlaylist = controladordb.obtenerCancionesPlaylist(Titulo, c.getId());
+		for (Cancion ca : cancionesPlaylist) {
+			System.out.println(ca.getNombreAudio() + " " + ca.durataConvertida());
+		}
+	}
+
+	public cliente RegistrarCliente() {
+	return null;
+	}
 }

@@ -22,8 +22,8 @@ public class Playlist {
 
 	@Override
 	public String toString() {
-		return "Playlist [id=" + id + ", idCliente=" + idCliente + ", titulo=" + titulo + ", fechaCreacion="
-				+ fechaCreacion + "]";
+		return " \n" + titulo + "";
+				
 	}
 
 	public int getId() {
