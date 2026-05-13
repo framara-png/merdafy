@@ -1,29 +1,24 @@
 package modelo;
 
 public class StatisticaPodcast {
-	private int idPodcast, numReproduciones;
+	private int  numReproduciones;
 	private String nombreArtistico, nombreAudio;
 
-	public StatisticaPodcast(int idPodcast , String nombreArtistico, String nombreAudio,int numReproduciones) {
-		this.idPodcast = idPodcast;
+	public StatisticaPodcast(String nombreArtistico, String nombreAudio, int numReproduciones) {
 		this.nombreArtistico = nombreArtistico;
 		this.nombreAudio = nombreAudio;
-	
+		this.numReproduciones = numReproduciones;
 	}
+
+
 
 	@Override
 	public String toString() {
-		return "StatisticaPodcast [idPodcast=" + idPodcast + ", numReproduciones=" + numReproduciones
-				+ ", nombreArtistico=" + nombreArtistico + ", nombreAudio=" + nombreAudio + "]";
+		return "StatisticaPodcast [numReproduciones=" + numReproduciones + ", nombreArtistico=" + nombreArtistico
+				+ ", nombreAudio=" + nombreAudio + "]";
 	}
 
-	public int getIdPodcast() {
-		return idPodcast;
-	}
 
-	public void setIdPodcast(int idPodcast) {
-		this.idPodcast = idPodcast;
-	}
 
 	public int getNumReproduciones() {
 		return numReproduciones;

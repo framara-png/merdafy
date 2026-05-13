@@ -148,7 +148,7 @@ public class controladorDB {
 
 		String query = "SELECT a.idAudio,a.nombreAudio,a.archivo,a.duracion,a.Nreproduciones,"
 				+ "c.idAlbum ,c.artistasInvitados FROM audio a join cancion c on c.idCancion= a.IdAudio where idAlbum = (select idAlbum from album "
-				+ " where titulo = '"+ nombreAlbum+"')";
+				+ " where titulo = '" + nombreAlbum + "')";
 
 		try {
 			Statement consulta = conexion.createStatement();
@@ -234,7 +234,7 @@ public class controladorDB {
 		String query = "SELECT a.idAudio,a.nombreAudio,a.archivo,a.duracion,a.Nreproduciones,c.idAlbum ,"
 				+ "c.artistasInvitados FROM `audio` a join cancion c on a.idAudio = c.idCancion "
 				+ "join playlist_canciones pc on pc.idCancion = c.idCancion join playlist p on pc.IdPlaylist = p.IDlist"
-				+" where titulo ='"+ nombrePlaylist +"' and IdCliente ='"+idCliente+"'";
+				+ " where titulo ='" + nombrePlaylist + "' and IdCliente ='" + idCliente + "'";
 		try {
 			Statement consulta = conexion.createStatement();
 			ResultSet resultado = consulta.executeQuery(query);
@@ -448,25 +448,24 @@ public class controladorDB {
 		}
 	}
 
-	public ArrayList<StastisticaCancion> obtenerstatcanciones() {
-		ArrayList<StastisticaCancion> statisticascanciones = new ArrayList<StastisticaCancion>();
-
-		String query = "Select * from cancionesmasescuchadas ";
-
+	public ArrayList<StastisticaCancion> obtenerCancionesFavoritas() {
+		ArrayList<StastisticaCancion> lista = new ArrayList<>();
 		try {
-			Statement consulta = conexion.createStatement();
-			ResultSet resultado = consulta.executeQuery(query);
-			while (resultado.next()) {
-				StastisticaCancion sta = new StastisticaCancion(resultado.getInt(1), resultado.getString(2),
-						resultado.getString(3), resultado.getInt(4));
-				statisticascanciones.add(sta);
-			}
-			consulta.close();
-		} catch (SQLException e) {
+			Statement stmt = conexion.createStatement();
+			String query = "SELECT * FROM canciones_favoritas";
+			ResultSet rs = stmt.executeQuery(query);
 
+			while (rs.next()) {
+				StastisticaCancion cf = new StastisticaCancion(rs.getString("nombre_musico"),
+						rs.getString("nombre_cancion"), rs.getInt("numero_likes"));
+				lista.add(cf);
+			}
+			rs.close();
+			stmt.close();
+		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		return statisticascanciones;
+		return lista;
 	}
 
 	public ArrayList<StatisticaAudio> obtenerstataudio() {
@@ -490,37 +489,36 @@ public class controladorDB {
 		return statisticasAudios;
 	}
 
-	public ArrayList<StatisticaPodcast> obtenerstatPodcast() {
-		ArrayList<StatisticaPodcast> statisticasPodcast = new ArrayList<StatisticaPodcast>();
-
-		String query = "Select * from podcastmasescuchado ";
-
+	public ArrayList<StatisticaPodcast> obtenerPodcastsFavoritos() {
+		ArrayList<StatisticaPodcast> lista = new ArrayList<>();
 		try {
-			Statement consulta = conexion.createStatement();
-			ResultSet resultado = consulta.executeQuery(query);
-			while (resultado.next()) {
-				StatisticaPodcast sta = new StatisticaPodcast(resultado.getInt(1), resultado.getString(2),
-						resultado.getString(3), resultado.getInt(4));
-				statisticasPodcast.add(sta);
-			}
-			consulta.close();
-		} catch (SQLException e) {
+			Statement stmt = conexion.createStatement();
+			String query = "SELECT * FROM podcasts_favoritos";
+			ResultSet rs = stmt.executeQuery(query);
 
+			while (rs.next()) {
+				StatisticaPodcast pf = new StatisticaPodcast(rs.getString("nombre_podcaster"),
+						rs.getString("nombre_podcast"), rs.getInt("numero_likes"));
+				lista.add(pf);
+			}
+			rs.close();
+			stmt.close();
+		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		return statisticasPodcast;
+		return lista;
 	}
 
 	public ArrayList<StatisticaPlaylist> obtenerstatPlaylist() {
 		ArrayList<StatisticaPlaylist> statisticasPlaylist = new ArrayList<StatisticaPlaylist>();
 
-		String query = "Select * from playlistmasescuchada ";
+		String query = "Select * from playlist_favoritas ";
 
 		try {
 			Statement consulta = conexion.createStatement();
 			ResultSet resultado = consulta.executeQuery(query);
 			while (resultado.next()) {
-				StatisticaPlaylist sta = new StatisticaPlaylist(resultado.getInt(1), resultado.getString(2),
+				StatisticaPlaylist sta = new StatisticaPlaylist(resultado.getString(1), resultado.getString(2),
 						resultado.getInt(3));
 				statisticasPlaylist.add(sta);
 			}
@@ -534,231 +532,270 @@ public class controladorDB {
 
 	// Aggiornare un cliente
 	public void actualizarCliente(cliente c) {
-	    try {
-	        Statement stmt = conexion.createStatement();
-	        String query = "UPDATE cliente SET nombre = '" + c.getNombre() 
-	                + "', apellidos = '" + c.getApellido() 
-	                + "', idioma = '" + c.getIdioma() 
-	                + "', usuario = '" + c.getUsuario() 
-	                + "', contrasena = '" + c.getContrasena() 
-	                + "', fechaNacimiento = '" + c.getFecNac() 
-	                + "', tipo = '" + (c.isEsPremium() ? "premium" : "free") 
-	                + "' WHERE idCliente = " + c.getId();
-	        stmt.executeUpdate(query);
-	        stmt.close();
-	    } catch (SQLException e) {
-	        e.printStackTrace();
-	    }
+		try {
+			Statement stmt = conexion.createStatement();
+			String query = "UPDATE cliente SET nombre = '" + c.getNombre() + "', apellidos = '" + c.getApellido()
+					+ "', idioma = '" + c.getIdioma() + "', usuario = '" + c.getUsuario() + "', contrasena = '"
+					+ c.getContrasena() + "', fechaNacimiento = '" + c.getFecNac() + "', tipo = '"
+					+ (c.isEsPremium() ? "premium" : "free") + "' WHERE idCliente = " + c.getId();
+			stmt.executeUpdate(query);
+			stmt.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 	}
 
 	// Aggiornare un artista (musico o podcaster)
 	public void actualizarArtista(artista a) { // Assumendo che esista una classe Artista
-	    try {
-	        Statement stmt = conexion.createStatement();
-	        String query = "UPDATE artista SET nombreArtistico = '" + a.getNombreArt() 
-	                + "', genero = '" + a.getGenero() 
-	                + "', descripcion = '" + a.getDescripcion() 
-	                + "', imagen = '" + a.getFoto() 
-	                + "' WHERE idArtista = " + a.getId();
-	        stmt.executeUpdate(query);
-	        stmt.close();
-	    } catch (SQLException e) {
-	        e.printStackTrace();
-	    }
+		try {
+			Statement stmt = conexion.createStatement();
+			String query = "UPDATE artista SET nombreArtistico = '" + a.getNombreArt() + "', genero = '" + a.getGenero()
+					+ "', descripcion = '" + a.getDescripcion() + "', imagen = '" + a.getFoto() + "' WHERE idArtista = "
+					+ a.getId();
+			stmt.executeUpdate(query);
+			stmt.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 	}
 
 	// Aggiornare una canzone
 	public void actualizarCancion(Cancion c) {
-	    try {
-	        Statement stmt = conexion.createStatement();
-	        
-	        // Convertir duración
-	        int ore = c.getDuratasecondi() / 3600;
-	        int minuti = (c.getDuratasecondi() % 3600) / 60;
-	        int secondi = c.getDuratasecondi() % 60;
-	        String durataTime = String.format("%02d:%02d:%02d", ore, minuti, secondi);
-	        
-	        // Update en audio
-	        String queryAudio = "UPDATE audio SET nombreAudio = '" + c.getNombreAudio() 
-	                + "', archivo = '" + c.getArchivo() 
-	                + "', duracion = '" + durataTime 
-	                + "', Nreproduciones = " + c.getNumRep() 
-	                + " WHERE idAudio = " + c.getId();
-	        stmt.executeUpdate(queryAudio);
-	        
-	        // Update en cancion
-	        String queryCancion = "UPDATE cancion SET idAlbum = " + c.getIdAlbum() 
-	                + ", artistasInvitados = '" + c.getNombresColaboradores() 
-	                + "' WHERE idCancion = " + c.getId();
-	        stmt.executeUpdate(queryCancion);
-	        
-	        stmt.close();
-	    } catch (SQLException e) {
-	        e.printStackTrace();
-	    }
+		try {
+			Statement stmt = conexion.createStatement();
+
+			// Convertir duración
+			int ore = c.getDuratasecondi() / 3600;
+			int minuti = (c.getDuratasecondi() % 3600) / 60;
+			int secondi = c.getDuratasecondi() % 60;
+			String durataTime = String.format("%02d:%02d:%02d", ore, minuti, secondi);
+
+			// Update en audio
+			String queryAudio = "UPDATE audio SET nombreAudio = '" + c.getNombreAudio() + "', archivo = '"
+					+ c.getArchivo() + "', duracion = '" + durataTime + "', Nreproduciones = " + c.getNumRep()
+					+ " WHERE idAudio = " + c.getId();
+			stmt.executeUpdate(queryAudio);
+
+			// Update en cancion
+			String queryCancion = "UPDATE cancion SET idAlbum = " + c.getIdAlbum() + ", artistasInvitados = '"
+					+ c.getNombresColaboradores() + "' WHERE idCancion = " + c.getId();
+			stmt.executeUpdate(queryCancion);
+
+			stmt.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 	}
 
 	// Aggiornare un album
 	public void actualizarAlbum(Album a) {
-	    try {
-	        Statement stmt = conexion.createStatement();
-	        String query = "UPDATE album SET titulo = '" + a.getTitulo() 
-	                + "', anno = '" + a.getFechaPub() 
-	                + "', genero = '" + a.getGenero() 
-	                + "', imagen = '" + a.getFoto() 
-	                + "', idMusico = " + a.getIdMusico() 
-	                + " WHERE idAlbum = " + a.getId();
-	        stmt.executeUpdate(query);
-	        stmt.close();
-	    } catch (SQLException e) {
-	        e.printStackTrace();
-	    }
+		try {
+			Statement stmt = conexion.createStatement();
+			String query = "UPDATE album SET titulo = '" + a.getTitulo() + "', anno = '" + a.getFechaPub()
+					+ "', genero = '" + a.getGenero() + "', imagen = '" + a.getFoto() + "', idMusico = "
+					+ a.getIdMusico() + " WHERE idAlbum = " + a.getId();
+			stmt.executeUpdate(query);
+			stmt.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 	}
 
 	// Aggiornare un podcast
 	public void actualizarPodcast(Podcast p) {
-	    try {
-	        Statement stmt = conexion.createStatement();
-	        
-	        // Convertir duración
-	        int ore = p.getDuratasecondi() / 3600;
-	        int minuti = (p.getDuratasecondi() % 3600) / 60;
-	        int secondi = p.getDuratasecondi() % 60;
-	        String durataTime = String.format("%02d:%02d:%02d", ore, minuti, secondi);
-	        
-	        // Update en audio
-	        String queryAudio = "UPDATE audio SET nombreAudio = '" + p.getNombreAudio() 
-	                + "', archivo = '" + p.getArchivo() 
-	                + "', duracion = '" + durataTime 
-	                + "', Nreproduciones = " + p.getNumRep() 
-	                + " WHERE idAudio = " + p.getId();
-	        stmt.executeUpdate(queryAudio);
-	        
-	        // Update en podcast
-	        String queryPodcast = "UPDATE podcast SET Ncolaboradores = " + p.getNumeroParticipantes() 
-	                + ", idPodcaster = " + p.getIdPodcaster() 
-	                + " WHERE idPodcast = " + p.getId();
-	        stmt.executeUpdate(queryPodcast);
-	        
-	        stmt.close();
-	    } catch (SQLException e) {
-	        e.printStackTrace();
-	    }
+		try {
+			Statement stmt = conexion.createStatement();
+
+			// Convertir duración
+			int ore = p.getDuratasecondi() / 3600;
+			int minuti = (p.getDuratasecondi() % 3600) / 60;
+			int secondi = p.getDuratasecondi() % 60;
+			String durataTime = String.format("%02d:%02d:%02d", ore, minuti, secondi);
+
+			// Update en audio
+			String queryAudio = "UPDATE audio SET nombreAudio = '" + p.getNombreAudio() + "', archivo = '"
+					+ p.getArchivo() + "', duracion = '" + durataTime + "', Nreproduciones = " + p.getNumRep()
+					+ " WHERE idAudio = " + p.getId();
+			stmt.executeUpdate(queryAudio);
+
+			// Update en podcast
+			String queryPodcast = "UPDATE podcast SET Ncolaboradores = " + p.getNumeroParticipantes()
+					+ ", idPodcaster = " + p.getIdPodcaster() + " WHERE idPodcast = " + p.getId();
+			stmt.executeUpdate(queryPodcast);
+
+			stmt.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 	}
 
 	// Aggiornare una playlist (solo título)
 	public void actualizarPlaylist(int idPlaylist, String nuevoTitulo) {
-	    try {
-	        Statement stmt = conexion.createStatement();
-	        String query = "UPDATE playlist SET titulo = '" + nuevoTitulo 
-	                + "' WHERE idPlaylist = " + idPlaylist;
-	        stmt.executeUpdate(query);
-	        stmt.close();
-	    } catch (SQLException e) {
-	        e.printStackTrace();
-	    }
+		try {
+			Statement stmt = conexion.createStatement();
+			String query = "UPDATE playlist SET titulo = '" + nuevoTitulo + "' WHERE idPlaylist = " + idPlaylist;
+			stmt.executeUpdate(query);
+			stmt.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 	}
 
 	// Incrementar reproducciones de un audio
 	public void incrementarReproducciones(String nombreAudio) {
-	    try {
-	        Statement stmt = conexion.createStatement();
-	        String query = "UPDATE audio SET Nreproduciones = Nreproduciones + 1 WHERE nombreAudio = " + nombreAudio;
-	        stmt.executeUpdate(query);
-	        stmt.close();
-	    } catch (SQLException e) {
-	        e.printStackTrace();
-	    }
+		try {
+			Statement stmt = conexion.createStatement();
+			String query = "UPDATE audio SET Nreproduciones = Nreproduciones + 1 WHERE nombreAudio = " + nombreAudio;
+			stmt.executeUpdate(query);
+			stmt.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 	}
+
 	// Eliminar un cliente - per username
 	public void eliminarCliente(String usuario) {
-	    try {
-	        Statement stmt = conexion.createStatement();
-	        String query = "DELETE FROM cliente WHERE usuario = '" + usuario + "'";
-	        stmt.executeUpdate(query);
-	        stmt.close();
-	    } catch (SQLException e) {
-	        e.printStackTrace();
-	    }
+		try {
+			Statement stmt = conexion.createStatement();
+			String query = "DELETE FROM cliente WHERE usuario = '" + usuario + "'";
+			stmt.executeUpdate(query);
+			stmt.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 	}
 
 	// Eliminar un artista - per nombre artistico
 	public void eliminarArtista(String nombreArtistico) {
-	    try {
-	        Statement stmt = conexion.createStatement();
-	        String query = "DELETE FROM artista WHERE nombreArtistico = '" + nombreArtistico + "'";
-	        stmt.executeUpdate(query);
-	        stmt.close();
-	    } catch (SQLException e) {
-	        e.printStackTrace();
-	    }
+		try {
+			Statement stmt = conexion.createStatement();
+			String query = "DELETE FROM artista WHERE nombreArtistico = '" + nombreArtistico + "'";
+			stmt.executeUpdate(query);
+			stmt.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 	}
 
 	// Eliminar una canción - per nombreAudio
 	public void eliminarCancion(String nombreAudio) {
-	    try {
-	        Statement stmt = conexion.createStatement();
-	        String query = "DELETE FROM audio WHERE nombreAudio = '" + nombreAudio + "'";
-	        stmt.executeUpdate(query);
-	        stmt.close();
-	    } catch (SQLException e) {
-	        e.printStackTrace();
-	    }
+		try {
+			Statement stmt = conexion.createStatement();
+			String query = "DELETE FROM audio WHERE nombreAudio = '" + nombreAudio + "'";
+			stmt.executeUpdate(query);
+			stmt.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 	}
 
 	// Eliminar un album - per titolo
 	public void eliminarAlbum(String tituloAlbum) {
-	    try {
-	        Statement stmt = conexion.createStatement();
-	        String query = "DELETE FROM album WHERE titulo = '" + tituloAlbum + "'";
-	        stmt.executeUpdate(query);
-	        stmt.close();
-	    } catch (SQLException e) {
-	        e.printStackTrace();
-	    }
+		try {
+			Statement stmt = conexion.createStatement();
+			String query = "DELETE FROM album WHERE titulo = '" + tituloAlbum + "'";
+			stmt.executeUpdate(query);
+			stmt.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 	}
 
 	// Eliminar un podcast - per nombreAudio
 	public void eliminarPodcast(String nombreAudio) {
-	    try {
-	        Statement stmt = conexion.createStatement();
-	        String query = "DELETE FROM audio WHERE nombreAudio = '" + nombreAudio + "' AND tipo = 'podcast'";
-	        stmt.executeUpdate(query);
-	        stmt.close();
-	    } catch (SQLException e) {
-	        e.printStackTrace();
-	    }
+		try {
+			Statement stmt = conexion.createStatement();
+			String query = "DELETE FROM audio WHERE nombreAudio = '" + nombreAudio + "' AND tipo = 'podcast'";
+			stmt.executeUpdate(query);
+			stmt.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 	}
 
 	// Eliminar una playlist - per titolo e username cliente
 	public void eliminarPlaylist(String tituloPlaylist, String usuarioCliente) {
-	    try {
-	        Statement stmt = conexion.createStatement();
-	        String query = "DELETE p FROM playlist p JOIN cliente c ON p.IdCliente = c.idCliente "
-	                + "WHERE p.titulo = '" + tituloPlaylist + "' AND c.usuario = '" + usuarioCliente + "'";
-	        stmt.executeUpdate(query);
-	        stmt.close();
-	    } catch (SQLException e) {
-	        e.printStackTrace();
-	    }
+		try {
+			Statement stmt = conexion.createStatement();
+			String query = "DELETE p FROM playlist p JOIN cliente c ON p.IdCliente = c.idCliente "
+					+ "WHERE p.titulo = '" + tituloPlaylist + "' AND c.usuario = '" + usuarioCliente + "'";
+			stmt.executeUpdate(query);
+			stmt.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 	}
 
 	// Eliminar una canción de una playlist
 	public void eliminarCancionDePlaylist(String nombreCancion, String tituloPlaylist, String usuarioCliente) {
-	    try {
-	        Statement stmt = conexion.createStatement();
-	        String query = "DELETE pc FROM playlist_canciones pc "
-	                + "JOIN cancion c ON pc.idCancion = c.idCancion "
-	                + "JOIN audio a ON c.idCancion = a.idAudio "
-	                + "JOIN playlist p ON pc.idPlaylist = p.IDlist "
-	                + "JOIN cliente cl ON p.IdCliente = cl.idCliente "
-	                + "WHERE a.nombreAudio = '" + nombreCancion + "' "
-	                + "AND p.titulo = '" + tituloPlaylist + "' "
-	                + "AND cl.usuario = '" + usuarioCliente + "'";
-	        stmt.executeUpdate(query);
-	        stmt.close();
-	    } catch (SQLException e) {
-	        e.printStackTrace();
-	    }
+		try {
+			Statement stmt = conexion.createStatement();
+			String query = "DELETE pc FROM playlist_canciones pc " + "JOIN cancion c ON pc.idCancion = c.idCancion "
+					+ "JOIN audio a ON c.idCancion = a.idAudio " + "JOIN playlist p ON pc.idPlaylist = p.IDlist "
+					+ "JOIN cliente cl ON p.IdCliente = cl.idCliente " + "WHERE a.nombreAudio = '" + nombreCancion
+					+ "' " + "AND p.titulo = '" + tituloPlaylist + "' " + "AND cl.usuario = '" + usuarioCliente + "'";
+			stmt.executeUpdate(query);
+			stmt.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 	}
+
+	public int obtenerReproduccionesTotalesMusico(String nombreMusico) {
+		int total = 0;
+		try {
+			Statement stmt = conexion.createStatement();
+			String query = "SELECT RepTotAlbum('" + nombreMusico + "')";
+			ResultSet rs = stmt.executeQuery(query);
+
+			if (rs.next()) {
+				total = rs.getInt(1);
+			}
+
+			rs.close();
+			stmt.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return total;
+	}
+
+	public int obtenerReproduccionesTotalesAlbum(String nombreAlbum, String nombreMusico) {
+		int total = 0;
+		try {
+			Statement stmt = conexion.createStatement();
+			String query = "SELECT RepTotPorAlbum('" + nombreAlbum + "', '" + nombreMusico + "')";
+			ResultSet rs = stmt.executeQuery(query);
+
+			if (rs.next()) {
+				total = rs.getInt(1);
+			}
+
+			rs.close();
+			stmt.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return total;
+	}
+
+	public int obtenerReproduccionesTotalPodcaster(String nombrePodcaster) {
+		int total = 0;
+		try {
+			Statement stmt = conexion.createStatement();
+			String query = "SELECT RepTotPodcaster('" + nombrePodcaster + "')";
+			ResultSet rs = stmt.executeQuery(query);
+
+			if (rs.next()) {
+				total = rs.getInt(1);
+			}
+
+			rs.close();
+			stmt.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return total;
+	}
+
 }

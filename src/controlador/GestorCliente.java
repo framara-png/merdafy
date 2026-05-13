@@ -32,7 +32,8 @@ public class GestorCliente {
 		ArrayList<Musico> musicos = controladordb.obtenerMusicos();
 		System.out.println("Musicos disponibles");
 		for (Musico m : musicos) {
-			System.out.println(m.getNombreArt());
+			int totalRep = controladordb.obtenerReproduccionesTotalesMusico(m.getNombreArt());
+			System.out.println(m.getNombreArt() + " NumReproduciones " + totalRep);
 		}
 	}
 
@@ -42,7 +43,8 @@ public class GestorCliente {
 		ArrayList<Album> albums = controladordb.obtenerAlbum(nombreArt);
 		System.out.println("Discografia de" + nombreArt);
 		for (Album a : albums) {
-			System.out.println(a.getTitulo());
+			int totalRep = controladordb.obtenerReproduccionesTotalesAlbum(a.getTitulo(), nombreArt);
+			System.out.println(a.getTitulo()+ " NumReproduciones " + totalRep);
 		}
 
 	}
@@ -61,7 +63,8 @@ public class GestorCliente {
 		controladordb.iniciarConexion();
 		ArrayList<Podcaster> podcasters = controladordb.obtenerPodcasters();
 		for (Podcaster p : podcasters) {
-			System.out.println(p.getNombreArt());
+			int totalRep = controladordb.obtenerReproduccionesTotalPodcaster(p.getNombreArt());
+			System.out.println(p.getNombreArt()+ " " + totalRep);
 		}
 	}
 
@@ -90,7 +93,18 @@ public class GestorCliente {
 		}
 	}
 
-	public cliente RegistrarCliente() {
-	return null;
+	public void pasarPremium (cliente c) {
+		c.setEsPremium(true);
+		controladordb.actualizarCliente(c);
+	
+	}
+	
+	
+	public cliente RegistrarCliente(int id, String nombre, String apellido, String idioma, String usuario, String contrasena,
+			String fecNac, String fecReg, boolean esPremium) {
+		id = 0;
+		
+		
+		return null;
 	}
 }

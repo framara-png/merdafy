@@ -8,7 +8,7 @@ public class StastisticaCancion {
 
 	}
 
-	public StastisticaCancion(int idCancion, String nombreAudio, String nombreArtista, int Nreproduciones) {
+	public StastisticaCancion( String nombreAudio, String nombreArtista, int Nreproduciones) {
 		this.idCancion = idCancion;
 		this.nombreAudio = nombreAudio;
 		this.nombreArtista = nombreArtista;
@@ -22,13 +22,7 @@ public class StastisticaCancion {
 				+ nombreAudio + ", nombreArtista=" + nombreArtista + "]";
 	}
 
-	public int getIdCancion() {
-		return idCancion;
-	}
 
-	public void setIdCancion(int idCancion) {
-		this.idCancion = idCancion;
-	}
 
 	public int getNreproduciones() {
 		return Nreproduciones;

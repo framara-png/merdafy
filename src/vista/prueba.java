@@ -34,14 +34,17 @@ public class prueba {
 
 		// statAudio = controladordb.obtenerstataudio();//
 
-	/**	gestorCli.visualizarMusicos();
+		gestorCli.visualizarMusicos();
 		gestorCli.visualizarAlbum("Carlos Music");
-		gestorCli.visualizarCanciones("Renacimiento");
-		ventana.ejecutarVentana();
-		**/
-		cliente c = gestorCli.login("carlos_music", "pass123");
+		
+		gestorCli.visualizarCancionesAlbum("Renacimiento");
+		
+		
+		cliente c = gestorCli.login("javi_ms", "pass789");
 		gestorCli.visualizarPlaylist(c);
-		gestorCli.visualizarCancionesPlaylist("Favoritos Pop", c);
+		
+		gestorCli.pasarPremium(c);
+		
 
 	}
 

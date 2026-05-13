@@ -1,28 +1,36 @@
 package modelo;
 
 public class StatisticaPlaylist {
-	private int idPlaylist, numReproduciones;
-	private String titulo;
+	private int numReproduciones;
+	private String user, titulo;
 
-	public StatisticaPlaylist(int idPlaylist, String titulo,int numReproduciones) {
-		this.idPlaylist = idPlaylist;
+	public StatisticaPlaylist(String user,String titulo,int numReproduciones) {
+		this.user = user;
 		this.numReproduciones = numReproduciones;
 		this.titulo = titulo;
 	}
 
+	
+
 	@Override
 	public String toString() {
-		return "StatisticaPlaylist [idPlaylist=" + idPlaylist + ", numReproduciones=" + numReproduciones + ", titulo="
-				+ titulo + "]";
+		return "StatisticaPlaylist [numReproduciones=" + numReproduciones + ", user=" + user + ", titulo=" + titulo
+				+ "]";
 	}
 
-	public int getIdPlaylist() {
-		return idPlaylist;
+
+
+	public String getUser() {
+		return user;
 	}
 
-	public void setIdPlaylist(int idPlaylist) {
-		this.idPlaylist = idPlaylist;
+
+
+	public void setUser(String user) {
+		this.user = user;
 	}
+
+
 
 	public int getNumReproduciones() {
 		return numReproduciones;
