@@ -6,27 +6,27 @@ import java.util.*;
 public class GestorCliente {
 	public controladorDB controladordb = new controladorDB("merdafy");
 
-	// pensar un return diferente, o otro metodo per aceso admin? //
-	public boolean Login(String user, String password) {
+	public cliente login(String user, String password) {
 		controladordb.iniciarConexion();
-		ArrayList<cliente> obtenerclientes = controladordb.obtenerClientes();
-		for (cliente c : obtenerclientes) {
+		ArrayList<cliente> clienti = controladordb.obtenerClientes();
+
+		for (cliente c : clienti) {
 			if (c.getUsuario().equals(user) && c.getContrasena().equals(password)) {
-				cliente clientelog = new cliente(c.getId(), c.getNombre(), c.getApellido(), c.getIdioma(),
-						c.getUsuario(), c.getContrasena(), c.getFecNac(), c.getFecReg(), c.isEsPremium());
 				c.setPlaylistCliente(controladordb.obtenerPlaylists(c.getId()));
-				System.out.println("Login...");
-				return true;
-//acesso panel cliente//
-			} else if (user.equals("admin") && password.equals("admin")) {
-				return true;
-				// aceso panel admin//
+				controladordb.cerrarConexion();
+				return c;
 			}
 		}
-		return false;
+
+		controladordb.cerrarConexion();
+		return null;
 	}
 
-	// cambiar print por return//
+	public boolean esAdmin(cliente c) {
+		return c.getUsuario().equals("admin") && c.getContrasena().equals("admin");
+	}
+
+	// cambiar print por return e usar los print para panales//
 	public void visualizarMusicos() {
 		controladordb.iniciarConexion();
 		ArrayList<Musico> musicos = controladordb.obtenerMusicos();
@@ -47,7 +47,7 @@ public class GestorCliente {
 
 	}
 
-//cambiar print por return//
+//cambiar print por return e usar los print para panales//
 	public void visualizarCanciones(String nombreAlbum) {
 		controladordb.iniciarConexion();
 		ArrayList<Cancion> canciones = controladordb.obtenerCanciones(nombreAlbum);
@@ -56,7 +56,7 @@ public class GestorCliente {
 		}
 	}
 
-//cambiare print con return//
+//cambiare print con return e usar los print para panales//
 	public void visualizarPodcaster() {
 		controladordb.iniciarConexion();
 		ArrayList<Podcaster> podcasters = controladordb.obtenerPodcasters();
@@ -65,7 +65,7 @@ public class GestorCliente {
 		}
 	}
 
-//cambiare print con return//
+//cambiare print  con return e usar los print para panales//
 	public void visualizarPodcasts(String NombrePodcaster) {
 		controladordb.iniciarConexion();
 		ArrayList<Podcast> podcasts = controladordb.obtenerPodcasts(NombrePodcaster);
@@ -75,7 +75,5 @@ public class GestorCliente {
 
 	}
 
-	public void visualizarPlatlists(cliente c) {
-
-	}
+	
 }

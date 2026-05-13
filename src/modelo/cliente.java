@@ -23,7 +23,7 @@ public class cliente {
 		this.fecNac = fecNac;
 		this.fecReg = fecReg;
 		this.esPremium = esPremium;
-		this.playlistCliente = new ArrayList<>();
+		this.playlistCliente = new ArrayList<Playlist>();
 	}
 
 	@Override
