@@ -11,12 +11,12 @@ public class cliente {
 	public cliente() {
 
 	}
-//caop//
+
 	public cliente(int id, String nombre, String apellido, String idioma, String usuario, String contrasena,
 			String fecNac, String fecReg, boolean esPremium) {
 		this.id = id;
 		this.nombre = nombre;
-		wthis.apellido = apellido;
+		this.apellido = apellido;
 		this.idioma = idioma;
 		this.usuario = usuario;
 		this.contrasena = contrasena;
