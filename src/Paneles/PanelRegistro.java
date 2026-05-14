@@ -26,7 +26,8 @@ public class PanelRegistro extends JPanel {
         controladordb.iniciarConexion();
        clienteTemp.setId(0); 
         // Creazione componenti
-        JLabel lblNombre = new JLabel("nombre");
+       JLabel lblNombreApp = new JLabel("FRACASSOFY"); 
+       JLabel lblNombre = new JLabel("nombre");
         JLabel lblApellido = new JLabel("apellido");
         JLabel lblUsuario = new JLabel("usuario");
         JLabel lblContrasena = new JLabel("contrasena");
@@ -61,7 +62,7 @@ public class PanelRegistro extends JPanel {
         lblFecNac.setBounds(150, 210, 150, 25);
         cmbIdiomi.setBounds(300, 250, 200, 25);
         cmbAbonamento.setBounds(300, 290, 200, 25);
-        
+        lblNombreApp.setBounds(0, 0,100, 50);
         txtNombre.setBounds(300, 50, 200, 25);
         txtApellido.setBounds(300, 90, 200, 25);
         txtUsuario.setBounds(300, 130, 200, 25);
@@ -72,6 +73,7 @@ public class PanelRegistro extends JPanel {
         btnVolver.setBounds(400, 400, 150, 30);
         
         // Aggiunta componenti
+        add(lblNombreApp);
         add(lblNombre);
         add(txtNombre);
         add(lblApellido);
@@ -107,10 +109,9 @@ public class PanelRegistro extends JPanel {
           
             	 @Override
             	    public void actionPerformed(ActionEvent e) {
-            	        System.out.println("Idioma selezionato: " + clienteTemp.getIdioma());
-            	        System.out.println("Lunghezza: " + clienteTemp.getIdioma().length());
             	        controladordb.insertarCliente(clienteTemp);
-            }
+            	        ventana.cambiarPanel("login");
+            	 }
         });
         
         btnVolver.addActionListener(new ActionListener() {

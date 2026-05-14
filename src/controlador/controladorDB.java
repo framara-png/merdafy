@@ -439,8 +439,8 @@ public class controladorDB {
 	            if (rs.next()) {
 	                idCliente = rs.getInt(1);
 	            }
-	            String queryPremium = "INSERT INTO premium (idCliente, fechaCaducidad) VALUES (" + idCliente + ", DATE_ADD(CURDATE(), INTERVAL 30 DAY))";
-	            stmt.executeUpdate(queryPremium);  // <-- IMPORTANTE: esegui la query
+	            String queryPremium = "INSERT INTO premium (idCliente) VALUES (" + idCliente + ")";
+	            stmt.executeUpdate(queryPremium);  
 	        }
 
 	        stmt.close();

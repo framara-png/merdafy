@@ -3,13 +3,30 @@ package Ventanas;
 import javax.swing.JFrame;
 
 import Paneles.PanelLogin;
+import Paneles.PanelPerfli;
 import Paneles.PanelRegistro;
-
+import Paneles.PanelSelecionCliente;
+import controlador.*;
+import modelo.*;
+import java.util.*;
+import Paneles.*;
 public class VentanaPrincipal extends JFrame {
+	private controladorDB controladordb = new controladorDB("merdafy");
+	private cliente clientelogeado = new cliente();
+
+
+	public cliente getClientelogeado() {
+		return clientelogeado;
+	}
+
+	public void setClientelogeado(cliente clientelogeado) {
+		this.clientelogeado = clientelogeado;
+	}
 
 	private static final long serialVersionUID = 1L;
 
 	public VentanaPrincipal() {
+		controladordb.iniciarConexion();
 
 		setSize(800, 600); // Tamaño
 		setDefaultCloseOperation(EXIT_ON_CLOSE); // Operacion de cierre
@@ -24,14 +41,29 @@ public class VentanaPrincipal extends JFrame {
 		case "login":
 			PanelLogin panelLogin = new PanelLogin(this);
 			setContentPane(panelLogin);
-			 revalidate();
+			revalidate();
 			break;
 
 		case "registro":
 			PanelRegistro panelRegistro = new PanelRegistro(this);
-		setContentPane(panelRegistro);
-		 revalidate();
-		break;
+			setContentPane(panelRegistro);
+			revalidate();
+			break;
+		case "cliente":
+			PanelSelecionCliente panelCliente = new PanelSelecionCliente(this,clientelogeado);
+			setContentPane(panelCliente);
+			revalidate();
+			break;
+		case "perfil" :
+			PanelPerfli panelPerfil = new PanelPerfli(this,clientelogeado);
+			setContentPane(panelPerfil);
+			revalidate();
+			break;
+		case "musicos" : 
+			PanelMusicos panelMusicos = new PanelMusicos(this,clientelogeado);
+			setContentPane(panelMusicos);
+			revalidate();
+			break;
 		}
 	}
 

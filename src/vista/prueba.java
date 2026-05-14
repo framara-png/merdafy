@@ -30,8 +30,8 @@ public class prueba {
 	public static void main(String[] args) {
 	    controladordb.iniciarConexion();
 	    ventana.ejecutarVentana();
-	    // fecNac = "1990-01-01" en lugar de null
-	    gestorCli.RegistrarCliente("gianni", "moracxzcccndsadadi", "EN", "gianndsasdaimora", "123", "1990-01-01", false);
-	 
+	   cliente cli = gestorCli.login("lauragd", "pass321"); 
+	  System.out.println(cli.toString());
+	   
 }
 }
