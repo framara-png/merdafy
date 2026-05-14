@@ -129,4 +129,8 @@ public class GestorCliente {
 			return "El usuario '" + usuario + "' ya existe. Elige otro nombre de usuario";
 		}
 	}
+public void crearPlaylist () {
+	
+}
+
 }

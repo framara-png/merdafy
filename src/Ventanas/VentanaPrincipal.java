@@ -2,8 +2,8 @@ package Ventanas;
 
 import javax.swing.JFrame;
 
-
 import Paneles.PanelLogin;
+import Paneles.PanelRegistro;
 
 public class VentanaPrincipal extends JFrame {
 
@@ -24,7 +24,14 @@ public class VentanaPrincipal extends JFrame {
 		case "login":
 			PanelLogin panelLogin = new PanelLogin(this);
 			setContentPane(panelLogin);
+			 revalidate();
 			break;
+
+		case "registro":
+			PanelRegistro panelRegistro = new PanelRegistro(this);
+		setContentPane(panelRegistro);
+		 revalidate();
+		break;
 		}
 	}
 

@@ -20,7 +20,7 @@ public class PanelLogin extends JPanel {
 
 	public PanelLogin(VentanaPrincipal ventana) {
 		setSize(ventana.getSize());
-
+System.out.println("MERDAFY");
 		setLayout(null);
 		// DECLARAR COMPONENTES
 		JLabel lblUsuario = new JLabel("usuario");
@@ -28,27 +28,35 @@ public class PanelLogin extends JPanel {
 		JPasswordField txtPass = new JPasswordField();
 		JTextField txtUsuario = new JTextField();
 		JButton btnLogin = new JButton("Login");
-		JButton btnAtras = new JButton("Atras");
+		JButton btnRegistrarse = new JButton("registrarse");
 		// COLOCAR COMPONENTES
 		lblUsuario.setBounds(100, 100, 150, 30);
 		lblPass.setBounds(100, 200, 150, 30);
 		txtUsuario.setBounds(300, 100, 150, 30);
 		txtPass.setBounds(300, 200, 150, 30);
 		btnLogin.setBounds(300, 300, 150, 30);
-		btnAtras.setBounds(100, 300, 150, 30);
+		btnRegistrarse.setBounds(100, 300, 150, 30);
 		// AÑADIR COMPONENTES AL PANEL
 		this.add(lblUsuario);
 		this.add(lblPass);
 		this.add(txtUsuario);
 		this.add(txtPass);
 		this.add(btnLogin);
-		this.add(btnAtras);
+		this.add(btnRegistrarse);
 		// AÑADIR LISTENERS
-		btnAtras.addActionListener(new ActionListener() {
+
+		btnLogin.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				ventana.cambiarPanel("cliente");
+			}
+		});
+
+		btnRegistrarse.addActionListener(new ActionListener() {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				ventana.cambiarPanel("bienvenida");
+				ventana.cambiarPanel("registro");
 
 			}
 		});

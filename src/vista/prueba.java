@@ -27,19 +27,11 @@ public class prueba {
 	public static Podcaster p = new Podcaster(0, "porcodio", "pop", null, "porcamadonna");
 	public static VentanaPrincipal ventana = new VentanaPrincipal();
 	public static PanelLogin panelLog;
-
 	public static void main(String[] args) {
-		controladordb.iniciarConexion();
-		// clientes = controladordb.obtenerClientes();
-
-		// statAudio = controladordb.obtenerstataudio();//
-
-		
-		
-		gestorCli.RegistrarCliente("gianni", "morandi", "EN", "giannimora", "123", "2026-02-12", false);
-
-		
-
-	}
-
+	    controladordb.iniciarConexion();
+	    ventana.ejecutarVentana();
+	    // fecNac = "1990-01-01" en lugar de null
+	    gestorCli.RegistrarCliente("gianni", "moracxzcccndsadadi", "EN", "gianndsasdaimora", "123", "1990-01-01", false);
+	 
+}
 }

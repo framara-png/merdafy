@@ -422,40 +422,39 @@ public class controladorDB {
 	}
 
 	public boolean insertarCliente(cliente c) {
-		String abonamento = c.isEsPremium() ? "premium" : "free";
+	    String abonamento = c.isEsPremium() ? "premium" : "free";
 
-		try {
-			Statement stmt = conexion.createStatement();
+	    try {
+	        Statement stmt = conexion.createStatement();
 
-			String queryCliente = "INSERT INTO cliente (nombre,apellidos,idioma,usuario,contrasena,fechaNacimiento,fechaRegistro,tipo) VALUES ('"
-					+ c.getNombre() + "', '" + c.getApellido() + "', '" + c.getIdioma() + "','" + c.getUsuario() + "','"
-					+ c.getContrasena() + "','" + c.getFecNac() + "', CURRENT_DATE, '" + abonamento + "')";
+	        String queryCliente = "INSERT INTO cliente (nombre,apellidos,idioma,usuario,contrasena,fechaNacimiento,fechaRegistro,tipo) VALUES ('"
+	                + c.getNombre() + "', '" + c.getApellido() + "', '" + c.getIdioma() + "','" + c.getUsuario() + "','"
+	                + c.getContrasena() + "','" + c.getFecNac() + "', CURRENT_DATE, '" + abonamento + "')";
 
-			stmt.executeUpdate(queryCliente, Statement.RETURN_GENERATED_KEYS);
+	        stmt.executeUpdate(queryCliente, Statement.RETURN_GENERATED_KEYS);
 
-			if (c.isEsPremium()) {
-				ResultSet rs = stmt.getGeneratedKeys();
-				int idCliente = 0;
-				if (rs.next()) {
-					idCliente = rs.getInt(1);
-				}
-				String queryPremium = "INSERT INTO premium (idCliente) VALUES (" + idCliente + ")";
-				stmt.executeUpdate(queryPremium);
-			}
+	        if (c.isEsPremium()) {
+	            ResultSet rs = stmt.getGeneratedKeys();
+	            int idCliente = 0;
+	            if (rs.next()) {
+	                idCliente = rs.getInt(1);
+	            }
+	            String queryPremium = "INSERT INTO premium (idCliente, fechaCaducidad) VALUES (" + idCliente + ", DATE_ADD(CURDATE(), INTERVAL 30 DAY))";
+	            stmt.executeUpdate(queryPremium);  // <-- IMPORTANTE: esegui la query
+	        }
 
-			stmt.close();
+	        stmt.close();
+	        return true;
 
-		} catch (SQLException e) {
-			if (e.getErrorCode() == 1062) {
-				System.out.println("Error, usuario ya registrado");
-				return false;
-
-			} else {
-				e.printStackTrace();
-			}
-		return false;
-		}
-		return true;
+	    } catch (SQLException e) {
+	        if (e.getErrorCode() == 1062) {
+	            System.out.println("Error, usuario ya registrado");
+	            return false;
+	        } else {
+	            e.printStackTrace();
+	            return false;
+	        }
+	    }
 	}
 
 	public ArrayList<StastisticaCancion> obtenerCancionesFavoritas() {
@@ -670,7 +669,42 @@ public class controladorDB {
 			e.printStackTrace();
 		}
 	}
-
+	// Añadir una canción a una playlist
+	public void añadirCancionAPlaylist(String nombreCancion, String tituloPlaylist, String usuarioCliente) {
+	    
+		try {
+	        Statement stmt = conexion.createStatement();
+	        String query = "INSERT INTO playlist_canciones (idPlaylist, idCancion) "
+	                + "SELECT p.IDlist, c.idCancion "
+	                + "FROM playlist p "
+	                + "JOIN cliente cl ON p.IdCliente = cl.idCliente "
+	                + "JOIN cancion c ON c.idCancion = (SELECT a.idAudio FROM audio a WHERE a.nombreAudio = '" + nombreCancion + "') "
+	                + "WHERE p.titulo = '" + tituloPlaylist + "' "
+	                + "AND cl.usuario = '" + usuarioCliente + "'";
+	        stmt.executeUpdate(query);
+	        stmt.close();
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	    }
+	}
+	// Añadir una canción a una playlist
+	public void añadirCancionAFAvoritos(String nombreCancion, String tituloPlaylist, String usuarioCliente) {
+	    tituloPlaylist = "favoritos";
+		try {
+	        Statement stmt = conexion.createStatement();
+	        String query = "INSERT INTO playlist_canciones (idPlaylist, idCancion) "
+	                + "SELECT p.IDlist, c.idCancion "
+	                + "FROM playlist p "
+	                + "JOIN cliente cl ON p.IdCliente = cl.idCliente "
+	                + "JOIN cancion c ON c.idCancion = (SELECT a.idAudio FROM audio a WHERE a.nombreAudio = '" + nombreCancion + "') "
+	                + "WHERE p.titulo = '" + tituloPlaylist + "' "
+	                + "AND cl.usuario = '" + usuarioCliente + "'";
+	        stmt.executeUpdate(query);
+	        stmt.close();
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	    }
+	}
 	// Eliminar un cliente - per username
 	public void eliminarCliente(String usuario) {
 		try {
@@ -837,5 +871,15 @@ public class controladorDB {
 			e.printStackTrace();
 		}
 		return idiomas;
+	}
+
+	public void anadirAGustos(int idCliente, int idAudio) {
+	    String consulta = "INSERT INTO gustos (idCliente, idAudio) VALUES (" + idCliente + ", " + idAudio + ")";
+	    try {
+	        Statement stmt = conexion.createStatement();
+	        stmt.executeUpdate(consulta);
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	    }
 	}
 }

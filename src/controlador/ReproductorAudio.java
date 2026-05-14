@@ -5,6 +5,7 @@ import modelo.*;
 
 public class ReproductorAudio {
 	private int contador = 0;
+	private controladorDB controladordb = new controladorDB("merdafy");
 
 	public audio SiguenteAudio(ArrayList<audio> audios) {
 		contador++;
@@ -23,5 +24,11 @@ public class ReproductorAudio {
 		}
 		return audios.get(contador);
 	}
+
+	public void DarleAlLike(int idCancion, int idCliente) {
+		controladordb.iniciarConexion();
+		controladordb.anadirAGustos(idCancion, idCliente);
+	}
+
 
 }
