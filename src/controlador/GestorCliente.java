@@ -100,11 +100,4 @@ public class GestorCliente {
 	}
 	
 	
-	public cliente RegistrarCliente(int id, String nombre, String apellido, String idioma, String usuario, String contrasena,
-			String fecNac, String fecReg, boolean esPremium) {
-		id = 0;
-		
-		
-		return null;
-	}
 }

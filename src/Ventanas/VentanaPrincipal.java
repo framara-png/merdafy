@@ -10,11 +10,11 @@ import controlador.*;
 import modelo.*;
 import java.util.*;
 import Paneles.*;
+
 public class VentanaPrincipal extends JFrame {
 	private controladorDB controladordb = new controladorDB("merdafy");
 	private cliente clientelogeado = new cliente();
-
-
+	private String artistaSeleccionado;
 	public cliente getClientelogeado() {
 		return clientelogeado;
 	}
@@ -50,18 +50,23 @@ public class VentanaPrincipal extends JFrame {
 			revalidate();
 			break;
 		case "cliente":
-			PanelSelecionCliente panelCliente = new PanelSelecionCliente(this,clientelogeado);
+			PanelSelecionCliente panelCliente = new PanelSelecionCliente(this, clientelogeado);
 			setContentPane(panelCliente);
 			revalidate();
 			break;
-		case "perfil" :
-			PanelPerfli panelPerfil = new PanelPerfli(this,clientelogeado);
+		case "perfil":
+			PanelPerfli panelPerfil = new PanelPerfli(this, clientelogeado);
 			setContentPane(panelPerfil);
 			revalidate();
 			break;
-		case "musicos" : 
-			PanelMusicos panelMusicos = new PanelMusicos(this,clientelogeado);
+		case "musicos":
+			PanelMusicos panelMusicos = new PanelMusicos(this, clientelogeado);
 			setContentPane(panelMusicos);
+			revalidate();
+			break;
+		case "album":
+			PanelAlbum panelAlbum = new PanelAlbum(this, clientelogeado, getArtistaSeleccionado());
+			setContentPane(panelAlbum);
 			revalidate();
 			break;
 		}
@@ -70,5 +75,12 @@ public class VentanaPrincipal extends JFrame {
 	public void ejecutarVentana() {
 		cambiarPanel("login");
 		setVisible(true);
+	}
+	public void setArtistaSeleccionado(String artista) {
+	    this.artistaSeleccionado = artista;
+	}
+
+	public String getArtistaSeleccionado() {
+	    return artistaSeleccionado;
 	}
 }
