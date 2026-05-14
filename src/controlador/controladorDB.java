@@ -278,8 +278,11 @@ public class controladorDB {
 
 			stmt.close();
 		} catch (SQLException e) {
-
-			e.printStackTrace();
+			if (e.getErrorCode() == 1062) {
+				System.out.println("Error, ye existe un musico con este nombre");
+			} else {
+				e.printStackTrace();
+			}
 		}
 	}
 
@@ -301,8 +304,9 @@ public class controladorDB {
 
 			stmt.close();
 		} catch (SQLException e) {
-			if (e instanceof SQLIntegrityConstraintViolationException) {
-				System.out.println("Artista già esistente: " + p.getNombreArt());
+			if (e.getErrorCode() == 1062) {
+				System.out.println("Error, ye existe un podcaster con este nombre");
+
 			} else {
 				e.printStackTrace();
 			}
@@ -335,8 +339,9 @@ public class controladorDB {
 			stmt.close();
 
 		} catch (SQLException e) {
-			if (e instanceof SQLIntegrityConstraintViolationException) {
-				System.out.println("Audio già esistente: " + c.getNombreAudio());
+			if (e.getErrorCode() == 1062) {
+				System.out.println("Error, ye existe una cancion con este nombre");
+
 			} else {
 				e.printStackTrace();
 			}
@@ -352,11 +357,8 @@ public class controladorDB {
 			stmt.executeUpdate(query);
 			stmt.close();
 		} catch (SQLException e) {
-			if (e instanceof SQLIntegrityConstraintViolationException) {
-				System.out.println("Album già esistente: " + a.getTitulo());
-			} else {
-				e.printStackTrace();
-			}
+
+			e.printStackTrace();
 		}
 	}
 
@@ -386,8 +388,9 @@ public class controladorDB {
 			stmt.close();
 
 		} catch (SQLException e) {
-			if (e instanceof SQLIntegrityConstraintViolationException) {
-				System.out.println("Audio già esistente: " + p.getNombreAudio());
+			if (e.getErrorCode() == 1062) {
+				System.out.println("Error, ye existe un podcast con este nombre");
+
 			} else {
 				e.printStackTrace();
 			}
@@ -418,7 +421,7 @@ public class controladorDB {
 		}
 	}
 
-	public void insertarCliente(cliente c) {
+	public boolean insertarCliente(cliente c) {
 		String abonamento = c.isEsPremium() ? "premium" : "free";
 
 		try {
@@ -443,9 +446,16 @@ public class controladorDB {
 			stmt.close();
 
 		} catch (SQLException e) {
-			System.out.println(e.getMessage());
+			if (e.getErrorCode() == 1062) {
+				System.out.println("Error, usuario ya registrado");
+				return false;
 
+			} else {
+				e.printStackTrace();
+			}
+		return false;
 		}
+		return true;
 	}
 
 	public ArrayList<StastisticaCancion> obtenerCancionesFavoritas() {
@@ -456,8 +466,7 @@ public class controladorDB {
 			ResultSet rs = stmt.executeQuery(query);
 
 			while (rs.next()) {
-				StastisticaCancion cf = new StastisticaCancion(rs.getString("nombre_musico"),
-						rs.getString("nombre_cancion"), rs.getInt("numero_likes"));
+				StastisticaCancion cf = new StastisticaCancion(rs.getString(1), rs.getString(2), rs.getInt(3));
 				lista.add(cf);
 			}
 			rs.close();
@@ -497,8 +506,7 @@ public class controladorDB {
 			ResultSet rs = stmt.executeQuery(query);
 
 			while (rs.next()) {
-				StatisticaPodcast pf = new StatisticaPodcast(rs.getString("nombre_podcaster"),
-						rs.getString("nombre_podcast"), rs.getInt("numero_likes"));
+				StatisticaPodcast pf = new StatisticaPodcast(rs.getString(1), rs.getString(2), rs.getInt(3));
 				lista.add(pf);
 			}
 			rs.close();
@@ -541,7 +549,12 @@ public class controladorDB {
 			stmt.executeUpdate(query);
 			stmt.close();
 		} catch (SQLException e) {
-			e.printStackTrace();
+			if (e.getErrorCode() == 1062) {
+				System.out.println("Error, ye existe un podcaster con este nombre");
+
+			} else {
+				e.printStackTrace();
+			}
 		}
 	}
 
@@ -555,7 +568,12 @@ public class controladorDB {
 			stmt.executeUpdate(query);
 			stmt.close();
 		} catch (SQLException e) {
-			e.printStackTrace();
+			if (e.getErrorCode() == 1062) {
+				System.out.println("Error, ye existe un artista con este nombre");
+
+			} else {
+				e.printStackTrace();
+			}
 		}
 	}
 
@@ -661,7 +679,12 @@ public class controladorDB {
 			stmt.executeUpdate(query);
 			stmt.close();
 		} catch (SQLException e) {
-			e.printStackTrace();
+			if (e.getErrorCode() == 1392) {
+				System.out.println("Error, no hay clienes con este user");
+
+			} else {
+				e.printStackTrace();
+			}
 		}
 	}
 
@@ -674,18 +697,29 @@ public class controladorDB {
 			stmt.close();
 		} catch (SQLException e) {
 			e.printStackTrace();
+			if (e.getErrorCode() == 1392) {
+				System.out.println("Error, no hay artistas con este nombre");
+
+			} else {
+				e.printStackTrace();
+			}
 		}
 	}
 
 	// Eliminar una canción - per nombreAudio
-	public void eliminarCancion(String nombreAudio) {
+	public void eliminarAudio(String nombreAudio) {
 		try {
 			Statement stmt = conexion.createStatement();
 			String query = "DELETE FROM audio WHERE nombreAudio = '" + nombreAudio + "'";
 			stmt.executeUpdate(query);
 			stmt.close();
 		} catch (SQLException e) {
-			e.printStackTrace();
+			if (e.getErrorCode() == 1392) {
+				System.out.println("Error, no hay audio con este user");
+
+			} else {
+				e.printStackTrace();
+			}
 		}
 	}
 
@@ -694,18 +728,6 @@ public class controladorDB {
 		try {
 			Statement stmt = conexion.createStatement();
 			String query = "DELETE FROM album WHERE titulo = '" + tituloAlbum + "'";
-			stmt.executeUpdate(query);
-			stmt.close();
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-	}
-
-	// Eliminar un podcast - per nombreAudio
-	public void eliminarPodcast(String nombreAudio) {
-		try {
-			Statement stmt = conexion.createStatement();
-			String query = "DELETE FROM audio WHERE nombreAudio = '" + nombreAudio + "' AND tipo = 'podcast'";
 			stmt.executeUpdate(query);
 			stmt.close();
 		} catch (SQLException e) {
@@ -745,7 +767,7 @@ public class controladorDB {
 		int total = 0;
 		try {
 			Statement stmt = conexion.createStatement();
-			String query = "SELECT RepTotAlbum('" + nombreMusico + "')";
+			String query = "SELECT RepTotMusico('" + nombreMusico + "')";
 			ResultSet rs = stmt.executeQuery(query);
 
 			if (rs.next()) {
@@ -764,7 +786,7 @@ public class controladorDB {
 		int total = 0;
 		try {
 			Statement stmt = conexion.createStatement();
-			String query = "SELECT RepTotPorAlbum('" + nombreAlbum + "', '" + nombreMusico + "')";
+			String query = "SELECT RepTotAlbum('" + nombreAlbum + "', '" + nombreMusico + "')";
 			ResultSet rs = stmt.executeQuery(query);
 
 			if (rs.next()) {
@@ -798,4 +820,22 @@ public class controladorDB {
 		return total;
 	}
 
+	public ArrayList<String> obteneridiomas() {
+		ArrayList<String> idiomas = new ArrayList<String>();
+		String query = "Select idIdioma from idioma";
+		try {
+			Statement consulta = conexion.createStatement();
+			ResultSet resultado = consulta.executeQuery(query);
+			while (resultado.next()) {
+				String idioma = resultado.getString(1);
+				idiomas.add(idioma);
+
+			}
+			consulta.close();
+		} catch (SQLException e) {
+
+			e.printStackTrace();
+		}
+		return idiomas;
+	}
 }

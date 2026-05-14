@@ -44,7 +44,7 @@ public class GestorCliente {
 		System.out.println("Discografia de" + nombreArt);
 		for (Album a : albums) {
 			int totalRep = controladordb.obtenerReproduccionesTotalesAlbum(a.getTitulo(), nombreArt);
-			System.out.println(a.getTitulo()+ " NumReproduciones " + totalRep);
+			System.out.println(a.getTitulo() + " NumReproduciones " + totalRep);
 		}
 
 	}
@@ -64,7 +64,7 @@ public class GestorCliente {
 		ArrayList<Podcaster> podcasters = controladordb.obtenerPodcasters();
 		for (Podcaster p : podcasters) {
 			int totalRep = controladordb.obtenerReproduccionesTotalPodcaster(p.getNombreArt());
-			System.out.println(p.getNombreArt()+ " " + totalRep);
+			System.out.println(p.getNombreArt() + " " + totalRep);
 		}
 	}
 
@@ -73,7 +73,7 @@ public class GestorCliente {
 		controladordb.iniciarConexion();
 		ArrayList<Podcast> podcasts = controladordb.obtenerPodcasts(NombrePodcaster);
 		for (Podcast p : podcasts) {
-			System.out.println(p.getNombreAudio() + " " + p.durataConvertida());
+			System.out.println(p.getNombreAudio() + " " + p.durataConvertida() + "" + p.getNumRep());
 		}
 
 	}
@@ -89,22 +89,44 @@ public class GestorCliente {
 		controladordb.iniciarConexion();
 		ArrayList<Cancion> cancionesPlaylist = controladordb.obtenerCancionesPlaylist(Titulo, c.getId());
 		for (Cancion ca : cancionesPlaylist) {
-			System.out.println(ca.getNombreAudio() + " " + ca.durataConvertida());
+			System.out.println(ca.getNombreAudio() + " " + ca.durataConvertida() + "" + ca.getNumRep());
 		}
 	}
 
-	public void pasarPremium (cliente c) {
+	public void pasarPremium(cliente c) {
 		c.setEsPremium(true);
 		controladordb.actualizarCliente(c);
-	
+
 	}
-	
-	
-	public cliente RegistrarCliente(int id, String nombre, String apellido, String idioma, String usuario, String contrasena,
-			String fecNac, String fecReg, boolean esPremium) {
-		id = 0;
-		
-		
-		return null;
+
+	public String RegistrarCliente(String nombre, String apellido, String idioma, String usuario, String contrasena,
+			String fecNac, boolean esPremium) {
+
+
+		if (nombre == null || nombre.trim().isEmpty())
+			return "El nombre es obligatorio";
+		if (apellido == null || apellido.trim().isEmpty())
+			return "El apellido es obligatorio";
+		if (usuario == null || usuario.trim().isEmpty())
+			return "El usuario es obligatorio";
+		if (contrasena == null || contrasena.trim().isEmpty())
+			return "La contraseña es obligatoria";
+		if (fecNac == null || fecNac.trim().isEmpty())
+			return "La fecha de nacimiento es obligatoria";
+
+		controladordb.iniciarConexion();
+
+
+		cliente nuevo = new cliente(0, nombre, apellido, idioma, usuario, contrasena, fecNac, null, esPremium);
+		nuevo.setEsPremium(esPremium);
+
+		boolean insertado = controladordb.insertarCliente(nuevo);
+		controladordb.cerrarConexion();
+
+		if (insertado) {
+			return null; 
+		} else {
+			return "El usuario '" + usuario + "' ya existe. Elige otro nombre de usuario";
+		}
 	}
 }

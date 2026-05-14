@@ -34,16 +34,9 @@ public class prueba {
 
 		// statAudio = controladordb.obtenerstataudio();//
 
-		gestorCli.visualizarMusicos();
-		gestorCli.visualizarAlbum("Carlos Music");
-		
-		gestorCli.visualizarCancionesAlbum("Renacimiento");
 		
 		
-		cliente c = gestorCli.login("javi_ms", "pass789");
-		gestorCli.visualizarPlaylist(c);
-		
-		gestorCli.pasarPremium(c);
+		gestorCli.RegistrarCliente("gianni", "morandi", "EN", "giannimora", "123", "2026-02-12", false);
 
 		
 
