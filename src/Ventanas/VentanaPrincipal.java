@@ -137,6 +137,9 @@ public class VentanaPrincipal extends JFrame {
 		case "playlists":
 			setContentPane(new PanelPlaylist(this, clientelogeado));
 			break;
+		case "cancionesPlaylist":
+			setContentPane(new PanelPlaylistCanciones(this, clientelogeado, playlistSelecionada));
+			break;
 		}
 
 		revalidate();

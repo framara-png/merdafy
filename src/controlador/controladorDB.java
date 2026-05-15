@@ -857,13 +857,10 @@ public class controladorDB {
 	}
 
 	// Eliminar una canción de una playlist
-	public void eliminarCancionDePlaylist(String nombreCancion, String tituloPlaylist, String usuarioCliente) {
+	public void eliminarCancionDePlaylist(int idPlaylist, int idCancion) {
 		try {
 			Statement stmt = conexion.createStatement();
-			String query = "DELETE pc FROM playlist_canciones pc " + "JOIN cancion c ON pc.idCancion = c.idCancion "
-					+ "JOIN audio a ON c.idCancion = a.idAudio " + "JOIN playlist p ON pc.idPlaylist = p.IDlist "
-					+ "JOIN cliente cl ON p.IdCliente = cl.idCliente " + "WHERE a.nombreAudio = '" + nombreCancion
-					+ "' " + "AND p.titulo = '" + tituloPlaylist + "' " + "AND cl.usuario = '" + usuarioCliente + "'";
+			String query = "DELETE  FROM playlist_canciones where IdPlaylist ='" + idPlaylist + "' and idCancion = '" + idCancion + "'";
 			stmt.executeUpdate(query);
 			stmt.close();
 		} catch (SQLException e) {
