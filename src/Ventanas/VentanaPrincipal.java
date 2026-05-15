@@ -16,7 +16,25 @@ public class VentanaPrincipal extends JFrame {
 	private Musico musicoSeleccionado;
 	private Podcaster podcasterSeleccionado;
 	private Album albumSeleccionado;
+
+	public controladorDB getControladordb() {
+		return controladordb;
+	}
+
+	public void setControladordb(controladorDB controladordb) {
+		this.controladordb = controladordb;
+	}
+
+	public Playlist getPlaylistSelecionada() {
+		return playlistSelecionada;
+	}
+
+	public void setPlaylistSelecionada(Playlist playlistSelecionada) {
+		this.playlistSelecionada = playlistSelecionada;
+	}
+
 	private Podcast podcastSeleccionado;
+	private Playlist playlistSelecionada;
 
 	public VentanaPrincipal() {
 		setSize(800, 600);
@@ -115,6 +133,9 @@ public class VentanaPrincipal extends JFrame {
 			break;
 		case "podcasters":
 			setContentPane(new PanelPodcasters(this, clientelogeado));
+			break;
+		case "playlists":
+			setContentPane(new PanelPlaylist(this, clientelogeado));
 			break;
 		}
 
