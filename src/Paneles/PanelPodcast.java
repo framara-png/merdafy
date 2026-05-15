@@ -1,4 +1,5 @@
 package Paneles;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
@@ -8,146 +9,137 @@ import java.util.ArrayList;
 import Ventanas.VentanaPrincipal;
 import controlador.GestorCliente;
 import modelo.*;
-public class PanelPodcast extends JPanel{
-	private GestorCliente gestor = new GestorCliente();
 
-	private JList<String> listDiscos;
-	private DefaultListModel<String> listModel;
+public class PanelPodcast extends JPanel {
 
-	private JTextArea txtInfoArtista;
-	private JLabel lblFoto;
+    private GestorCliente gestor = new GestorCliente();
 
-	private Podcaster artistaActual;
+    private JList<String> listPodcast;
+    private DefaultListModel<String> listModel;
 
-	public PanelPodcast(VentanaPrincipal ventana, cliente clientelogeado, String nombreArtista) {
+    private JTextArea txtInfo;
+    private JLabel lblFoto;
 
-		setLayout(new BorderLayout(10, 10));
-		setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+    private Podcaster podcasterActual;
 
-		this.artistaActual = gestor.obtenerPodcasterPorNombre(nombreArtista);
+    private ArrayList<Podcast> podcastsActuales;
 
-		// ================= TOP =================
-		JPanel panelSuperior = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+    public PanelPodcast(VentanaPrincipal ventana, cliente clientelogeado, String nombrePodcaster) {
 
-		JButton btnPerfil = new JButton("Perfil");
-		JButton btnAtras = new JButton("Atrás");
+        setLayout(new BorderLayout(10, 10));
+        setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
-		btnAtras.addActionListener(e -> ventana.cambiarPanel("podcaster"));
-		btnPerfil.addActionListener(e -> ventana.cambiarPanel("perfil"));
+        // ================= PODCASTER =================
+        this.podcasterActual = gestor.obtenerPodcasterPorNombre(nombrePodcaster);
 
-		panelSuperior.add(btnAtras);
-		panelSuperior.add(btnPerfil);
+        // ================= TOP =================
+        JPanel top = new JPanel(new FlowLayout(FlowLayout.RIGHT));
 
-		add(panelSuperior, BorderLayout.NORTH);
+        JButton btnPerfil = new JButton("Perfil");
+        JButton btnAtras = new JButton("Atrás");
 
-		// ================= CENTER =================
-		JPanel panelCentral = new JPanel(new GridLayout(1, 2, 10, 10));
+        btnAtras.addActionListener(e -> ventana.cambiarPanel("podcasters"));
+        btnPerfil.addActionListener(e -> ventana.cambiarPanel("perfil"));
 
-		// ===== LEFT =====
-		JPanel panelIzquierdo = new JPanel(new BorderLayout());
-		panelIzquierdo.setBorder(BorderFactory.createTitledBorder("Discografía"));
+        top.add(btnAtras);
+        top.add(btnPerfil);
 
-		listModel = new DefaultListModel<>();
-		listDiscos = new JList<>(listModel);
+        add(top, BorderLayout.NORTH);
 
-		listDiscos.setFont(new Font("Arial", Font.PLAIN, 14));
-		listDiscos.setFixedCellHeight(50);
-		listDiscos.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        // ================= CENTER =================
+        JPanel center = new JPanel(new GridLayout(1, 2, 10, 10));
 
-	
-		listDiscos.addMouseListener(new MouseAdapter() {
-		    @Override
-		    public void mouseClicked(MouseEvent e) {
-		        if (e.getClickCount() == 1) {
+        // ================= LEFT (PODCAST LIST) =================
+        JPanel left = new JPanel(new BorderLayout());
+        left.setBorder(BorderFactory.createTitledBorder("Podcast"));
 
-		            String seleccionado = listDiscos.getSelectedValue();
-		            if (seleccionado == null) return;
+        listModel = new DefaultListModel<>();
+        listPodcast = new JList<>(listModel);
 
-		            Podcast p = null;
+        listPodcast.setFont(new Font("Arial", Font.PLAIN, 14));
+        listPodcast.setFixedCellHeight(45);
+        listPodcast.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 
-		            for (Podcast pod : gestor.controladordb.obtenerPodcasts(
-		                    ventana.getPodcasterSeleccionado().getNombreArt())) {
+        // CLICK PODCAST
+        listPodcast.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
 
-		                if (pod.getNombreAudio().equals(seleccionado)) {
-		                    p = pod;
-		                    break;
-		                }
-		            }
+                if (e.getClickCount() == 1) {
 
-		            if (p == null) return;
+                    int index = listPodcast.getSelectedIndex();
+                    if (index < 0 || podcastsActuales == null) return;
 
-		            ventana.setPodcastSeleccionado(p);
-		            ventana.cambiarPanel("reproduccionPodcast");
-		        }
-		    }
-		});
+                    Podcast seleccionado = podcastsActuales.get(index);
 
-		panelIzquierdo.add(new JScrollPane(listDiscos), BorderLayout.CENTER);
+                    ventana.setPodcastSeleccionado(seleccionado);
+                    ventana.cambiarPanel("reproduccionPodcast");
+                }
+            }
+        });
 
-		// ===== RIGHT =====
-		JPanel panelDerecho = new JPanel(new BorderLayout(10, 10));
-		panelDerecho.setBorder(BorderFactory.createTitledBorder("Información del Artista"));
+        left.add(new JScrollPane(listPodcast), BorderLayout.CENTER);
 
-		JPanel panelInfoArtista = new JPanel(new BorderLayout(10, 10));
+        // ================= RIGHT (INFO) =================
+        JPanel right = new JPanel(new BorderLayout(10, 10));
+        right.setBorder(BorderFactory.createTitledBorder("Info Podcaster"));
 
-		// FOTO
-		lblFoto = new JLabel();
-		lblFoto.setHorizontalAlignment(JLabel.CENTER);
-		lblFoto.setPreferredSize(new Dimension(200, 200));
-		lblFoto.setBorder(BorderFactory.createLineBorder(Color.GRAY));
+        lblFoto = new JLabel();
+        lblFoto.setHorizontalAlignment(JLabel.CENTER);
+        lblFoto.setPreferredSize(new Dimension(200, 200));
 
-		if (artistaActual != null && artistaActual.getFoto() != null) {
-			ImageIcon icon = new ImageIcon(artistaActual.getFoto());
-			Image img = icon.getImage().getScaledInstance(200, 200, Image.SCALE_SMOOTH);
-			lblFoto.setIcon(new ImageIcon(img));
-		} else {
-			lblFoto.setText("Sin foto");
-		}
+        if (podcasterActual != null && podcasterActual.getFoto() != null) {
+            ImageIcon icon = new ImageIcon(podcasterActual.getFoto());
+            Image img = icon.getImage().getScaledInstance(200, 200, Image.SCALE_SMOOTH);
+            lblFoto.setIcon(new ImageIcon(img));
+        } else {
+            lblFoto.setText("Sin foto");
+        }
 
-		panelInfoArtista.add(lblFoto, BorderLayout.NORTH);
+        txtInfo = new JTextArea();
+        txtInfo.setEditable(false);
+        txtInfo.setLineWrap(true);
 
-		// INFO
-		txtInfoArtista = new JTextArea();
-		txtInfoArtista.setEditable(false);
-		txtInfoArtista.setLineWrap(true);
-		txtInfoArtista.setWrapStyleWord(true);
+        if (podcasterActual != null) {
+            txtInfo.setText(
+                    "Nombre: " + podcasterActual.getNombreArt() + "\n" +
+                    "Género: " + podcasterActual.getGenero() + "\n\n" +
+                    podcasterActual.getDescripcion()
+            );
+        }
 
-		if (artistaActual != null) {
-			txtInfoArtista.setText("Nombre: " + artistaActual.getNombreArt() + "\n" + "Género: "
-					+ artistaActual.getGenero() + "\n\n" + "Descripción:\n" + artistaActual.getDescripcion());
-		}
+        right.add(lblFoto, BorderLayout.NORTH);
+        right.add(new JScrollPane(txtInfo), BorderLayout.CENTER);
 
-		panelInfoArtista.add(new JScrollPane(txtInfoArtista), BorderLayout.CENTER);
+        center.add(left);
+        center.add(right);
 
-		panelDerecho.add(panelInfoArtista, BorderLayout.CENTER);
+        add(center, BorderLayout.CENTER);
 
-		panelCentral.add(panelIzquierdo);
-		panelCentral.add(panelDerecho);
+        // ================= LOAD PODCAST =================
+        cargarPodcast(nombrePodcaster);
+    }
 
-		add(panelCentral, BorderLayout.CENTER);
+    private void cargarPodcast(String nombrePodcaster) {
 
-		// ================= LOAD DISCOS =================
-		if (artistaActual != null) {
-			cargarPodcast(artistaActual.getNombreArt());
-		}
-	}
+        listModel.clear();
 
-	// ================= LOAD DISCOS =================
-	private void cargarPodcast(String nombreArtista) {
+        podcastsActuales = gestor.obtenerPodcasts(nombrePodcaster);
 
-		listModel.clear();
+        if (podcastsActuales != null && !podcastsActuales.isEmpty()) {
 
-		gestor.controladordb.iniciarConexion();
-		ArrayList<Podcast> podcasts = gestor.controladordb.obtenerPodcasts(nombreArtista);
-		gestor.controladordb.cerrarConexion();
+            for (Podcast p : podcastsActuales) {
 
-		if (podcasts != null && !podcasts.isEmpty()) {
-			for (Podcast p : podcasts) {
-				listModel.addElement(p.getNombreAudio() + " | " + p.getNumeroParticipantes() + " | " + p.durataConvertida()  + p.getNumRep());
-			}
-		} else {
-			listModel.addElement("No hay podcasts disponibles");
-		}
-	}
+                listModel.addElement(
+                        p.getNombreAudio()
+                        + " | " + p.getNumeroParticipantes()
+                        + " | " + p.durataConvertida()
+                        + " | " + p.getNumRep()
+                );
+            }
+
+        } else {
+            listModel.addElement("No hay podcasts disponibles");
+        }
+    }
 }
-

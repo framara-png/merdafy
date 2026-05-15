@@ -91,7 +91,7 @@ public class VentanaPrincipal extends JFrame {
 			setContentPane(new PanelArtista(this, clientelogeado, musicoSeleccionado.getNombreArt()));
 			break;
 
-		case "podcaster":
+		case "podcast":
 
 			if (podcasterSeleccionado == null)
 				return;
@@ -109,10 +109,13 @@ public class VentanaPrincipal extends JFrame {
 		case "perfil":
 			setContentPane(new PanelPerfli(this, clientelogeado));
 			break;
+
 		case "registro":
 			setContentPane(new PanelRegistro(this));
 			break;
-
+		case "podcasters":
+			setContentPane(new PanelPodcasters(this, clientelogeado));
+			break;
 		}
 
 		revalidate();
