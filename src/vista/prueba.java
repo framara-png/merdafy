@@ -29,9 +29,10 @@ public class prueba {
 	public static PanelLogin panelLog;
 	public static void main(String[] args) {
 	    controladordb.iniciarConexion();
-	    ventana.ejecutarVentana();
-	   cliente cli = gestorCli.login("lauragd", "pass321"); 
-	  System.out.println(cli.toString());
+	    //ventana.ejecutarVentana();
+	   cliente cli = gestorCli.login("carlos_music", "pass123"); 
+	gestorCli.inserireCancionesPlaylist(cli);
+	System.out.println(cli.getPlaylistCliente().get(1).getCancionesPlaylist().toString());
 	  
 	  // Album al =controladordb.obtenerAlbumPorNombre("Inicios");
 	   //System.out.println(al.toString());

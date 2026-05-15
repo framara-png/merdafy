@@ -14,8 +14,12 @@ public class GestorCliente {
 
 		for (cliente c : clienti) {
 			if (c.getUsuario().equals(user) && c.getContrasena().equals(password)) {
-				controladordb.cerrarConexion();
+
+				ArrayList<Playlist> playlistclietne = controladordb.obtenerPlaylists(c.getId());
+				c.setPlaylistCliente(playlistclietne);
+				inserireCancionesPlaylist(c);
 				return c;
+
 			}
 		}
 
@@ -128,5 +132,21 @@ public class GestorCliente {
 		int rep = controladordb.obtenerReproduccionesTotalPodcaster(NombrePodcaster);
 		controladordb.cerrarConexion();
 		return rep;
+
+	}
+
+	public void crearPlaylist(String nombrePlaylist, int idCliente) {
+		controladordb.iniciarConexion();
+		controladordb.insertarPlaylist(nombrePlaylist, idCliente);
+		controladordb.cerrarConexion();
+	}
+
+	
+	public void inserireCancionesPlaylist(cliente c) {
+		controladordb.iniciarConexion();
+	for ( int i=0; i < c.getPlaylistCliente().size(); i ++) {
+		c.getPlaylistCliente().get(i).setCancionesPlaylist(controladordb.obtenerCancionesPlaylist(c.getPlaylistCliente().get(i).getTitulo(),c.getId()));
+		
+	}
 	}
 }

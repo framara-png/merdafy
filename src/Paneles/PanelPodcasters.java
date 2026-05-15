@@ -79,7 +79,7 @@ public class PanelPodcasters extends JPanel {
                     // 🔥 QUI METTI IL PODCASTER NELLA VENTANA
                     ventana.setPodcasterSeleccionado(p);
 
-                    // vai alla pagina podcaster (o quella che usi)
+                   
                     ventana.cambiarPanel("podcast");
                 }
             }
