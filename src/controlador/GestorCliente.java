@@ -99,5 +99,11 @@ public class GestorCliente {
 	
 	}
 	
-	
+	// En GestorCliente.java
+	public Musico obtenerMusicoPorNombre(String nombreArtista) {
+	    controladordb.iniciarConexion();
+	    Musico musico = controladordb.obtenerMusicoPorNombre(nombreArtista);
+	    controladordb.cerrarConexion();
+	    return musico;
+	}	
 }

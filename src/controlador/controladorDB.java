@@ -97,6 +97,34 @@ public class controladorDB {
 		return musicos;
 	}
 
+	
+	
+	public Musico obtenerMusicoPorNombre(String NombreMusico) {
+		Musico m = new Musico();
+
+		String query = "SELECT a.idArtista,a.nombreArtistico,a.genero,a.descripcion,a.imagen,m.caracteristica"
+				+ " FROM artista a join musico m on a.idArtista = m.idMusico Where nombreArtistico ='" + NombreMusico +"'";
+		try {
+			Statement consulta = conexion.createStatement();
+			ResultSet resultado = consulta.executeQuery(query);
+
+			while (resultado.next()) {
+				m = new Musico(resultado.getInt(1), resultado.getString(2), resultado.getString(3),
+						resultado.getString(4), resultado.getString(5), resultado.getString(6));
+			
+			}
+			consulta.close();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		return m;
+	}
+	
+	
+	
+	
 	public ArrayList<Podcaster> obtenerPodcasters() {
 		ArrayList<Podcaster> podcasters = new ArrayList<Podcaster>();
 
@@ -820,7 +848,7 @@ public class controladorDB {
 		int total = 0;
 		try {
 			Statement stmt = conexion.createStatement();
-			String query = "SELECT RepTotAlbum('" + nombreAlbum + "', '" + nombreMusico + "')";
+			String query = "SELECT RepTotAlbum('" + nombreMusico + "', '" + nombreAlbum + "')";
 			ResultSet rs = stmt.executeQuery(query);
 
 			if (rs.next()) {

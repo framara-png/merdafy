@@ -13,6 +13,10 @@ public class Musico extends artista {
         this.albums = new ArrayList<>(); 
     }
 
+	public Musico() {
+		// TODO Auto-generated constructor stub
+	}
+
 	public String getComposicion() {
 		return composicion;
 	}

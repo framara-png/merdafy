@@ -10,7 +10,11 @@ public class Podcaster extends artista {
         this.podcasts = new ArrayList<>();
     }
 
-    public ArrayList<Podcast> getPodcasts() {
+    public Podcaster() {
+		// TODO Auto-generated constructor stub
+	}
+
+	public ArrayList<Podcast> getPodcasts() {
         return podcasts;
     }
 

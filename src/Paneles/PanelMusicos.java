@@ -58,8 +58,8 @@ public class PanelMusicos extends JPanel {
                         
                         // EXTRAER SOLO EL NOMBRE DEL ARTISTA
                         String nombreArtista = seleccionado.split(" - Reproducciones: ")[0];
-                        ventana.setArtistaSeleccionado(nombreArtista);
-                        ventana.cambiarPanel("album");
+                        ventana.getM().setNombreArt(nombreArtista);
+                        ventana.cambiarPanel("artista");
                     }
                 }
             }
