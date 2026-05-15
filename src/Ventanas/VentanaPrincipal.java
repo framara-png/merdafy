@@ -16,6 +16,8 @@ public class VentanaPrincipal extends JFrame {
 	private cliente clientelogeado = new cliente();
 	private Musico m = new Musico();
 	private Podcaster p = new Podcaster();
+	private Album al = new Album();
+
 	public Musico getM() {
 		return m;
 	}
@@ -39,8 +41,6 @@ public class VentanaPrincipal extends JFrame {
 	public void setAl(Album al) {
 		this.al = al;
 	}
-
-	private Album al = new Album();
 
 	public cliente getClientelogeado() {
 		return clientelogeado;
@@ -96,6 +96,22 @@ public class VentanaPrincipal extends JFrame {
 			setContentPane(panelArtista);
 			revalidate();
 			break;
+		case "album":
+
+			System.out.println("AL DENTRO CAMBIARPANEL = " + al);
+
+			if (al == null) {
+				System.out.println("AL NULL");
+				return;
+			}
+
+			PanelAlbum panelAlbum = new PanelAlbum(this, al.getTitulo(), m.getNombreArt());
+
+			setContentPane(panelAlbum);
+
+			revalidate();
+
+			break;
 		}
 	}
 
@@ -104,5 +120,4 @@ public class VentanaPrincipal extends JFrame {
 		setVisible(true);
 	}
 
-	
 }

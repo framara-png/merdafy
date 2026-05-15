@@ -8,14 +8,14 @@ public class Album {
 	private int duracion;
 	private String fechaPub, genero;
 	private String foto;
-	private int idMusico;
+	private int idMusico, numerocanciones;
 	ArrayList<Cancion> cancionesAlbum;
 
 	public Album() {
 
 	}
 
-	public Album(int id, String titulo, String fechaPub, String genero,String  foto, int idMusico) {
+	public Album(int id, String titulo, String fechaPub, String genero, String foto, int idMusico) {
 		this.id = id;
 		this.titulo = titulo;
 		this.duracion = 0;
@@ -24,6 +24,15 @@ public class Album {
 		this.foto = foto;
 		this.idMusico = idMusico;
 		this.cancionesAlbum = new ArrayList<>();
+		this.numerocanciones = cancionesAlbum.size() - 1;
+	}
+
+	public int getNumerocanciones() {
+		return numerocanciones;
+	}
+
+	public void setNumerocanciones(int numerocanciones) {
+		this.numerocanciones = numerocanciones;
 	}
 
 	public String getFoto() {
@@ -56,8 +65,6 @@ public class Album {
 		this.idMusico = idMusico;
 	}
 
-	
-
 	public int getId() {
 		return id;
 	}
@@ -89,7 +96,6 @@ public class Album {
 	public void setGenero(String genero) {
 		this.genero = genero;
 	}
-
 
 	public ArrayList<Cancion> getCancionesAlbum() {
 		return cancionesAlbum;
