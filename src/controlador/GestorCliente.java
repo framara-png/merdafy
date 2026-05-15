@@ -4,15 +4,16 @@ import modelo.*;
 import java.util.*;
 
 public class GestorCliente {
+
 	public controladorDB controladordb = new controladorDB("merdafy");
 
+	// ================= LOGIN =================
 	public cliente login(String user, String password) {
 		controladordb.iniciarConexion();
 		ArrayList<cliente> clienti = controladordb.obtenerClientes();
 
 		for (cliente c : clienti) {
 			if (c.getUsuario().equals(user) && c.getContrasena().equals(password)) {
-				c.setPlaylistCliente(controladordb.obtenerPlaylists(c.getId()));
 				controladordb.cerrarConexion();
 				return c;
 			}
@@ -23,90 +24,109 @@ public class GestorCliente {
 	}
 
 	public boolean esAdmin(cliente c) {
-		return c.getUsuario().equals("admin") && c.getContrasena().equals("admin");
+		return c != null && c.getUsuario().equals("admin") && c.getContrasena().equals("admin");
 	}
 
-	// cambiar print por return e usar los print para panales//
-	public void visualizarMusicos() {
+	// ================= MUSICI =================
+	public ArrayList<Musico> obtenerMusicos() {
 		controladordb.iniciarConexion();
 		ArrayList<Musico> musicos = controladordb.obtenerMusicos();
-		System.out.println("Musicos disponibles");
-		for (Musico m : musicos) {
-			int totalRep = controladordb.obtenerReproduccionesTotalesMusico(m.getNombreArt());
-			System.out.println(m.getNombreArt() + " NumReproduciones " + totalRep);
-		}
+		controladordb.cerrarConexion();
+		return musicos;
 	}
 
-	// cambiar print por return//
-	public void visualizarAlbum(String nombreArt) {
+	public Musico obtenerMusicoPorNombre(String nombre) {
 		controladordb.iniciarConexion();
-		ArrayList<Album> albums = controladordb.obtenerAlbum(nombreArt);
-		System.out.println("Discografia de" + nombreArt);
-		for (Album a : albums) {
-			int totalRep = controladordb.obtenerReproduccionesTotalesAlbum(a.getTitulo(), nombreArt);
-			System.out.println(a.getTitulo()+ " NumReproduciones " + totalRep);
-		}
-
+		Musico m = controladordb.obtenerMusicoPorNombre(nombre);
+		controladordb.cerrarConexion();
+		return m;
 	}
 
-//cambiar print por return e usar los print para panales//
-	public void visualizarCancionesAlbum(String nombreAlbum) {
+	// ================= ALBUM =================
+	public ArrayList<Album> obtenerAlbum(String nombreArtista) {
+		controladordb.iniciarConexion();
+		ArrayList<Album> albums = controladordb.obtenerAlbum(nombreArtista);
+		controladordb.cerrarConexion();
+		return albums;
+	}
+
+	public Album obtenerAlbumPorNombre(String titulo) {
+		controladordb.iniciarConexion();
+		Album a = controladordb.obtenerAlbumPorNombre(titulo);
+		controladordb.cerrarConexion();
+		return a;
+	}
+
+	// ================= CANCIONES =================
+	public ArrayList<Cancion> obtenerCancionesAlbum(String nombreAlbum) {
 		controladordb.iniciarConexion();
 		ArrayList<Cancion> canciones = controladordb.obtenerCanciones(nombreAlbum);
-		for (Cancion c : canciones) {
-			System.out.println(c.getNombreAudio() + " " + c.durataConvertida());
-		}
+		controladordb.cerrarConexion();
+		return canciones;
 	}
 
-//cambiare print con return e usar los print para panales//
-	public void visualizarPodcaster() {
+	// ================= PODCASTERS =================
+	public ArrayList<Podcaster> obtenerPodcasters() {
 		controladordb.iniciarConexion();
 		ArrayList<Podcaster> podcasters = controladordb.obtenerPodcasters();
-		for (Podcaster p : podcasters) {
-			int totalRep = controladordb.obtenerReproduccionesTotalPodcaster(p.getNombreArt());
-			System.out.println(p.getNombreArt()+ " " + totalRep);
-		}
+		controladordb.cerrarConexion();
+		return podcasters;
 	}
 
-//cambiare print  con return e usar los print para panales//
-	public void visualizarPodcasts(String NombrePodcaster) {
+	public Podcaster obtenerPodcasterPorNombre(String nombre) {
 		controladordb.iniciarConexion();
-		ArrayList<Podcast> podcasts = controladordb.obtenerPodcasts(NombrePodcaster);
-		for (Podcast p : podcasts) {
-			System.out.println(p.getNombreAudio() + " " + p.durataConvertida());
-		}
-
+		Podcaster p = controladordb.obtenerPodcasterPorNombre(nombre);
+		controladordb.cerrarConexion();
+		return p;
 	}
 
-//cambiar con return//
-	public void visualizarPlaylist(cliente c) {
+	// ================= PODCAST =================
+	public ArrayList<Podcast> obtenerPodcasts(String nombrePodcaster) {
 		controladordb.iniciarConexion();
-		System.out.println(c.getPlaylistCliente().toString());
+		ArrayList<Podcast> podcasts = controladordb.obtenerPodcasts(nombrePodcaster);
+		controladordb.cerrarConexion();
+		return podcasts;
 	}
 
-//cambiar print con return//
-	public void visualizarCancionesPlaylist(String Titulo, cliente c) {
+	// ================= PLAYLIST =================
+	public ArrayList<Playlist> obtenerPlaylist(cliente c) {
 		controladordb.iniciarConexion();
-		ArrayList<Cancion> cancionesPlaylist = controladordb.obtenerCancionesPlaylist(Titulo, c.getId());
-		for (Cancion ca : cancionesPlaylist) {
-			System.out.println(ca.getNombreAudio() + " " + ca.durataConvertida());
-		}
+		ArrayList<Playlist> playlists = controladordb.obtenerPlaylists(c.getId());
+		controladordb.cerrarConexion();
+		return playlists;
 	}
 
-	public void pasarPremium (cliente c) {
+	public ArrayList<Cancion> obtenerCancionesPlaylist(String titulo, cliente c) {
+		controladordb.iniciarConexion();
+		ArrayList<Cancion> canciones = controladordb.obtenerCancionesPlaylist(titulo, c.getId());
+		controladordb.cerrarConexion();
+		return canciones;
+	}
+
+	// ================= PREMIUM =================
+	public void pasarPremium(cliente c) {
 		c.setEsPremium(true);
 		controladordb.actualizarCliente(c);
-	
 	}
-	
-	// En GestorCliente.java
-	public Musico obtenerMusicoPorNombre(String nombreArtista) {
-	    controladordb.iniciarConexion();
-	    Musico musico = controladordb.obtenerMusicoPorNombre(nombreArtista);
-	    controladordb.cerrarConexion();
-	    return musico;
-	}	
-	
+
+	public int obtenerRepTotMusico(String NombreMusico) {
+		controladordb.iniciarConexion();
+		int rep = controladordb.obtenerReproduccionesTotalesMusico(NombreMusico);
+		controladordb.cerrarConexion();
+		return rep;
+	}
+
+	public int obtenerRepTotAlbum(String NombreAlbum, String NombreMusico) {
+		controladordb.iniciarConexion();
+		int rep = controladordb.obtenerReproduccionesTotalesAlbum(NombreAlbum, NombreMusico);
+		controladordb.cerrarConexion();
+		return rep;
+	}
+
+	public int obtenerRepTotPodcaster(String NombrePodcaster) {
+		controladordb.iniciarConexion();
+		int rep = controladordb.obtenerReproduccionesTotalPodcaster(NombrePodcaster);
+		controladordb.cerrarConexion();
+		return rep;
+	}
 }
-
-

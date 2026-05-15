@@ -101,6 +101,30 @@ public class controladorDB {
 		return al;
 	}
 
+	
+	public Podcaster obtenerPodcasterPorNombre(String NombrePodcaster) {
+		Podcaster p = null;
+
+		String query = "SELECT a.idArtista,a.nombreArtistico,a.genero,a.descripcion,a.imagen"
+				+ " FROM artista a join podcaster p on a.idArtista = p.idPodcaster Where nombreArtistico ='" + NombrePodcaster
+				+ "'";
+		try {
+			Statement consulta = conexion.createStatement();
+			ResultSet resultado = consulta.executeQuery(query);
+
+			while (resultado.next()) {
+				p = new Podcaster(resultado.getInt(1), resultado.getString(2), resultado.getString(3),
+						resultado.getString(4), resultado.getString(5));
+
+			}
+			consulta.close();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		return p;
+	}
 	public ArrayList<Musico> obtenerMusicos() {
 		ArrayList<Musico> musicos = new ArrayList<Musico>();
 

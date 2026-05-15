@@ -1,5 +1,4 @@
 package Paneles;
-
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
@@ -9,9 +8,7 @@ import java.util.ArrayList;
 import Ventanas.VentanaPrincipal;
 import controlador.GestorCliente;
 import modelo.*;
-
-public class PanelArtista extends JPanel {
-
+public class PanelPodcast extends JPanel{
 	private GestorCliente gestor = new GestorCliente();
 
 	private JList<String> listDiscos;
@@ -20,14 +17,14 @@ public class PanelArtista extends JPanel {
 	private JTextArea txtInfoArtista;
 	private JLabel lblFoto;
 
-	private Musico artistaActual;
+	private Podcaster artistaActual;
 
-	public PanelArtista(VentanaPrincipal ventana, cliente clientelogeado, String nombreArtista) {
+	public PanelPodcast(VentanaPrincipal ventana, cliente clientelogeado, String nombreArtista) {
 
 		setLayout(new BorderLayout(10, 10));
 		setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
-		this.artistaActual = gestor.obtenerMusicoPorNombre(nombreArtista);
+		this.artistaActual = gestor.obtenerPodcasterPorNombre(nombreArtista);
 
 		// ================= TOP =================
 		JPanel panelSuperior = new JPanel(new FlowLayout(FlowLayout.RIGHT));
@@ -35,7 +32,7 @@ public class PanelArtista extends JPanel {
 		JButton btnPerfil = new JButton("Perfil");
 		JButton btnAtras = new JButton("Atrás");
 
-		btnAtras.addActionListener(e -> ventana.cambiarPanel("musicos"));
+		btnAtras.addActionListener(e -> ventana.cambiarPanel("podcaster"));
 		btnPerfil.addActionListener(e -> ventana.cambiarPanel("perfil"));
 
 		panelSuperior.add(btnAtras);
@@ -59,41 +56,30 @@ public class PanelArtista extends JPanel {
 
 	
 		listDiscos.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent e) {
-				if (e.getClickCount() == 1) {
+		    @Override
+		    public void mouseClicked(MouseEvent e) {
+		        if (e.getClickCount() == 1) {
 
-					String seleccionado = listDiscos.getSelectedValue();
-					if (seleccionado == null || seleccionado.equals("No hay discos disponibles"))
-						return;
+		            String seleccionado = listDiscos.getSelectedValue();
+		            if (seleccionado == null) return;
 
-					String nombreDisco = seleccionado;
+		            Podcast p = null;
 
-					if (seleccionado.contains("|")) {
-						nombreDisco = seleccionado.split("\\|")[0].trim();
-					} else if (seleccionado.contains("NumReproducciones")) {
-						nombreDisco = seleccionado.split("NumReproducciones")[0].trim();
-					}
+		            for (Podcast pod : gestor.controladordb.obtenerPodcasts(
+		                    ventana.getPodcasterSeleccionado().getNombreArt())) {
 
-					System.out.println("NOMBRE DISCO = " + nombreDisco);
+		                if (pod.getNombreAudio().equals(seleccionado)) {
+		                    p = pod;
+		                    break;
+		                }
+		            }
 
-					gestor.controladordb.iniciarConexion();
+		            if (p == null) return;
 
-					Album albumSeleccionado = gestor.controladordb.obtenerAlbumPorNombre(nombreDisco);
-
-					gestor.controladordb.cerrarConexion();
-
-					System.out.println("ALBUM = " + albumSeleccionado);
-
-					if (albumSeleccionado == null) {
-						System.out.println("Album no encontrado");
-						return;
-					}
-
-					ventana.setAlbumSeleccionado(albumSeleccionado);
-					ventana.cambiarPanel("album");
-				}
-			}
+		            ventana.setPodcastSeleccionado(p);
+		            ventana.cambiarPanel("reproduccionPodcast");
+		        }
+		    }
 		});
 
 		panelIzquierdo.add(new JScrollPane(listDiscos), BorderLayout.CENTER);
@@ -142,25 +128,26 @@ public class PanelArtista extends JPanel {
 
 		// ================= LOAD DISCOS =================
 		if (artistaActual != null) {
-			cargarDiscos(artistaActual.getNombreArt());
+			cargarPodcast(artistaActual.getNombreArt());
 		}
 	}
 
 	// ================= LOAD DISCOS =================
-	private void cargarDiscos(String nombreArtista) {
+	private void cargarPodcast(String nombreArtista) {
 
 		listModel.clear();
 
 		gestor.controladordb.iniciarConexion();
-		ArrayList<Album> albums = gestor.controladordb.obtenerAlbum(nombreArtista);
+		ArrayList<Podcast> podcasts = gestor.controladordb.obtenerPodcasts(nombreArtista);
 		gestor.controladordb.cerrarConexion();
 
-		if (albums != null && !albums.isEmpty()) {
-			for (Album a : albums) {
-				listModel.addElement(a.getTitulo() + " | " + a.getFechaPub() + " | " + a.getGenero());
+		if (podcasts != null && !podcasts.isEmpty()) {
+			for (Podcast p : podcasts) {
+				listModel.addElement(p.getNombreAudio() + " | " + p.getNumeroParticipantes() + " | " + p.durataConvertida()  + p.getNumRep());
 			}
 		} else {
-			listModel.addElement("No hay discos disponibles");
+			listModel.addElement("No hay podcasts disponibles");
 		}
 	}
 }
+

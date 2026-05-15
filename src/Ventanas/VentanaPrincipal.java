@@ -1,123 +1,126 @@
 package Ventanas;
 
-import javax.swing.JFrame;
+import javax.swing.*;
 
-import Paneles.PanelLogin;
-import Paneles.PanelPerfli;
-import Paneles.PanelRegistro;
-import Paneles.PanelSelecionCliente;
 import controlador.*;
 import modelo.*;
-import java.util.*;
 import Paneles.*;
 
 public class VentanaPrincipal extends JFrame {
+
 	private controladorDB controladordb = new controladorDB("merdafy");
-	private cliente clientelogeado = new cliente();
-	private Musico m = new Musico();
-	private Podcaster p = new Podcaster();
-	private Album al = new Album();
 
-	public Musico getM() {
-		return m;
+	private cliente clientelogeado;
+
+	// ================= STATI SELEZIONE =================
+	private Musico musicoSeleccionado;
+	private Podcaster podcasterSeleccionado;
+	private Album albumSeleccionado;
+	private Podcast podcastSeleccionado;
+
+	public VentanaPrincipal() {
+		setSize(800, 600);
+		setDefaultCloseOperation(EXIT_ON_CLOSE);
+		setResizable(false);
+		setTitle("Ventana Principal");
 	}
 
-	public void setM(Musico m) {
-		this.m = m;
+	// ================= GET/SET =================
+	public Musico getMusicoSeleccionado() {
+		return musicoSeleccionado;
 	}
 
-	public Podcaster getP() {
-		return p;
+	public void setMusicoSeleccionado(Musico m) {
+		this.musicoSeleccionado = m;
 	}
 
-	public void setP(Podcaster p) {
-		this.p = p;
+	public Podcaster getPodcasterSeleccionado() {
+		return podcasterSeleccionado;
 	}
 
-	public Album getAl() {
-		return al;
+	public void setPodcasterSeleccionado(Podcaster p) {
+		this.podcasterSeleccionado = p;
 	}
 
-	public void setAl(Album al) {
-		this.al = al;
+	public Album getAlbumSeleccionado() {
+		return albumSeleccionado;
+	}
+
+	public void setAlbumSeleccionado(Album a) {
+		this.albumSeleccionado = a;
+	}
+
+	public Podcast getPodcastSeleccionado() {
+		return podcastSeleccionado;
+	}
+
+	public void setPodcastSeleccionado(Podcast p) {
+		this.podcastSeleccionado = p;
 	}
 
 	public cliente getClientelogeado() {
 		return clientelogeado;
 	}
 
-	public void setClientelogeado(cliente clientelogeado) {
-		this.clientelogeado = clientelogeado;
+	public void setClientelogeado(cliente c) {
+		this.clientelogeado = c;
 	}
 
-	private static final long serialVersionUID = 1L;
-
-	public VentanaPrincipal() {
-		controladordb.iniciarConexion();
-
-		setSize(800, 600); // Tamaño
-		setDefaultCloseOperation(EXIT_ON_CLOSE); // Operacion de cierre
-		setResizable(false); // No redimensionar
-		setTitle("Ventana Principal"); // Titulo
-
-	}
-
+	// ================= CAMBIO PANEL =================
 	public void cambiarPanel(String nombrePanel) {
 
 		switch (nombrePanel) {
+
 		case "login":
-			PanelLogin panelLogin = new PanelLogin(this);
-			setContentPane(panelLogin);
-			revalidate();
+			setContentPane(new PanelLogin(this));
 			break;
 
-		case "registro":
-			PanelRegistro panelRegistro = new PanelRegistro(this);
-			setContentPane(panelRegistro);
-			revalidate();
-			break;
 		case "cliente":
-			PanelSelecionCliente panelCliente = new PanelSelecionCliente(this, clientelogeado);
-			setContentPane(panelCliente);
-			revalidate();
+			setContentPane(new PanelSelecionCliente(this, clientelogeado));
 			break;
-		case "perfil":
-			PanelPerfli panelPerfil = new PanelPerfli(this, clientelogeado);
-			setContentPane(panelPerfil);
-			revalidate();
-			break;
+
 		case "musicos":
-			PanelMusicos panelMusicos = new PanelMusicos(this, clientelogeado);
-			setContentPane(panelMusicos);
-			revalidate();
+			setContentPane(new PanelMusicos(this, clientelogeado));
 			break;
+
 		case "artista":
-			PanelArtista panelArtista = new PanelArtista(this, clientelogeado, m.getNombreArt());
-			setContentPane(panelArtista);
-			revalidate();
+
+			if (musicoSeleccionado == null)
+				return;
+
+			setContentPane(new PanelArtista(this, clientelogeado, musicoSeleccionado.getNombreArt()));
 			break;
+
+		case "podcaster":
+
+			if (podcasterSeleccionado == null)
+				return;
+
+			setContentPane(new PanelPodcast(this, clientelogeado, podcasterSeleccionado.getNombreArt()));
+			break;
+
 		case "album":
 
-			System.out.println("AL DENTRO CAMBIARPANEL = " + al);
-
-			if (al == null) {
-				System.out.println("AL NULL");
+			if (albumSeleccionado == null)
 				return;
-			}
 
-			PanelAlbum panelAlbum = new PanelAlbum(this, al.getTitulo(), m.getNombreArt());
-
-			setContentPane(panelAlbum);
-
-			revalidate();
-
+			setContentPane(new PanelAlbum(this, albumSeleccionado.getTitulo(), musicoSeleccionado.getNombreArt()));
 			break;
+		case "perfil":
+			setContentPane(new PanelPerfli(this, clientelogeado));
+			break;
+		case "registro":
+			setContentPane(new PanelRegistro(this));
+			break;
+
 		}
+
+		revalidate();
+		repaint();
 	}
 
 	public void ejecutarVentana() {
 		cambiarPanel("login");
 		setVisible(true);
 	}
-
 }

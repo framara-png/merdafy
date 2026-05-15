@@ -32,7 +32,7 @@ public class prueba {
 	    ventana.ejecutarVentana();
 	   cliente cli = gestorCli.login("lauragd", "pass321"); 
 	  System.out.println(cli.toString());
-	   gestorCli.visualizarAlbum("Carlos Music");
+	  
 	  // Album al =controladordb.obtenerAlbumPorNombre("Inicios");
 	   //System.out.println(al.toString());
 	}
