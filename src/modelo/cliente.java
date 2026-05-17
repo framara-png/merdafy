@@ -24,6 +24,12 @@ public class cliente {
 		this.fecReg = fecReg;
 		this.esPremium = esPremium;
 		this.playlistCliente = new ArrayList<Playlist>();
+		
+
+	}
+
+	public void setEsPremium(boolean esPremium) {
+		this.esPremium = esPremium;
 	}
 
 	@Override
@@ -108,15 +114,6 @@ public class cliente {
 
 	public boolean isEsPremium() {
 		return esPremium;
-	}
-
-	public void setEsPremium(boolean esPremium) {
-		this.esPremium = esPremium;
-		if (!esPremium) {
-			this.limitesPlaylists = 3;
-		} else {
-			this.limitesPlaylists = Integer.MAX_VALUE;
-		}
 	}
 
 	public ArrayList<Playlist> getPlaylistCliente() {

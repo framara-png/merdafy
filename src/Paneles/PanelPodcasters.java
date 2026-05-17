@@ -21,7 +21,7 @@ public class PanelPodcasters extends JPanel {
 
         setLayout(null);
 
-        // ================= BOTONES =================
+        // botones
         JButton btnPerfil = new JButton("Perfil");
         JButton btnAtras = new JButton("Atrás");
 
@@ -34,7 +34,7 @@ public class PanelPodcasters extends JPanel {
         add(btnAtras);
         add(btnPerfil);
 
-        // ================= DATI =================
+        // datos
         ArrayList<Podcaster> podcasters = gestor.obtenerPodcasters();
 
         listModel = new DefaultListModel<>();
@@ -54,14 +54,14 @@ public class PanelPodcasters extends JPanel {
             listModel.addElement("No hay podcasters disponibles");
         }
 
-        // ================= LISTA =================
+        // lista
         listPodcasters = new JList<>(listModel);
         listPodcasters.setFont(new Font("Arial", Font.BOLD, 18));
         listPodcasters.setFixedCellHeight(40);
         listPodcasters.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         listPodcasters.setBackground(new Color(240, 240, 240));
 
-        // ================= CLICK =================
+        // listener
         listPodcasters.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
@@ -76,7 +76,7 @@ public class PanelPodcasters extends JPanel {
                     Podcaster p = gestor.obtenerPodcasterPorNombre(nombre);
                     if (p == null) return;
 
-                    // 🔥 QUI METTI IL PODCASTER NELLA VENTANA
+                    //settiamo podcaster selezionado per panales
                     ventana.setPodcasterSeleccionado(p);
 
                    

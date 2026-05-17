@@ -20,7 +20,7 @@ public class PanelMusicos extends JPanel {
     public PanelMusicos(VentanaPrincipal ventana, cliente clientelogeado) {
         setLayout(null);
 
-        // ================= BOTONES =================
+        //botones
         JButton btnPerfil = new JButton("Perfil");
         JButton btnAtras = new JButton("Atrás");
 
@@ -33,7 +33,7 @@ public class PanelMusicos extends JPanel {
         add(btnAtras);
         add(btnPerfil);
 
-        // ================= DATOS =================
+        // datos
         ArrayList<Musico> musicos = gestor.obtenerMusicos();
 
         listModel = new DefaultListModel<>();
@@ -60,7 +60,7 @@ public class PanelMusicos extends JPanel {
                     String seleccionado = listMusicos.getSelectedValue();
                     if (seleccionado == null) return;
 
-                    // 🔥 SOLO NOME ARTISTA
+                    // nombe artista
                     String nombreArtista = seleccionado.split(" - Reproducciones: ")[0];
 
                     Musico m = new Musico();

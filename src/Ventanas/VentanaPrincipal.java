@@ -1,5 +1,7 @@
 package Ventanas;
 
+import java.util.ArrayList;
+
 import javax.swing.*;
 
 import controlador.*;
@@ -12,11 +14,46 @@ public class VentanaPrincipal extends JFrame {
 
 	private cliente clientelogeado;
 
-	// ================= STATI SELEZIONE =================
+	// oeggetti che mi servono per mantenere costanza tra i pannelli
 	private Musico musicoSeleccionado;
 	private Podcaster podcasterSeleccionado;
-	private Album albumSeleccionado;
+	public ArrayList<Musico> getTodoslosmusicos() {
+		return todoslosmusicos;
+	}
 
+	public void setTodoslosmusicos(ArrayList<Musico> todoslosmusicos) {
+		this.todoslosmusicos = todoslosmusicos;
+	}
+
+	public ArrayList<Podcaster> getTodoslospodcasters() {
+		return todoslospodcasters;
+	}
+
+	public void setTodoslospodcasters(ArrayList<Podcaster> todoslospodcasters) {
+		this.todoslospodcasters = todoslospodcasters;
+	}
+
+	public ArrayList<Cancion> getTodaslascanciones() {
+		return todaslascanciones;
+	}
+
+	public void setTodaslascanciones(ArrayList<Cancion> todaslascanciones) {
+		this.todaslascanciones = todaslascanciones;
+	}
+
+	public ArrayList<Album> getTodoslosAlbumes() {
+		return todoslosAlbumes;
+	}
+
+	public void setTodoslosAlbumes(ArrayList<Album> todoslosAlbumes) {
+		this.todoslosAlbumes = todoslosAlbumes;
+	}
+
+	private Album albumSeleccionado;
+	private ArrayList<Musico> todoslosmusicos = controladordb.obtenerMusicos();
+	private ArrayList<Podcaster> todoslospodcasters;
+	private ArrayList<Cancion> todaslascanciones;
+	private ArrayList<Album> todoslosAlbumes;
 	public controladorDB getControladordb() {
 		return controladordb;
 	}
@@ -43,7 +80,7 @@ public class VentanaPrincipal extends JFrame {
 		setTitle("Ventana Principal");
 	}
 
-	// ================= GET/SET =================
+	// getter setter
 	public Musico getMusicoSeleccionado() {
 		return musicoSeleccionado;
 	}
@@ -84,7 +121,7 @@ public class VentanaPrincipal extends JFrame {
 		this.clientelogeado = c;
 	}
 
-	// ================= CAMBIO PANEL =================
+	// cambio de paneles
 	public void cambiarPanel(String nombrePanel) {
 
 		switch (nombrePanel) {
@@ -140,6 +177,13 @@ public class VentanaPrincipal extends JFrame {
 		case "cancionesPlaylist":
 			setContentPane(new PanelPlaylistCanciones(this, clientelogeado, playlistSelecionada));
 			break;
+		case "panelAdmin":
+			setContentPane(new PanelSelecionAdmin(this, clientelogeado));
+			break;
+		
+		case "GestionCancion":
+			setContentPane(new PanelGestionCanciones(this, clientelogeado));
+				break;
 		}
 
 		revalidate();

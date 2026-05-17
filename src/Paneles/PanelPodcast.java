@@ -80,7 +80,7 @@ public class PanelPodcast extends JPanel {
 
         left.add(new JScrollPane(listPodcast), BorderLayout.CENTER);
 
-        // ================= RIGHT (INFO) =================
+        // informaiones 
         JPanel right = new JPanel(new BorderLayout(10, 10));
         right.setBorder(BorderFactory.createTitledBorder("Info Podcaster"));
 
@@ -116,7 +116,7 @@ public class PanelPodcast extends JPanel {
 
         add(center, BorderLayout.CENTER);
 
-        // ================= LOAD PODCAST =================
+        // caragmos el poscast
         cargarPodcast(nombrePodcaster);
     }
 

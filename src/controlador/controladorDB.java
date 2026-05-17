@@ -101,13 +101,12 @@ public class controladorDB {
 		return al;
 	}
 
-	
 	public Podcaster obtenerPodcasterPorNombre(String NombrePodcaster) {
 		Podcaster p = null;
 
 		String query = "SELECT a.idArtista,a.nombreArtistico,a.genero,a.descripcion,a.imagen"
-				+ " FROM artista a join podcaster p on a.idArtista = p.idPodcaster Where nombreArtistico ='" + NombrePodcaster
-				+ "'";
+				+ " FROM artista a join podcaster p on a.idArtista = p.idPodcaster Where nombreArtistico ='"
+				+ NombrePodcaster + "'";
 		try {
 			Statement consulta = conexion.createStatement();
 			ResultSet resultado = consulta.executeQuery(query);
@@ -125,6 +124,7 @@ public class controladorDB {
 
 		return p;
 	}
+
 	public ArrayList<Musico> obtenerMusicos() {
 		ArrayList<Musico> musicos = new ArrayList<Musico>();
 
@@ -200,6 +200,90 @@ public class controladorDB {
 
 		String query = "SELECT * FROM album where idMusico in (Select idMusico from musico m join artista a on m.IdMusico = a.IdArtista "
 				+ "where nombreArtistico = '" + nombreMusico + "')";
+		try {
+			Statement consulta = conexion.createStatement();
+			ResultSet resultado = consulta.executeQuery(query);
+
+			while (resultado.next()) {
+				Album nuevoAlbum = new Album(resultado.getInt(1), resultado.getString(2), resultado.getString(3),
+						resultado.getString(4), resultado.getString(5), resultado.getInt(6));
+				albums.add(nuevoAlbum);
+			}
+			consulta.close();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		return albums;
+	}
+
+	public ArrayList<Cancion> obtenerTodasCanciones() {
+		ArrayList<Cancion> canciones = new ArrayList<Cancion>();
+
+		String query = "SELECT a.idAudio,a.nombreAudio,a.archivo,a.duracion,a.Nreproduciones,"
+				+ "c.idAlbum ,c.artistasInvitados FROM audio a join cancion c on c.idCancion= a.IdAudio";
+
+		try {
+			Statement consulta = conexion.createStatement();
+			ResultSet resultado = consulta.executeQuery(query);
+
+			while (resultado.next()) {
+				String tipo = "cancion";
+				Time tiempo = resultado.getTime(4); // colonna 4 = duracion
+				int duracionSegundos = tiempo.toLocalTime().toSecondOfDay();
+				Cancion nuevaCancion = new Cancion(resultado.getInt(1), resultado.getString(2), resultado.getString(3),
+						duracionSegundos, resultado.getInt(5), resultado.getInt(6), resultado.getString(7), tipo);
+				canciones.add(nuevaCancion);
+			}
+			consulta.close();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		return canciones;
+	}
+
+	public ArrayList<Podcast> obtenerTodosPodcasts() {
+		ArrayList<Podcast> podcasts = new ArrayList<Podcast>();
+
+		String query = "SELECT a.idAudio, a.nombreAudio, a.archivo, a.duracion, a.Nreproduciones, p.Ncolaboradores, p.idPodcaster"
+				+ " FROM audio a JOIN podcast p ON p.idPodcast = a.idAudio";
+
+		try {
+			Statement consulta = conexion.createStatement();
+			ResultSet resultado = consulta.executeQuery(query);
+
+			while (resultado.next()) {
+				String tipo = "podcast";
+				Time tiempo = resultado.getTime("duracion");
+				int duracionSegundos = tiempo.toLocalTime().toSecondOfDay();
+
+				Podcast nuevoPodcast = new Podcast(resultado.getInt("idAudio"), // id
+						resultado.getString("nombreAudio"), // nombreAudio
+						resultado.getString("archivo"), // archivo
+						duracionSegundos, // duratasecondi
+						resultado.getInt("Nreproduciones"), // NumRep
+						resultado.getInt("idPodcaster"), // idPodcaster
+						resultado.getInt("Ncolaboradores"), // numeroParticipantes
+						tipo // tipo
+				);
+
+				podcasts.add(nuevoPodcast);
+			}
+			consulta.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+
+		return podcasts;
+	}
+
+	public ArrayList<Album> obtenerTodosAlbum() {
+		ArrayList<Album> albums = new ArrayList<Album>();
+
+		String query = "SELECT * FROM album";
 		try {
 			Statement consulta = conexion.createStatement();
 			ResultSet resultado = consulta.executeQuery(query);
@@ -860,7 +944,8 @@ public class controladorDB {
 	public void eliminarCancionDePlaylist(int idPlaylist, int idCancion) {
 		try {
 			Statement stmt = conexion.createStatement();
-			String query = "DELETE  FROM playlist_canciones where IdPlaylist ='" + idPlaylist + "' and idCancion = '" + idCancion + "'";
+			String query = "DELETE  FROM playlist_canciones where IdPlaylist ='" + idPlaylist + "' and idCancion = '"
+					+ idCancion + "'";
 			stmt.executeUpdate(query);
 			stmt.close();
 		} catch (SQLException e) {

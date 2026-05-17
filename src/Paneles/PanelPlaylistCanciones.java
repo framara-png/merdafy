@@ -27,7 +27,7 @@ public class PanelPlaylistCanciones extends JPanel {
 		setLayout(new BorderLayout(10, 10));
 		setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
-		// ================= TOP =================
+		//head panel
 		JPanel top = new JPanel(new BorderLayout());
 
 		JButton btnAtras = new JButton("Atrás");
@@ -41,14 +41,14 @@ public class PanelPlaylistCanciones extends JPanel {
 
 		add(top, BorderLayout.NORTH);
 
-		// ================= TITULO =================
+		// titulo de la playlist
 		JLabel lblTitulo = new JLabel("Playlist: " + playlistActual.getTitulo(), SwingConstants.CENTER);
 
 		lblTitulo.setFont(new Font("Arial", Font.BOLD, 24));
 
 		add(lblTitulo, BorderLayout.SOUTH);
 
-		// ================= PANEL CANCIONES =================
+		// lista canzione playlist
 		panelCanciones = new JPanel();
 		panelCanciones.setLayout(new BoxLayout(panelCanciones, BoxLayout.Y_AXIS));
 
@@ -56,11 +56,12 @@ public class PanelPlaylistCanciones extends JPanel {
 
 		add(scroll, BorderLayout.CENTER);
 
-		// ================= LOAD =================
+		//cargo las canciones de la playlist
 		cargarCanciones(clienteLogeado);
 	}
 
-	// ================= CARGAR CANCIONES =================
+	//cargo las canciones con un ciclo for que genere un boton por cada cancion asi a secunda de que playlisrt sea y de cuanta
+	//canciones tenga tendre tantos botones
 	private void cargarCanciones(cliente clienteLogeado) {
 
         panelCanciones.removeAll();
@@ -87,16 +88,18 @@ public class PanelPlaylistCanciones extends JPanel {
                         BorderFactory.createEmptyBorder(10, 10, 10, 10)
                 );
 
-                // ================= INFO =================
+                //info canziones
                 JLabel lblInfo = new JLabel(
                         c.getNombreAudio()
                         + " | "
                         + c.durataConvertida()
+                        + c.getNumRep()
+                        
                 );
 
                 lblInfo.setFont(new Font("Arial", Font.PLAIN, 18));
 
-                // ================= BOTON ELIMINAR =================
+                // eleimianr 
                 JButton btnEliminar = new JButton("-");
 
                 btnEliminar.setFont(new Font("Arial", Font.BOLD, 20));

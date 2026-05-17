@@ -10,7 +10,9 @@ public class Cancion extends audio {
         this.nombresColaboradores = nombresColaboradores;
     }
 
-    public int getIdAlbum() {
+    
+
+	public int getIdAlbum() {
         return idAlbum;
     }
 

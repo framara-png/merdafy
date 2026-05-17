@@ -70,7 +70,11 @@ public class PanelLogin extends JPanel {
 				cli = gestor.login(usuario, contrasena);
 				if (cli == null) {
 					System.out.println("usuario no encontrado o pass equicoada");
-				} else {
+				}
+				else if(usuario.equals("admin") && contrasena.equals("admin")) {
+					ventana.cambiarPanel("panelAdmin");
+					ventana.setClientelogeado(cli);
+				}	else {
 					ventana.cambiarPanel("cliente");
 					ventana.setClientelogeado(cli);
 				}

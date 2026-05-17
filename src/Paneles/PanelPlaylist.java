@@ -25,7 +25,7 @@ public class PanelPlaylist extends JPanel {
         setLayout(new BorderLayout(10, 10));
         setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
-        // ================= TOP =================
+        //head panel
         JPanel top = new JPanel(new BorderLayout());
 
         JButton btnAtras = new JButton("Atrás");
@@ -39,10 +39,10 @@ public class PanelPlaylist extends JPanel {
 
         add(top, BorderLayout.NORTH);
 
-        // ================= CENTER =================
+        // cengtra il panel
         JPanel center = new JPanel(new BorderLayout(15, 15));
 
-        // ================= LISTA PLAYLIST =================
+        // lastaplaylist
         JPanel panelLista = new JPanel(new BorderLayout());
         panelLista.setBorder(
                 BorderFactory.createTitledBorder("Tus Playlists")
@@ -63,7 +63,7 @@ public class PanelPlaylist extends JPanel {
             @Override
             public void mouseClicked(MouseEvent e) {
 
-                if (e.getClickCount() == 1) {
+                if (e.getClickCount() == 2) {
 
                     int index = listPlaylist.getSelectedIndex();
 
@@ -78,7 +78,7 @@ public class PanelPlaylist extends JPanel {
             }
         });
 
-        // ================= BOTONES DERECHA =================
+        // botones derecha
         JPanel panelBotones = new JPanel();
         panelBotones.setLayout(new GridLayout(4, 1, 10, 20));
         panelBotones.setPreferredSize(new Dimension(220, 300));
@@ -100,7 +100,7 @@ public class PanelPlaylist extends JPanel {
         btnImportar.setPreferredSize(new Dimension(200, 60));
         btnExportar.setPreferredSize(new Dimension(200, 60));
 
-        // ================= ACCIONES =================
+        //acciones botones
 
         btnCrear.addActionListener(e -> {
 
@@ -109,6 +109,18 @@ public class PanelPlaylist extends JPanel {
                     "Nombre playlist:"
             );
 
+           if(!clienteLogeado.isEsPremium()) {
+        	   clienteLogeado.setLimitesPlaylists(3);
+           }
+            
+            if(playlistsActuales.size() ==  clienteLogeado.getLimitesPlaylists()) {
+            	  JOptionPane.showMessageDialog(
+                          this,
+                          "as llegado al limite de playlists paga si quieres mas playlists"
+            );
+           return;
+            }
+            
             if (nombre != null && !nombre.trim().isEmpty()) {
 
                 gestor.controladordb.iniciarConexion();
@@ -176,11 +188,11 @@ public class PanelPlaylist extends JPanel {
 
         add(center, BorderLayout.CENTER);
 
-        // ================= CARGAR PLAYLIST =================
+        //cargo las playlist del cliente loegado
         cargarPlaylists(clienteLogeado);
     }
 
-    // ================= LOAD PLAYLIST =================
+    // stampo le playlist del client cos che le possa selezionare
     private void cargarPlaylists(cliente clienteLogeado) {
 
         listModel.clear();

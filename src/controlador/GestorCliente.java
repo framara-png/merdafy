@@ -7,7 +7,6 @@ public class GestorCliente {
 
 	public controladorDB controladordb = new controladorDB("merdafy");
 
-	// ================= LOGIN =================
 	public cliente login(String user, String password) {
 		controladordb.iniciarConexion();
 		ArrayList<cliente> clienti = controladordb.obtenerClientes();
