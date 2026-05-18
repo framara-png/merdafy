@@ -153,6 +153,12 @@ public class VentanaPrincipal extends JFrame {
 		case "GestionCanciones":
 			setContentPane(new PanelGestionCanciones(this, clientelogeado));
 			break;
+
+		case "Estatisticas":
+			setContentPane(new PanelEstatisticas(this, clientelogeado));
+			break;
+		case "
+		
 		}
 
 		revalidate();
