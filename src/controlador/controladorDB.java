@@ -726,22 +726,20 @@ public class controladorDB {
 		}
 	}
 
-	// Aggiornare un artista (musico o podcaster)
-	public void actualizarMusico(Musico m) { // Assumendo che esista una classe Artista
+	// Aggiornare un musico 
+	public void actualizarMusico(Musico m) { 
 		try {
 			Statement stmt = conexion.createStatement();
-			String queryArtista = "UPDATE artista SET nombreArtistico = '" + m.getNombreArt() + "', genero = '" + m.getGenero()
-					+ "', descripcion = '" + m.getDescripcion() + "', imagen = '" + m.getFoto() + "' WHERE idArtista = "
+			String queryArtista = "UPDATE artista SET nombreArtistico = '" + m.getNombreArt() + "', genero = '"
+					+ m.getGenero() + "', descripcion = '" + m.getDescripcion() + "', imagen = '" + m.getFoto()
+					+ "' WHERE idArtista = " + m.getId();
+			stmt.executeUpdate(queryArtista);
+
+			// update musico
+			String queryMusico = "Update Musico set  caracteristica = '" + m.getComposicion() + "' where idMusico = "
 					+ m.getId();
-			stmt.executeUpdate(queryArtista); 
-			
-			//update musico 
-			String queryMusico 
-			
-			
-			
-			
-			
+			stmt.executeUpdate(queryMusico);
+
 			stmt.close();
 		} catch (SQLException e) {
 			if (e.getErrorCode() == 1062) {
@@ -753,6 +751,28 @@ public class controladorDB {
 		}
 	}
 
+	
+	
+	// Aggiornare un podcaster
+		public void actualizarPodcaster(Podcaster p) { 
+			try {
+				Statement stmt = conexion.createStatement();
+				String queryArtista = "UPDATE artista SET nombreArtistico = '" + p.getNombreArt() + "', genero = '"
+						+ p.getGenero() + "', descripcion = '" + p.getDescripcion() + "', imagen = '" + p.getFoto()
+						+ "' WHERE idArtista = " + p.getId();
+				stmt.executeUpdate(queryArtista);
+
+				stmt.close();
+			} catch (SQLException e) {
+				if (e.getErrorCode() == 1062) {
+					System.out.println("Error, ye existe un artista con este nombre");
+
+				} else {
+					e.printStackTrace();
+				}
+			}
+		}
+	
 	// Aggiornare una canzone
 	public void actualizarCancion(Cancion c) {
 		try {
@@ -1173,6 +1193,4 @@ public class controladorDB {
 		return StatisticaPodcast;
 	}
 
-	
-	
 }

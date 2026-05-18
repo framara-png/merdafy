@@ -121,7 +121,7 @@ public class PanelGestionMusicos extends JPanel {
 
 				m.setNombreArt(nuevoNombre);
 
-				ventana.getControladordb().actualizarArtista(m);
+				ventana.getControladordb().actualizarMusico(m);
 
 				cargarPodcasts();
 			}

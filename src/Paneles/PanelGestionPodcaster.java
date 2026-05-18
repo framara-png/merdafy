@@ -125,7 +125,7 @@ public class PanelGestionPodcaster extends JPanel {
 
 				ventana.getControladordb().actualizarPodcaster(p);
 
-				podcasts = ventana.getControladordb().obtenerTodosPodcasts();
+			
 				cargarPodcasts();
 			}
 		});
@@ -133,23 +133,23 @@ public class PanelGestionPodcaster extends JPanel {
 		// ================= ELIMINAR =================
 		btnEliminar.addActionListener(e -> {
 
-			int index = listPodcasts.getSelectedIndex();
+			int index = listPodcasters.getSelectedIndex();
 
 			if (index < 0) {
 				JOptionPane.showMessageDialog(this, "Selecciona un podcast");
 				return;
 			}
 
-			Podcast p = podcasts.get(index);
+			Podcaster p = podcasters.get(index);
 
-			int confirm = JOptionPane.showConfirmDialog(this, "¿Eliminar " + p.getNombreAudio() + "?", "Confirmar",
+			int confirm = JOptionPane.showConfirmDialog(this, "¿Eliminar " + p.getNombreArt() + "?", "Confirmar",
 					JOptionPane.YES_NO_OPTION);
 
 			if (confirm == JOptionPane.YES_OPTION) {
 
-				ventana.getControladordb().eliminarAudio(p.getNombreAudio());
+				ventana.getControladordb().eliminarAudio(p.getNombreArt());
 
-				podcasts = ventana.getControladordb().obtenerTodosPodcasts();
+			
 				cargarPodcasts();
 			}
 		});
@@ -168,12 +168,11 @@ public class PanelGestionPodcaster extends JPanel {
 
 		listModel.clear();
 
-		if (podcasts != null && !podcasts.isEmpty()) {
+		if (podcasters != null && !podcasters.isEmpty()) {
 
-			for (Podcast p : podcasts) {
+			for (Podcaster p : podcasters) {
 
-				listModel.addElement(p.getNombreAudio() + " | Participantes: " + p.getNumeroParticipantes()
-						+ " | Reproducciones: " + p.getNumRep());
+				listModel.addElement(p.getNombreArt() + " | genero: " + p.getGenero());
 			}
 
 		} else {
