@@ -654,7 +654,7 @@ public class controladorDB {
 			Statement consulta = conexion.createStatement();
 			ResultSet resultado = consulta.executeQuery(query);
 			while (resultado.next()) {
-				StatisticaAudio sta = new StatisticaAudio(resultado.getInt(1), resultado.getString(2),
+				StatisticaAudio sta = new StatisticaAudio(resultado.getString(1), resultado.getString(2),
 						resultado.getInt(3));
 				statisticasAudios.add(sta);
 			}
@@ -1108,7 +1108,7 @@ public class controladorDB {
 			ResultSet resultado = consulta.executeQuery(query);
 
 			while (resultado.next()) {
-				StatisticaAudio NueaStat = new StatisticaAudio(resultado.getInt(1), resultado.getString(2),
+				StatisticaAudio NueaStat = new StatisticaAudio(resultado.getString(1), resultado.getString(2),
 						resultado.getInt(3));
 				StatisticaAudios.add(NueaStat);
 			}

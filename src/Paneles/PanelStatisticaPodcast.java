@@ -10,15 +10,18 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 
+import Ventanas.VentanaPrincipal;
 import modelo.StatisticaPodcast;
 
 public class PanelStatisticaPodcast extends JPanel {
-
+	private VentanaPrincipal ventana;
 	private JTable tabla;
 	private DefaultTableModel modelo;
+	private ArrayList<StatisticaPodcast> listaPodcast = new ArrayList<StatisticaPodcast>();
 
-	public PanelStatisticaPodcast(ArrayList<StatisticaPodcast> listaPodcast) {
-
+	public PanelStatisticaPodcast(VentanaPrincipal ventana, ArrayList<StatisticaPodcast> listaPodcast) {
+		this.ventana = ventana;
+		this.listaPodcast = listaPodcast;
 		setLayout(null);
 		setBackground(Color.WHITE);
 

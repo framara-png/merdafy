@@ -30,7 +30,7 @@ public class prueba {
 	public static void main(String[] args) {
 	    controladordb.iniciarConexion();
 	    ventana.ejecutarVentana();
-	  
+	
 	
 	
 	  

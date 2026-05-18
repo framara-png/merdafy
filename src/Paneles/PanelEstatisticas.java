@@ -46,6 +46,7 @@ public class PanelEstatisticas extends JPanel {
 		btnStatPlaylist.addActionListener(e -> ventana.cambiarPanel("StatPlaylist"));
 		
 		
+
 	}
 
 

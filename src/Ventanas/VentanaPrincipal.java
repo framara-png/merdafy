@@ -1,5 +1,7 @@
 package Ventanas;
 
+import java.util.ArrayList;
+
 import javax.swing.*;
 import controlador.*;
 import modelo.*;
@@ -17,8 +19,17 @@ public class VentanaPrincipal extends JFrame {
 	private Musico musicoSeleccionado;
 	private Podcaster podcasterSeleccionado;
 	private Album albumSeleccionado;
+
+
 	private Podcast podcastSeleccionado;
 	private Playlist playlistSelecionada;
+	private ArrayList<StastisticaCancion> StatisticaCanciones;
+
+	
+
+	public void setControladordb(controladorDB controladordb) {
+		this.controladordb = controladordb;
+	}
 
 	public VentanaPrincipal() {
 
@@ -91,6 +102,17 @@ public class VentanaPrincipal extends JFrame {
 		this.playlistSelecionada = p;
 	}
 
+	public ArrayList<StastisticaCancion> getStatisticaCanciones() {
+		return StatisticaCanciones;
+	}
+
+	public void setStatisticaCanciones(ArrayList<StastisticaCancion> statisticaCanciones) {
+		StatisticaCanciones = statisticaCanciones;
+	}
+
+	
+	
+	
 	// ================= NAV =================
 	public void cambiarPanel(String nombrePanel) {
 
@@ -157,8 +179,14 @@ public class VentanaPrincipal extends JFrame {
 		case "Estatisticas":
 			setContentPane(new PanelEstatisticas(this, clientelogeado));
 			break;
-		case "
 		
+		case "StatCancion":
+			setContentPane(new PaneloStatisticaCancion(this, controladordb.StatCancion()));
+			break;
+		
+		case "StatAudio":
+			setContentPane(new PaneloStatisticaAudio(this, controladordb.StatAudio()));
+			break;
 		}
 
 		revalidate();

@@ -1,32 +1,40 @@
 package modelo;
  
 public class StatisticaAudio {
-private int idAudio, reproducioines;
-private String nombreAudio;
+private int  reproducioines;
+private String nombreAudio, nombreArtista;
  
 
 
-public StatisticaAudio(int idAudio, String nombreAudio,int reproduciones) {
-	this.idAudio = idAudio;
+public StatisticaAudio(String nombreAudio, String nombreArtista,int reproduciones) {
+	this.nombreArtista = nombreArtista;
 	this.reproducioines = reproduciones;
 	this.nombreAudio = nombreAudio;
 	
 	
 }
 
+
+
 @Override
 public String toString() {
-	return "StatisticaAudio [idAudio=" + idAudio + ", reproducioines=" + reproducioines + ", nombreAudio=" + nombreAudio
-			+ "]";
+	return "StatisticaAudio [reproducioines=" + reproducioines + ", nombreAudio=" + nombreAudio + ", nombreArtista="
+			+ nombreArtista + "]";
 }
 
-public int getIdAudio() {
-	return idAudio;
+
+
+public String getNombreArtista() {
+	return nombreArtista;
 }
 
-public void setIdAudio(int idAudio) {
-	this.idAudio = idAudio;
+
+
+public void setNombreArtista(String nombreArtista) {
+	this.nombreArtista = nombreArtista;
 }
+
+
 
 public int getReproducioines() {
 	return reproducioines;

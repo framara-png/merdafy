@@ -10,15 +10,19 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 
+import Ventanas.VentanaPrincipal;
 import modelo.StastisticaCancion;
+import modelo.StatisticaAudio;
 
-public class PaneloStatisticaCanciones extends JPanel {
-
+public class PaneloStatisticaAudio extends JPanel {
+	private VentanaPrincipal ventana;
+	ArrayList<StatisticaAudio> listaAudio = new ArrayList<StatisticaAudio>();
 	private JTable tabla;
 	private DefaultTableModel modelo;
 
-	public PaneloStatisticaCanciones(ArrayList<StastisticaCancion> listaCanciones) {
-
+	public PaneloStatisticaAudio(VentanaPrincipal ventana, ArrayList<StatisticaAudio> listaAudio) {
+		this.ventana = ventana;
+		this.listaAudio = listaAudio;
 		setLayout(null);
 		setBackground(Color.WHITE);
 
@@ -51,13 +55,9 @@ public class PaneloStatisticaCanciones extends JPanel {
 		tabla.setFont(new Font("Arial", Font.PLAIN, 16));
 
 		// CARGAR DATOS
-		for (StastisticaCancion stat : listaCanciones) {
+		for (StatisticaAudio stat : listaAudio) {
 
-			Object[] fila = {
-					stat.getNombreAudio(),
-					stat.getNombreArtista(),
-					stat.getNreproduciones()
-			};
+			Object[] fila = { stat.getNombreArtista(), stat.getNombreAudio(), stat.getReproducioines() };
 
 			modelo.addRow(fila);
 		}
