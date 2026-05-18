@@ -468,28 +468,24 @@ public class controladorDB {
 
 	public void insertarCancion(Cancion c) {
 
-	    try {
+		try {
 
-	        Statement stmt = conexion.createStatement();
+			Statement stmt = conexion.createStatement();
 
-	        String query = "CALL AnadirCancion('"
-	                + c.getNombreAudio() + "','"
-	                + c.durataConvertida() + "','"
-	                + c.getArchivo() + "',"
-	                + c.getIdAlbum() + ",'"
-	                + c.getNombresColaboradores() + "')";
+			String query = "CALL AnadirCancion('" + c.getNombreAudio() + "','" + c.durataConvertida() + "','"
+					+ c.getArchivo() + "'," + c.getIdAlbum() + ",'" + c.getNombresColaboradores() + "')";
 
-	        ResultSet rs = stmt.executeQuery(query);
+			ResultSet rs = stmt.executeQuery(query);
 
-	        if (rs.next()) {
-	            System.out.println(rs.getString("mensaje"));
-	        }
+			if (rs.next()) {
+				System.out.println(rs.getString("mensaje"));
+			}
 
-	        stmt.close();
+			stmt.close();
 
-	    } catch (SQLException e) {
-	        e.printStackTrace();
-	    }
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 	}
 
 	public void insertarAlbum(Album a) {
@@ -1080,4 +1076,93 @@ public class controladorDB {
 			e.printStackTrace();
 		}
 	}
+
+	public ArrayList<StastisticaCancion> StatCancion() {
+
+		ArrayList<StastisticaCancion> StatisticaCanciones = new ArrayList<StastisticaCancion>();
+		String query = "SELECT * from canciones_favoritas";
+		try {
+			Statement consulta = conexion.createStatement();
+			ResultSet resultado = consulta.executeQuery(query);
+
+			while (resultado.next()) {
+				StastisticaCancion NueaStat = new StastisticaCancion(resultado.getString(1), resultado.getString(2),
+						resultado.getInt(3));
+				StatisticaCanciones.add(NueaStat);
+			}
+			consulta.close();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		return StatisticaCanciones;
+	}
+
+	public ArrayList<StatisticaAudio> StatAudio() {
+
+		ArrayList<StatisticaAudio> StatisticaAudios = new ArrayList<StatisticaAudio>();
+		String query = "SELECT * from audiosmasescuchados";
+		try {
+			Statement consulta = conexion.createStatement();
+			ResultSet resultado = consulta.executeQuery(query);
+
+			while (resultado.next()) {
+				StatisticaAudio NueaStat = new StatisticaAudio(resultado.getInt(1), resultado.getString(2),
+						resultado.getInt(3));
+				StatisticaAudios.add(NueaStat);
+			}
+			consulta.close();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		return StatisticaAudios;
+	}
+
+	public ArrayList<StatisticaPlaylist> StatPlaylist() {
+
+		ArrayList<StatisticaPlaylist> StatisticaPlaylist = new ArrayList<StatisticaPlaylist>();
+		String query = "SELECT * from playlist_favoritas";
+		try {
+			Statement consulta = conexion.createStatement();
+			ResultSet resultado = consulta.executeQuery(query);
+
+			while (resultado.next()) {
+				StatisticaPlaylist NueaStat = new StatisticaPlaylist(resultado.getString(1), resultado.getString(2),
+						resultado.getInt(3));
+				StatisticaPlaylist.add(NueaStat);
+			}
+			consulta.close();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		return StatisticaPlaylist;
+	}
+
+	public ArrayList<StatisticaPodcast> StatPodcast() {
+
+		ArrayList<StatisticaPodcast> StatisticaPodcast = new ArrayList<StatisticaPodcast>();
+		String query = "SELECT * from podcasts_favoritos";
+		try {
+			Statement consulta = conexion.createStatement();
+			ResultSet resultado = consulta.executeQuery(query);
+
+			while (resultado.next()) {
+				StatisticaPodcast NueaStat = new StatisticaPodcast(resultado.getString(1), resultado.getString(2),
+						resultado.getInt(3));
+				StatisticaPodcast.add(NueaStat);
+			}
+			consulta.close();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		return StatisticaPodcast;
+	}
+
 }
