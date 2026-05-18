@@ -7,7 +7,7 @@ import Ventanas.*;
 import Paneles.*;
 
 public class prueba {
-	public static GestorCliente gestorCli = new GestorCliente();
+	
 	public static controladorDB controladordb = new controladorDB("merdafy");
 	public static ArrayList<cliente> clientes;
 	public static ArrayList<Musico> musicos;
@@ -30,9 +30,9 @@ public class prueba {
 	public static void main(String[] args) {
 	    controladordb.iniciarConexion();
 	    ventana.ejecutarVentana();
-	   cliente cli = gestorCli.login("carlos_music", "pass123"); 
-	gestorCli.inserireCancionesPlaylist(cli);
-	System.out.println(cli.getPlaylistCliente().get(1).getCancionesPlaylist().toString());
+	  
+	
+	
 	  
 	  // Album al =controladordb.obtenerAlbumPorNombre("Inicios");
 	   //System.out.println(al.toString());

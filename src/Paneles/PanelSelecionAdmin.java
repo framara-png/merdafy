@@ -23,8 +23,8 @@ public class PanelSelecionAdmin extends JPanel {
 		JButton btnGestionMusicos = new JButton("gestion de musicos");
 		JButton btnGestionPodcasters = new JButton("gestion de podcasters");
 		JButton btnGestionAlbum = new JButton("gestion de album");
-		JButton btnGestionCanciones = new JButton("gestion de album");
-		JButton btnGestionPodcast = new JButton("gestion de album");
+		JButton btnGestionCanciones = new JButton("gestion de Canciones");
+		JButton btnGestionPodcast = new JButton("gestion de Podcast");
 		btnGestionMusicos.setBounds(150, 150, 500, 50);
 		btnGestionPodcasters.setBounds(150, 230, 500, 50);
 		btnGestionAlbum.setBounds(150, 310, 500, 50);
@@ -37,6 +37,9 @@ public class PanelSelecionAdmin extends JPanel {
 		this.add(btnGestionMusicos);
 		this.add(btnGestionPodcasters);
 		this.add(btnGestionAlbum);
+		this.add(btnGestionPodcast);
+		this.add(btnGestionCanciones);
+		
 		
 		// LISTENERS
 		btnAtras.addActionListener(e -> ventana.cambiarPanel("login"));

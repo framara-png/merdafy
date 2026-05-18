@@ -12,134 +12,125 @@ import modelo.*;
 
 public class PanelPodcast extends JPanel {
 
-    private GestorCliente gestor = new GestorCliente();
+	private VentanaPrincipal ventana;
+	private Podcaster podcasterActual;
+	private ArrayList<Podcast> podcastsActuales;
 
-    private JList<String> listPodcast;
-    private DefaultListModel<String> listModel;
+	private JList<String> listPodcast;
+	private DefaultListModel<String> listModel;
 
-    private JTextArea txtInfo;
-    private JLabel lblFoto;
+	private JTextArea txtInfo;
+	private JLabel lblFoto;
 
-    private Podcaster podcasterActual;
+	public PanelPodcast(VentanaPrincipal ventana, cliente clientelogeado, String nombrePodcaster) {
+		this.ventana = ventana;
+		setLayout(new BorderLayout(10, 10));
+		setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
-    private ArrayList<Podcast> podcastsActuales;
+		// ================= PODCASTER =================
+		this.podcasterActual = ventana.getControladordb().obtenerPodcasterPorNombre(nombrePodcaster);
+		// ================= TOP =================
+		JPanel top = new JPanel(new FlowLayout(FlowLayout.RIGHT));
 
-    public PanelPodcast(VentanaPrincipal ventana, cliente clientelogeado, String nombrePodcaster) {
+		JButton btnPerfil = new JButton("Perfil");
+		JButton btnAtras = new JButton("Atrás");
 
-        setLayout(new BorderLayout(10, 10));
-        setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+		btnAtras.addActionListener(e -> ventana.cambiarPanel("podcasters"));
+		btnPerfil.addActionListener(e -> ventana.cambiarPanel("perfil"));
 
-        // ================= PODCASTER =================
-        this.podcasterActual = gestor.obtenerPodcasterPorNombre(nombrePodcaster);
+		top.add(btnAtras);
+		top.add(btnPerfil);
 
-        // ================= TOP =================
-        JPanel top = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+		add(top, BorderLayout.NORTH);
 
-        JButton btnPerfil = new JButton("Perfil");
-        JButton btnAtras = new JButton("Atrás");
+		// ================= CENTER =================
+		JPanel center = new JPanel(new GridLayout(1, 2, 10, 10));
 
-        btnAtras.addActionListener(e -> ventana.cambiarPanel("podcasters"));
-        btnPerfil.addActionListener(e -> ventana.cambiarPanel("perfil"));
+		// ================= LEFT (PODCAST LIST) =================
+		JPanel left = new JPanel(new BorderLayout());
+		left.setBorder(BorderFactory.createTitledBorder("Podcast"));
 
-        top.add(btnAtras);
-        top.add(btnPerfil);
+		listModel = new DefaultListModel<>();
+		listPodcast = new JList<>(listModel);
 
-        add(top, BorderLayout.NORTH);
+		listPodcast.setFont(new Font("Arial", Font.PLAIN, 14));
+		listPodcast.setFixedCellHeight(45);
+		listPodcast.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 
-        // ================= CENTER =================
-        JPanel center = new JPanel(new GridLayout(1, 2, 10, 10));
+		// CLICK PODCAST
+		listPodcast.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
 
-        // ================= LEFT (PODCAST LIST) =================
-        JPanel left = new JPanel(new BorderLayout());
-        left.setBorder(BorderFactory.createTitledBorder("Podcast"));
+				if (e.getClickCount() == 1) {
 
-        listModel = new DefaultListModel<>();
-        listPodcast = new JList<>(listModel);
+					int index = listPodcast.getSelectedIndex();
+					if (index < 0 || podcastsActuales == null)
+						return;
 
-        listPodcast.setFont(new Font("Arial", Font.PLAIN, 14));
-        listPodcast.setFixedCellHeight(45);
-        listPodcast.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+					Podcast seleccionado = podcastsActuales.get(index);
 
-        // CLICK PODCAST
-        listPodcast.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseClicked(MouseEvent e) {
+					ventana.setPodcastSeleccionado(seleccionado);
+					ventana.cambiarPanel("reproduccionPodcast");
+				}
+			}
+		});
 
-                if (e.getClickCount() == 1) {
+		left.add(new JScrollPane(listPodcast), BorderLayout.CENTER);
 
-                    int index = listPodcast.getSelectedIndex();
-                    if (index < 0 || podcastsActuales == null) return;
+		// informaiones
+		JPanel right = new JPanel(new BorderLayout(10, 10));
+		right.setBorder(BorderFactory.createTitledBorder("Info Podcaster"));
 
-                    Podcast seleccionado = podcastsActuales.get(index);
+		lblFoto = new JLabel();
+		lblFoto.setHorizontalAlignment(JLabel.CENTER);
+		lblFoto.setPreferredSize(new Dimension(200, 200));
 
-                    ventana.setPodcastSeleccionado(seleccionado);
-                    ventana.cambiarPanel("reproduccionPodcast");
-                }
-            }
-        });
+		if (podcasterActual != null && podcasterActual.getFoto() != null) {
+			ImageIcon icon = new ImageIcon(podcasterActual.getFoto());
+			Image img = icon.getImage().getScaledInstance(200, 200, Image.SCALE_SMOOTH);
+			lblFoto.setIcon(new ImageIcon(img));
+		} else {
+			lblFoto.setText("Sin foto");
+		}
 
-        left.add(new JScrollPane(listPodcast), BorderLayout.CENTER);
+		txtInfo = new JTextArea();
+		txtInfo.setEditable(false);
+		txtInfo.setLineWrap(true);
 
-        // informaiones 
-        JPanel right = new JPanel(new BorderLayout(10, 10));
-        right.setBorder(BorderFactory.createTitledBorder("Info Podcaster"));
+		if (podcasterActual != null) {
+			txtInfo.setText("Nombre: " + podcasterActual.getNombreArt() + "\n" + "Género: "
+					+ podcasterActual.getGenero() + "\n\n" + podcasterActual.getDescripcion());
+		}
 
-        lblFoto = new JLabel();
-        lblFoto.setHorizontalAlignment(JLabel.CENTER);
-        lblFoto.setPreferredSize(new Dimension(200, 200));
+		right.add(lblFoto, BorderLayout.NORTH);
+		right.add(new JScrollPane(txtInfo), BorderLayout.CENTER);
 
-        if (podcasterActual != null && podcasterActual.getFoto() != null) {
-            ImageIcon icon = new ImageIcon(podcasterActual.getFoto());
-            Image img = icon.getImage().getScaledInstance(200, 200, Image.SCALE_SMOOTH);
-            lblFoto.setIcon(new ImageIcon(img));
-        } else {
-            lblFoto.setText("Sin foto");
-        }
+		center.add(left);
+		center.add(right);
 
-        txtInfo = new JTextArea();
-        txtInfo.setEditable(false);
-        txtInfo.setLineWrap(true);
+		add(center, BorderLayout.CENTER);
 
-        if (podcasterActual != null) {
-            txtInfo.setText(
-                    "Nombre: " + podcasterActual.getNombreArt() + "\n" +
-                    "Género: " + podcasterActual.getGenero() + "\n\n" +
-                    podcasterActual.getDescripcion()
-            );
-        }
+		// caragmos el poscast
+		cargarPodcast(nombrePodcaster);
+	}
 
-        right.add(lblFoto, BorderLayout.NORTH);
-        right.add(new JScrollPane(txtInfo), BorderLayout.CENTER);
+	private void cargarPodcast(String nombrePodcaster) {
 
-        center.add(left);
-        center.add(right);
+		listModel.clear();
 
-        add(center, BorderLayout.CENTER);
+		podcastsActuales = ventana.getControladordb().obtenerPodcasts(nombrePodcaster);
 
-        // caragmos el poscast
-        cargarPodcast(nombrePodcaster);
-    }
+		if (podcastsActuales != null && !podcastsActuales.isEmpty()) {
 
-    private void cargarPodcast(String nombrePodcaster) {
+			for (Podcast p : podcastsActuales) {
 
-        listModel.clear();
+				listModel.addElement(p.getNombreAudio() + " | " + p.getNumeroParticipantes() + " | "
+						+ p.durataConvertida() + " | " + p.getNumRep());
+			}
 
-        podcastsActuales = gestor.obtenerPodcasts(nombrePodcaster);
-
-        if (podcastsActuales != null && !podcastsActuales.isEmpty()) {
-
-            for (Podcast p : podcastsActuales) {
-
-                listModel.addElement(
-                        p.getNombreAudio()
-                        + " | " + p.getNumeroParticipantes()
-                        + " | " + p.durataConvertida()
-                        + " | " + p.getNumRep()
-                );
-            }
-
-        } else {
-            listModel.addElement("No hay podcasts disponibles");
-        }
-    }
+		} else {
+			listModel.addElement("No hay podcasts disponibles");
+		}
+	}
 }

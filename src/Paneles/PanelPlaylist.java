@@ -13,204 +13,173 @@ import modelo.cliente;
 
 public class PanelPlaylist extends JPanel {
 
-    private GestorCliente gestor = new GestorCliente();
+	private VentanaPrincipal ventana;
 
-    private JList<String> listPlaylist;
-    private DefaultListModel<String> listModel;
+	private JList<String> listPlaylist;
+	private DefaultListModel<String> listModel;
 
-    private ArrayList<Playlist> playlistsActuales;
+	private ArrayList<Playlist> playlistsActuales;
 
-    public PanelPlaylist(VentanaPrincipal ventana, cliente clienteLogeado) {
+	public PanelPlaylist(VentanaPrincipal ventana, cliente clienteLogeado) {
+		this.ventana = ventana;
+		setLayout(new BorderLayout(10, 10));
+		setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
-        setLayout(new BorderLayout(10, 10));
-        setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+		// head panel
+		JPanel top = new JPanel(new BorderLayout());
 
-        //head panel
-        JPanel top = new JPanel(new BorderLayout());
+		JButton btnAtras = new JButton("Atrás");
+		JButton btnPerfil = new JButton("Perfil");
 
-        JButton btnAtras = new JButton("Atrás");
-        JButton btnPerfil = new JButton("Perfil");
+		btnAtras.addActionListener(e -> ventana.cambiarPanel("cliente"));
+		btnPerfil.addActionListener(e -> ventana.cambiarPanel("perfil"));
 
-        btnAtras.addActionListener(e -> ventana.cambiarPanel("cliente"));
-        btnPerfil.addActionListener(e -> ventana.cambiarPanel("perfil"));
+		top.add(btnAtras, BorderLayout.WEST);
+		top.add(btnPerfil, BorderLayout.EAST);
 
-        top.add(btnAtras, BorderLayout.WEST);
-        top.add(btnPerfil, BorderLayout.EAST);
+		add(top, BorderLayout.NORTH);
 
-        add(top, BorderLayout.NORTH);
+		// cengtra il panel
+		JPanel center = new JPanel(new BorderLayout(15, 15));
 
-        // cengtra il panel
-        JPanel center = new JPanel(new BorderLayout(15, 15));
+		// lastaplaylist
+		JPanel panelLista = new JPanel(new BorderLayout());
+		panelLista.setBorder(BorderFactory.createTitledBorder("Tus Playlists"));
 
-        // lastaplaylist
-        JPanel panelLista = new JPanel(new BorderLayout());
-        panelLista.setBorder(
-                BorderFactory.createTitledBorder("Tus Playlists")
-        );
+		listModel = new DefaultListModel<>();
+		listPlaylist = new JList<>(listModel);
 
-        listModel = new DefaultListModel<>();
-        listPlaylist = new JList<>(listModel);
+		listPlaylist.setFont(new Font("Arial", Font.BOLD, 16));
+		listPlaylist.setFixedCellHeight(45);
+		listPlaylist.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 
-        listPlaylist.setFont(new Font("Arial", Font.BOLD, 16));
-        listPlaylist.setFixedCellHeight(45);
-        listPlaylist.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		panelLista.add(new JScrollPane(listPlaylist), BorderLayout.CENTER);
 
-        panelLista.add(new JScrollPane(listPlaylist), BorderLayout.CENTER);
+		// CLICK PLAYLIST
+		listPlaylist.addMouseListener(new MouseAdapter() {
 
-        // CLICK PLAYLIST
-        listPlaylist.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
 
-            @Override
-            public void mouseClicked(MouseEvent e) {
+				if (e.getClickCount() == 2) {
 
-                if (e.getClickCount() == 2) {
+					int index = listPlaylist.getSelectedIndex();
 
-                    int index = listPlaylist.getSelectedIndex();
+					if (index < 0 || playlistsActuales == null)
+						return;
 
-                    if (index < 0 || playlistsActuales == null) return;
+					Playlist seleccionada = playlistsActuales.get(index);
 
-                    Playlist seleccionada = playlistsActuales.get(index);
+					ventana.setPlaylistSelecionada(seleccionada);
 
-                    ventana.setPlaylistSelecionada(seleccionada);
+					ventana.cambiarPanel("cancionesPlaylist");
+				}
+			}
+		});
 
-                    ventana.cambiarPanel("cancionesPlaylist");
-                }
-            }
-        });
+		// botones derecha
+		JPanel panelBotones = new JPanel();
+		panelBotones.setLayout(new GridLayout(4, 1, 10, 20));
+		panelBotones.setPreferredSize(new Dimension(220, 300));
 
-        // botones derecha
-        JPanel panelBotones = new JPanel();
-        panelBotones.setLayout(new GridLayout(4, 1, 10, 20));
-        panelBotones.setPreferredSize(new Dimension(220, 300));
+		JButton btnCrear = new JButton("Crear Nueva");
+		JButton btnEliminar = new JButton("Eliminar Playlist");
+		JButton btnImportar = new JButton("Importar");
+		JButton btnExportar = new JButton("Exportar");
 
-        JButton btnCrear = new JButton("Crear Nueva");
-        JButton btnEliminar = new JButton("Eliminar Playlist");
-        JButton btnImportar = new JButton("Importar");
-        JButton btnExportar = new JButton("Exportar");
+		Font fontBotones = new Font("Arial", Font.BOLD, 18);
 
-        Font fontBotones = new Font("Arial", Font.BOLD, 18);
+		btnCrear.setFont(fontBotones);
+		btnEliminar.setFont(fontBotones);
+		btnImportar.setFont(fontBotones);
+		btnExportar.setFont(fontBotones);
 
-        btnCrear.setFont(fontBotones);
-        btnEliminar.setFont(fontBotones);
-        btnImportar.setFont(fontBotones);
-        btnExportar.setFont(fontBotones);
+		btnCrear.setPreferredSize(new Dimension(200, 60));
+		btnEliminar.setPreferredSize(new Dimension(200, 60));
+		btnImportar.setPreferredSize(new Dimension(200, 60));
+		btnExportar.setPreferredSize(new Dimension(200, 60));
 
-        btnCrear.setPreferredSize(new Dimension(200, 60));
-        btnEliminar.setPreferredSize(new Dimension(200, 60));
-        btnImportar.setPreferredSize(new Dimension(200, 60));
-        btnExportar.setPreferredSize(new Dimension(200, 60));
+		// acciones botones
 
-        //acciones botones
+		btnCrear.addActionListener(e -> {
 
-        btnCrear.addActionListener(e -> {
+			String nombre = JOptionPane.showInputDialog(this, "Nombre playlist:");
 
-            String nombre = JOptionPane.showInputDialog(
-                    this,
-                    "Nombre playlist:"
-            );
+			if (!clienteLogeado.isEsPremium()) {
+				clienteLogeado.setLimitesPlaylists(3);
+			}
 
-           if(!clienteLogeado.isEsPremium()) {
-        	   clienteLogeado.setLimitesPlaylists(3);
-           }
-            
-            if(playlistsActuales.size() ==  clienteLogeado.getLimitesPlaylists()) {
-            	  JOptionPane.showMessageDialog(
-                          this,
-                          "as llegado al limite de playlists paga si quieres mas playlists"
-            );
-           return;
-            }
-            
-            if (nombre != null && !nombre.trim().isEmpty()) {
+			if (playlistsActuales.size() == clienteLogeado.getLimitesPlaylists()) {
+				JOptionPane.showMessageDialog(this, "as llegado al limite de playlists paga si quieres mas playlists");
+				return;
+			}
 
-                gestor.controladordb.iniciarConexion();
+			if (nombre != null && !nombre.trim().isEmpty()) {
 
-                gestor.controladordb.insertarPlaylist(
-                        nombre,
-                        clienteLogeado.getId()
-                );
+				ventana.getControladordb().insertarPlaylist(nombre, clienteLogeado.getId());
 
-                gestor.controladordb.cerrarConexion();
+				cargarPlaylists(clienteLogeado);
+			}
+		});
 
-                cargarPlaylists(clienteLogeado);
-            }
-        });
+		btnEliminar.addActionListener(e -> {
 
-        btnEliminar.addActionListener(e -> {
+			int index = listPlaylist.getSelectedIndex();
 
-            int index = listPlaylist.getSelectedIndex();
+			if (index < 0) {
+				JOptionPane.showMessageDialog(this, "Selecciona una playlist");
+				return;
+			}
 
-            if (index < 0) {
-                JOptionPane.showMessageDialog(
-                        this,
-                        "Selecciona una playlist"
-                );
-                return;
-            }
+			Playlist seleccionada = playlistsActuales.get(index);
 
-            Playlist seleccionada = playlistsActuales.get(index);
+			ventana.getControladordb().eliminarPlaylist(seleccionada.getTitulo(), clienteLogeado.getUsuario());
 
-            gestor.controladordb.iniciarConexion();
+			cargarPlaylists(clienteLogeado);
+		});
 
-            gestor.controladordb.eliminarPlaylist(
-                    seleccionada.getTitulo(),clienteLogeado.getUsuario()
-            );
+		btnImportar.addActionListener(e -> {
 
-            gestor.controladordb.cerrarConexion();
+			JOptionPane.showMessageDialog(this, "Importar playlist próximamente");
+		});
 
-            cargarPlaylists(clienteLogeado);
-        });
+		btnExportar.addActionListener(e -> {
 
-        btnImportar.addActionListener(e -> {
+			JOptionPane.showMessageDialog(this, "Exportar playlist próximamente");
+		});
 
-            JOptionPane.showMessageDialog(
-                    this,
-                    "Importar playlist próximamente"
-            );
-        });
+		panelBotones.add(btnCrear);
+		panelBotones.add(btnEliminar);
+		panelBotones.add(btnImportar);
+		panelBotones.add(btnExportar);
 
-        btnExportar.addActionListener(e -> {
+		// ================= AGREGAR =================
+		center.add(panelLista, BorderLayout.CENTER);
+		center.add(panelBotones, BorderLayout.EAST);
 
-            JOptionPane.showMessageDialog(
-                    this,
-                    "Exportar playlist próximamente"
-            );
-        });
+		add(center, BorderLayout.CENTER);
 
-        panelBotones.add(btnCrear);
-        panelBotones.add(btnEliminar);
-        panelBotones.add(btnImportar);
-        panelBotones.add(btnExportar);
+		// cargo las playlist del cliente loegado
+		cargarPlaylists(clienteLogeado);
+	}
 
-        // ================= AGREGAR =================
-        center.add(panelLista, BorderLayout.CENTER);
-        center.add(panelBotones, BorderLayout.EAST);
+	// stampo le playlist del client cos che le possa selezionare
+	private void cargarPlaylists(cliente clienteLogeado) {
 
-        add(center, BorderLayout.CENTER);
+		listModel.clear();
 
-        //cargo las playlist del cliente loegado
-        cargarPlaylists(clienteLogeado);
-    }
+		playlistsActuales = ventana.getControladordb().obtenerPlaylists(clienteLogeado.getId());
 
-    // stampo le playlist del client cos che le possa selezionare
-    private void cargarPlaylists(cliente clienteLogeado) {
+		if (playlistsActuales != null && !playlistsActuales.isEmpty()) {
 
-        listModel.clear();
+			for (Playlist p : playlistsActuales) {
 
-        playlistsActuales = gestor.obtenerPlaylist(clienteLogeado);
+				listModel.addElement(p.getTitulo());
+			}
 
-        if (playlistsActuales != null && !playlistsActuales.isEmpty()) {
+		} else {
 
-            for (Playlist p : playlistsActuales) {
-
-                listModel.addElement(
-                        p.getTitulo()
-                );
-            }
-
-        } else {
-
-            listModel.addElement("No tienes playlists");
-        }
-    }
+			listModel.addElement("No tienes playlists");
+		}
+	}
 }

@@ -12,242 +12,201 @@ import javax.swing.*;
 
 public class PanelGestionCanciones extends JPanel {
 
-    private VentanaPrincipal ventana;
-    private cliente clienteLogeado;
+	public VentanaPrincipal ventana;
+	private cliente clienteLogeado;
 
-    private ArrayList<Cancion> canciones;
+	private ArrayList<Cancion> canciones;
 
-    private JList<String> listCanciones;
-    private DefaultListModel<String> listModel;
+	private JList<String> listCanciones;
+	private DefaultListModel<String> listModel;
 
-    public PanelGestionCanciones(VentanaPrincipal ventana, cliente clienteLogeado) {
+	public PanelGestionCanciones(VentanaPrincipal ventana, cliente clienteLogeado) {
 
-        this.ventana = ventana;
-        this.clienteLogeado = clienteLogeado;
-        this.canciones = ventana.getTodaslascanciones();
+		this.ventana = ventana;
+		this.clienteLogeado = clienteLogeado;
+		this.canciones = ventana.getControladordb().obtenerTodasCanciones();
 
-        setLayout(new BorderLayout(10, 10));
-        setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+		setLayout(new BorderLayout(10, 10));
+		setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
-        // ================= TOP PANEL =================
-        JPanel top = new JPanel(new BorderLayout());
+		// ================= TOP PANEL =================
+		JPanel top = new JPanel(new BorderLayout());
 
-        JButton btnAtras = new JButton("Atrás");
-        JButton btnPerfil = new JButton("Perfil");
+		JButton btnAtras = new JButton("Atrás");
+		JButton btnPerfil = new JButton("Perfil");
 
-        btnAtras.addActionListener(e -> ventana.cambiarPanel("panelAdmin"));
-        btnPerfil.addActionListener(e -> ventana.cambiarPanel("perfil"));
+		btnAtras.addActionListener(e -> ventana.cambiarPanel("panelAdmin"));
+		btnPerfil.addActionListener(e -> ventana.cambiarPanel("perfil"));
 
-        top.add(btnAtras, BorderLayout.WEST);
-        top.add(btnPerfil, BorderLayout.EAST);
+		top.add(btnAtras, BorderLayout.WEST);
+		top.add(btnPerfil, BorderLayout.EAST);
 
-        add(top, BorderLayout.NORTH);
+		add(top, BorderLayout.NORTH);
 
-        // ================= CENTER PANEL =================
-        JPanel center = new JPanel(new BorderLayout(15, 15));
+		// ================= CENTER PANEL =================
+		JPanel center = new JPanel(new BorderLayout(15, 15));
 
-        // ================= LISTA CANCIONES =================
-        JPanel panelLista = new JPanel(new BorderLayout());
+		// ================= LISTA CANCIONES =================
+		JPanel panelLista = new JPanel(new BorderLayout());
 
-        panelLista.setBorder(
-                BorderFactory.createTitledBorder("Lista Canciones")
-        );
+		panelLista.setBorder(BorderFactory.createTitledBorder("Lista Canciones"));
 
-        listModel = new DefaultListModel<>();
+		listModel = new DefaultListModel<>();
 
-        listCanciones = new JList<>(listModel);
+		listCanciones = new JList<>(listModel);
 
-        listCanciones.setFont(new Font("Arial", Font.BOLD, 16));
-        listCanciones.setFixedCellHeight(45);
-        listCanciones.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		listCanciones.setFont(new Font("Arial", Font.BOLD, 16));
+		listCanciones.setFixedCellHeight(45);
+		listCanciones.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 
-        JScrollPane scroll = new JScrollPane(listCanciones);
+		JScrollPane scroll = new JScrollPane(listCanciones);
 
-        panelLista.add(scroll, BorderLayout.CENTER);
+		panelLista.add(scroll, BorderLayout.CENTER);
 
-        // ================= DOBLE CLICK =================
-        listCanciones.addMouseListener(new MouseAdapter() {
+		// ================= DOBLE CLICK =================
+		listCanciones.addMouseListener(new MouseAdapter() {
 
-            @Override
-            public void mouseClicked(MouseEvent e) {
+			@Override
+			public void mouseClicked(MouseEvent e) {
 
-                if (e.getClickCount() == 2) {
+				if (e.getClickCount() == 2) {
 
-                    int index = listCanciones.getSelectedIndex();
+					int index = listCanciones.getSelectedIndex();
 
-                    if (index < 0) return;
+					if (index < 0)
+						return;
 
-                    Cancion seleccionada = canciones.get(index);
+					Cancion seleccionada = canciones.get(index);
 
-                    JOptionPane.showMessageDialog(
-                            null,
-                            "Canción seleccionada: "
-                                    + seleccionada.getNombreAudio()
-                    );
-                }
-            }
-        });
+					JOptionPane.showMessageDialog(null, "Canción seleccionada: " + seleccionada.getNombreAudio());
+				}
+			}
+		});
 
-        // ================= PANEL BOTONES =================
-        JPanel panelBotones = new JPanel();
+		// ================= PANEL BOTONES =================
+		JPanel panelBotones = new JPanel();
 
-        panelBotones.setLayout(new GridLayout(3, 1, 10, 20));
+		panelBotones.setLayout(new GridLayout(3, 1, 10, 20));
 
-        panelBotones.setPreferredSize(new Dimension(250, 300));
+		panelBotones.setPreferredSize(new Dimension(250, 300));
 
-        JButton btnAgregar = new JButton("Agregar Canción");
-        JButton btnModificar = new JButton("Modificar Canción");
-        JButton btnEliminar = new JButton("Eliminar Canción");
+		JButton btnAgregar = new JButton("Agregar Canción");
+		JButton btnModificar = new JButton("Modificar Canción");
+		JButton btnEliminar = new JButton("Eliminar Canción");
 
-        Font fontBotones = new Font("Arial", Font.BOLD, 18);
+		Font fontBotones = new Font("Arial", Font.BOLD, 18);
 
-        btnAgregar.setFont(fontBotones);
-        btnModificar.setFont(fontBotones);
-        btnEliminar.setFont(fontBotones);
+		btnAgregar.setFont(fontBotones);
+		btnModificar.setFont(fontBotones);
+		btnEliminar.setFont(fontBotones);
 
-        btnAgregar.setPreferredSize(new Dimension(220, 60));
-        btnModificar.setPreferredSize(new Dimension(220, 60));
-        btnEliminar.setPreferredSize(new Dimension(220, 60));
+		btnAgregar.setPreferredSize(new Dimension(220, 60));
+		btnModificar.setPreferredSize(new Dimension(220, 60));
+		btnEliminar.setPreferredSize(new Dimension(220, 60));
 
-        // ================= ACCIONES =================
+		// ================= ACCIONES =================
 
-        // AGREGAR
-        btnAgregar.addActionListener(e -> {
+		// AGREGAR
+		btnAgregar.addActionListener(e -> {
 
-            String nombre = JOptionPane.showInputDialog(
-                    this,
-                    "Nombre de la canción:"
-            );
+			String nombre = JOptionPane.showInputDialog(this, "Nombre de la canción:");
 
-            if (nombre != null && !nombre.trim().isEmpty()) {
+			if (nombre != null && !nombre.trim().isEmpty()) {
 
-                Cancion nueva = null;
+				Cancion nueva = null;
 
-                nueva.setNombreAudio(nombre);
+				nueva.setNombreAudio(nombre);
 
-                canciones.add(nueva);
+				canciones.add(nueva);
 
-                cargarCanciones();
+				cargarCanciones();
 
-                JOptionPane.showMessageDialog(
-                        this,
-                        "Canción agregada correctamente"
-                );
-            }
-        });
+				JOptionPane.showMessageDialog(this, "Canción agregada correctamente");
+			}
+		});
 
-        // MODIFICAR
-        btnModificar.addActionListener(e -> {
+		// MODIFICAR
+		btnModificar.addActionListener(e -> {
 
-            int index = listCanciones.getSelectedIndex();
+			int index = listCanciones.getSelectedIndex();
 
-            if (index < 0) {
+			if (index < 0) {
 
-                JOptionPane.showMessageDialog(
-                        this,
-                        "Selecciona una canción"
-                );
+				JOptionPane.showMessageDialog(this, "Selecciona una canción");
 
-                return;
-            }
+				return;
+			}
 
-            Cancion seleccionada = canciones.get(index);
+			Cancion seleccionada = canciones.get(index);
 
-            String nuevoNombre = JOptionPane.showInputDialog(
-                    this,
-                    "Nuevo nombre:",
-                    seleccionada.getNombreAudio()
-            );
+			String nuevoNombre = JOptionPane.showInputDialog(this, "Nuevo nombre:", seleccionada.getNombreAudio());
 
-            if (nuevoNombre != null && !nuevoNombre.trim().isEmpty()) {
+			if (nuevoNombre != null && !nuevoNombre.trim().isEmpty()) {
 
-                seleccionada.setNombreAudio(nuevoNombre);
+				seleccionada.setNombreAudio(nuevoNombre);
 
-                cargarCanciones();
+				cargarCanciones();
 
-                JOptionPane.showMessageDialog(
-                        this,
-                        "Canción modificada correctamente"
-                );
-            }
-        });
+				JOptionPane.showMessageDialog(this, "Canción modificada correctamente");
+			}
+		});
 
-        // ELIMINAR
-        btnEliminar.addActionListener(e -> {
+		btnEliminar.addActionListener(e -> {
 
-            int index = listCanciones.getSelectedIndex();
+			int index = listCanciones.getSelectedIndex();
 
-            if (index < 0) {
+			if (index < 0) {
 
-                JOptionPane.showMessageDialog(
-                        this,
-                        "Selecciona una canción"
-                );
+				JOptionPane.showMessageDialog(this, "Selecciona una canción");
+				return;
+			}
 
-                return;
-            }
+			Cancion seleccionada = canciones.get(index);
 
-            Cancion seleccionada = canciones.get(index);
+			int confirmacion = JOptionPane.showConfirmDialog(this,
+					"¿Eliminar canción " + seleccionada.getNombreAudio() + "?", "Confirmar", JOptionPane.YES_NO_OPTION);
 
-            int confirmacion = JOptionPane.showConfirmDialog(
-                    this,
-                    "¿Eliminar canción "
-                            + seleccionada.getNombreAudio()
-                            + "?",
-                    "Confirmar",
-                    JOptionPane.YES_NO_OPTION
-            );
+			if (confirmacion == JOptionPane.YES_OPTION) {
 
-            if (confirmacion == JOptionPane.YES_OPTION) {
+				ventana.getControladordb().eliminarAudio(seleccionada.getNombreAudio());
 
-                canciones.remove(index);
+				// ricarico lista dopo delete
+				canciones = ventana.getControladordb().obtenerTodasCanciones();
+				cargarCanciones();
 
-                cargarCanciones();
+				JOptionPane.showMessageDialog(this, "Canción eliminada correctamente");
+			}
+		});
+		panelBotones.add(btnAgregar);
+		panelBotones.add(btnModificar);
+		panelBotones.add(btnEliminar);
 
-                JOptionPane.showMessageDialog(
-                        this,
-                        "Canción eliminada correctamente"
-                );
-            }
-        });
+		// ================= AGREGAR TODO =================
+		center.add(panelLista, BorderLayout.CENTER);
+		center.add(panelBotones, BorderLayout.EAST);
 
-        panelBotones.add(btnAgregar);
-        panelBotones.add(btnModificar);
-        panelBotones.add(btnEliminar);
+		add(center, BorderLayout.CENTER);
 
-        // ================= AGREGAR TODO =================
-        center.add(panelLista, BorderLayout.CENTER);
-        center.add(panelBotones, BorderLayout.EAST);
+		// ================= CARGAR CANCIONES =================
+		cargarCanciones();
+	}
 
-        add(center, BorderLayout.CENTER);
+	// ================= CARGAR CANCIONES =================
+	private void cargarCanciones() {
 
-        // ================= CARGAR CANCIONES =================
-        cargarCanciones();
-    }
+		listModel.clear();
 
-    // ================= CARGAR CANCIONES =================
-    private void cargarCanciones() {
+		if (canciones != null && !canciones.isEmpty()) {
 
-        listModel.clear();
+			for (Cancion c : canciones) {
 
-        if (canciones != null && !canciones.isEmpty()) {
+				listModel.addElement(c.getNombreAudio() + " | " + c.durataConvertida() + " | "
+						+ c.getNombresColaboradores() + " | Reproducciones: " + c.getNumRep());
+			}
 
-            for (Cancion c : canciones) {
+		} else {
 
-                listModel.addElement(
-                        c.getNombreAudio()
-                                + " | "
-                                + c.durataConvertida()
-                                + " | "
-                                + c.getNombresColaboradores()
-                                + " | Reproducciones: "
-                                + c.getNumRep()
-                );
-            }
-
-        } else {
-
-            listModel.addElement("No hay canciones");
-        }
-    }
+			listModel.addElement("No hay canciones");
+		}
+	}
 }

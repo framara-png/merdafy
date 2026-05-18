@@ -13,7 +13,7 @@ import modelo.cliente;
 
 public class PanelPodcasters extends JPanel {
 
-    private GestorCliente gestor = new GestorCliente();
+	private VentanaPrincipal ventana;
     private JList<String> listPodcasters;
     private DefaultListModel<String> listModel;
 
@@ -35,14 +35,14 @@ public class PanelPodcasters extends JPanel {
         add(btnPerfil);
 
         // datos
-        ArrayList<Podcaster> podcasters = gestor.obtenerPodcasters();
+        ArrayList<Podcaster> podcasters = ventana.getControladordb().obtenerPodcasters();
 
         listModel = new DefaultListModel<>();
 
         if (podcasters != null && !podcasters.isEmpty()) {
             for (Podcaster p : podcasters) {
 
-                int rep = gestor.obtenerRepTotPodcaster(p.getNombreArt());
+                int rep = ventana.getControladordb().obtenerReproduccionesTotalPodcaster(p.getNombreArt());
 
                 listModel.addElement(
                         p.getNombreArt()
@@ -73,7 +73,7 @@ public class PanelPodcasters extends JPanel {
 
                     String nombre = sel.split(" - Reproducciones: ")[0].trim();
 
-                    Podcaster p = gestor.obtenerPodcasterPorNombre(nombre);
+                    Podcaster p = ventana.getControladordb().obtenerPodcasterPorNombre(nombre);
                     if (p == null) return;
 
                     //settiamo podcaster selezionado per panales

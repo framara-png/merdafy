@@ -1,86 +1,56 @@
 package Ventanas;
 
-import java.util.ArrayList;
-
 import javax.swing.*;
-
 import controlador.*;
 import modelo.*;
 import Paneles.*;
 
 public class VentanaPrincipal extends JFrame {
 
-	private controladorDB controladordb = new controladorDB("merdafy");
+	// ================= DB =================
+	private controladorDB controladordb;
 
+	// ================= USER =================
 	private cliente clientelogeado;
 
-	// oeggetti che mi servono per mantenere costanza tra i pannelli
+	// ================= SELECTED =================
 	private Musico musicoSeleccionado;
 	private Podcaster podcasterSeleccionado;
-	public ArrayList<Musico> getTodoslosmusicos() {
-		return todoslosmusicos;
-	}
-
-	public void setTodoslosmusicos(ArrayList<Musico> todoslosmusicos) {
-		this.todoslosmusicos = todoslosmusicos;
-	}
-
-	public ArrayList<Podcaster> getTodoslospodcasters() {
-		return todoslospodcasters;
-	}
-
-	public void setTodoslospodcasters(ArrayList<Podcaster> todoslospodcasters) {
-		this.todoslospodcasters = todoslospodcasters;
-	}
-
-	public ArrayList<Cancion> getTodaslascanciones() {
-		return todaslascanciones;
-	}
-
-	public void setTodaslascanciones(ArrayList<Cancion> todaslascanciones) {
-		this.todaslascanciones = todaslascanciones;
-	}
-
-	public ArrayList<Album> getTodoslosAlbumes() {
-		return todoslosAlbumes;
-	}
-
-	public void setTodoslosAlbumes(ArrayList<Album> todoslosAlbumes) {
-		this.todoslosAlbumes = todoslosAlbumes;
-	}
-
 	private Album albumSeleccionado;
-	private ArrayList<Musico> todoslosmusicos = controladordb.obtenerMusicos();
-	private ArrayList<Podcaster> todoslospodcasters;
-	private ArrayList<Cancion> todaslascanciones;
-	private ArrayList<Album> todoslosAlbumes;
-	public controladorDB getControladordb() {
-		return controladordb;
-	}
-
-	public void setControladordb(controladorDB controladordb) {
-		this.controladordb = controladordb;
-	}
-
-	public Playlist getPlaylistSelecionada() {
-		return playlistSelecionada;
-	}
-
-	public void setPlaylistSelecionada(Playlist playlistSelecionada) {
-		this.playlistSelecionada = playlistSelecionada;
-	}
-
 	private Podcast podcastSeleccionado;
 	private Playlist playlistSelecionada;
 
 	public VentanaPrincipal() {
+
 		setSize(800, 600);
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 		setResizable(false);
 		setTitle("Ventana Principal");
+
+		// 🔥 SOLO DB
+		controladordb = new controladorDB("merdafy");
+
+		if (!controladordb.iniciarConexion()) {
+			JOptionPane.showMessageDialog(this, "Errore connessione DB");
+			System.exit(0);
+		}
 	}
 
-	// getter setter
+	// ================= GET DB =================
+	public controladorDB getControladordb() {
+		return controladordb;
+	}
+
+	// ================= USER =================
+	public cliente getClientelogeado() {
+		return clientelogeado;
+	}
+
+	public void setClientelogeado(cliente c) {
+		this.clientelogeado = c;
+	}
+
+	// ================= SELECTED =================
 	public Musico getMusicoSeleccionado() {
 		return musicoSeleccionado;
 	}
@@ -113,15 +83,15 @@ public class VentanaPrincipal extends JFrame {
 		this.podcastSeleccionado = p;
 	}
 
-	public cliente getClientelogeado() {
-		return clientelogeado;
+	public Playlist getPlaylistSelecionada() {
+		return playlistSelecionada;
 	}
 
-	public void setClientelogeado(cliente c) {
-		this.clientelogeado = c;
+	public void setPlaylistSelecionada(Playlist p) {
+		this.playlistSelecionada = p;
 	}
 
-	// cambio de paneles
+	// ================= NAV =================
 	public void cambiarPanel(String nombrePanel) {
 
 		switch (nombrePanel) {
@@ -139,28 +109,23 @@ public class VentanaPrincipal extends JFrame {
 			break;
 
 		case "artista":
-
 			if (musicoSeleccionado == null)
 				return;
-
 			setContentPane(new PanelArtista(this, clientelogeado, musicoSeleccionado.getNombreArt()));
 			break;
 
 		case "podcast":
-
 			if (podcasterSeleccionado == null)
 				return;
-
 			setContentPane(new PanelPodcast(this, clientelogeado, podcasterSeleccionado.getNombreArt()));
 			break;
 
 		case "album":
-
 			if (albumSeleccionado == null)
 				return;
-
 			setContentPane(new PanelAlbum(this, albumSeleccionado.getTitulo(), musicoSeleccionado.getNombreArt()));
 			break;
+
 		case "perfil":
 			setContentPane(new PanelPerfli(this, clientelogeado));
 			break;
@@ -168,22 +133,26 @@ public class VentanaPrincipal extends JFrame {
 		case "registro":
 			setContentPane(new PanelRegistro(this));
 			break;
+
 		case "podcasters":
 			setContentPane(new PanelPodcasters(this, clientelogeado));
 			break;
+
 		case "playlists":
 			setContentPane(new PanelPlaylist(this, clientelogeado));
 			break;
+
 		case "cancionesPlaylist":
 			setContentPane(new PanelPlaylistCanciones(this, clientelogeado, playlistSelecionada));
 			break;
+
 		case "panelAdmin":
 			setContentPane(new PanelSelecionAdmin(this, clientelogeado));
 			break;
-		
-		case "GestionCancion":
+
+		case "GestionCanciones":
 			setContentPane(new PanelGestionCanciones(this, clientelogeado));
-				break;
+			break;
 		}
 
 		revalidate();

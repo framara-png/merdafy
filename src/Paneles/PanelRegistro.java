@@ -16,14 +16,14 @@ import controlador.*;
 import modelo.*;
 
 public class PanelRegistro extends JPanel {
-    controladorDB controladordb = new controladorDB("merdafy");
+   VentanaPrincipal ventana;
     private cliente clienteTemp = new cliente();
     
     
     public PanelRegistro(VentanaPrincipal ventana) {
         setSize(ventana.getSize());
         setLayout(null);
-        controladordb.iniciarConexion();
+  
        clienteTemp.setId(0); 
         // Creazione componenti
        JLabel lblNombreApp = new JLabel("FRACASSOFY"); 
@@ -37,7 +37,7 @@ public class PanelRegistro extends JPanel {
         cmbAbonamento.addItem("Free");
         cmbAbonamento.addItem("Premium"); 
         
-        ArrayList<String> idiomi = controladordb.obteneridiomas();
+        ArrayList<String> idiomi = ventana.getControladordb().obteneridiomas();
         JComboBox<String> cmbIdiomi = new JComboBox<>();
         for (String i : idiomi) {
             cmbIdiomi.addItem(i);
@@ -109,7 +109,7 @@ public class PanelRegistro extends JPanel {
           
             	 @Override
             	    public void actionPerformed(ActionEvent e) {
-            	        controladordb.insertarCliente(clienteTemp);
+            		 ventana.getControladordb().insertarCliente(clienteTemp);
             	        ventana.cambiarPanel("login");
             	 }
         });

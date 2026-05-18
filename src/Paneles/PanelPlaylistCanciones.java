@@ -12,8 +12,7 @@ import modelo.cliente;
 
 public class PanelPlaylistCanciones extends JPanel {
 
-	private GestorCliente gestor = new GestorCliente();
-
+	private VentanaPrincipal ventana;
 	private JPanel panelCanciones;
 
 	private Playlist playlistActual;
@@ -23,11 +22,11 @@ public class PanelPlaylistCanciones extends JPanel {
 	public PanelPlaylistCanciones(VentanaPrincipal ventana, cliente clienteLogeado, Playlist playlist) {
 
 		this.playlistActual = playlist;
-
+		this.ventana = ventana;
 		setLayout(new BorderLayout(10, 10));
 		setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
-		//head panel
+		// head panel
 		JPanel top = new JPanel(new BorderLayout());
 
 		JButton btnAtras = new JButton("Atrás");
@@ -56,79 +55,65 @@ public class PanelPlaylistCanciones extends JPanel {
 
 		add(scroll, BorderLayout.CENTER);
 
-		//cargo las canciones de la playlist
+		// cargo las canciones de la playlist
 		cargarCanciones(clienteLogeado);
 	}
 
-	//cargo las canciones con un ciclo for que genere un boton por cada cancion asi a secunda de que playlisrt sea y de cuanta
-	//canciones tenga tendre tantos botones
+	// cargo las canciones con un ciclo for que genere un boton por cada cancion asi
+	// a secunda de que playlisrt sea y de cuanta
+	// canciones tenga tendre tantos botones
 	private void cargarCanciones(cliente clienteLogeado) {
 
-        panelCanciones.removeAll();
+		panelCanciones.removeAll();
 
-        cancionesActuales = gestor.obtenerCancionesPlaylist(
-                playlistActual.getTitulo(),
-                clienteLogeado
-        );
+		cancionesActuales = ventana.getControladordb().obtenerCancionesPlaylist(playlistActual.getTitulo(),
+				clienteLogeado.getId());
 
-        if (cancionesActuales == null || cancionesActuales.isEmpty()) {
+		if (cancionesActuales == null || cancionesActuales.isEmpty()) {
 
-            JLabel vacio = new JLabel("No hay canciones");
-            vacio.setFont(new Font("Arial", Font.BOLD, 18));
+			JLabel vacio = new JLabel("No hay canciones");
+			vacio.setFont(new Font("Arial", Font.BOLD, 18));
 
-            panelCanciones.add(vacio);
+			panelCanciones.add(vacio);
 
-        } else {
+		} else {
 
-            for (Cancion c : cancionesActuales) {
+			for (Cancion c : cancionesActuales) {
 
-                JPanel fila = new JPanel(new BorderLayout());
+				JPanel fila = new JPanel(new BorderLayout());
 
-                fila.setBorder(
-                        BorderFactory.createEmptyBorder(10, 10, 10, 10)
-                );
+				fila.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
-                //info canziones
-                JLabel lblInfo = new JLabel(
-                        c.getNombreAudio()
-                        + " | "
-                        + c.durataConvertida()
-                        + c.getNumRep()
-                        
-                );
+				// info canziones
+				JLabel lblInfo = new JLabel(c.getNombreAudio() + " | " + c.durataConvertida() + c.getNumRep()
 
-                lblInfo.setFont(new Font("Arial", Font.PLAIN, 18));
+				);
 
-                // eleimianr 
-                JButton btnEliminar = new JButton("-");
+				lblInfo.setFont(new Font("Arial", Font.PLAIN, 18));
 
-                btnEliminar.setFont(new Font("Arial", Font.BOLD, 20));
+				// eleimianr
+				JButton btnEliminar = new JButton("-");
 
-                btnEliminar.setPreferredSize(new Dimension(50, 40));
+				btnEliminar.setFont(new Font("Arial", Font.BOLD, 20));
 
-                btnEliminar.addActionListener(e -> {
+				btnEliminar.setPreferredSize(new Dimension(50, 40));
 
-                    // ELIMINAR DE DB
-                    gestor.controladordb.iniciarConexion();
+				btnEliminar.addActionListener(e -> {
 
-                    gestor.controladordb.eliminarCancionDePlaylist(this.playlistActual.getId(), c.getId());
-                    gestor.controladordb.cerrarConexion();
+					ventana.getControladordb().eliminarCancionDePlaylist(playlistActual.getId(), c.getId());
 
-                    // ELIMINAR DEL ARRAY
-                    cancionesActuales.remove(c);
+					cancionesActuales.remove(c);
+					cargarCanciones(clienteLogeado);
+				});
 
-                    // RECARGAR PANEL
-                    cargarCanciones(clienteLogeado);
-                });
+				fila.add(lblInfo, BorderLayout.CENTER);
+				fila.add(btnEliminar, BorderLayout.EAST);
 
-                fila.add(lblInfo, BorderLayout.CENTER);
-                fila.add(btnEliminar, BorderLayout.EAST);
+				panelCanciones.add(fila);
+			}
+		}
 
-                panelCanciones.add(fila);
-            }
-        }
-
-        panelCanciones.revalidate();
-        panelCanciones.repaint();
-    }
+		panelCanciones.revalidate();
+		panelCanciones.repaint();
+	}
 }

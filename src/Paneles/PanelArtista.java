@@ -12,7 +12,7 @@ import modelo.*;
 
 public class PanelArtista extends JPanel {
 
-	private GestorCliente gestor = new GestorCliente();
+	private VentanaPrincipal ventana;
 
 	private JList<String> listDiscos;
 	private DefaultListModel<String> listModel;
@@ -26,8 +26,8 @@ public class PanelArtista extends JPanel {
 
 		setLayout(new BorderLayout(10, 10));
 		setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
-
-		this.artistaActual = gestor.obtenerMusicoPorNombre(nombreArtista);
+		this.ventana = ventana;
+		this.artistaActual = ventana.getControladordb().obtenerMusicoPorNombre(nombreArtista);
 
 		// ================= TOP =================
 		JPanel panelSuperior = new JPanel(new FlowLayout(FlowLayout.RIGHT));
@@ -57,7 +57,6 @@ public class PanelArtista extends JPanel {
 		listDiscos.setFixedCellHeight(50);
 		listDiscos.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 
-	
 		listDiscos.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
@@ -77,11 +76,7 @@ public class PanelArtista extends JPanel {
 
 					System.out.println("NOMBRE DISCO = " + nombreDisco);
 
-					gestor.controladordb.iniciarConexion();
-
-					Album albumSeleccionado = gestor.controladordb.obtenerAlbumPorNombre(nombreDisco);
-
-					gestor.controladordb.cerrarConexion();
+					Album albumSeleccionado = ventana.getControladordb().obtenerAlbumPorNombre(nombreDisco);
 
 					System.out.println("ALBUM = " + albumSeleccionado);
 
@@ -151,9 +146,7 @@ public class PanelArtista extends JPanel {
 
 		listModel.clear();
 
-		gestor.controladordb.iniciarConexion();
-		ArrayList<Album> albums = gestor.controladordb.obtenerAlbum(nombreArtista);
-		gestor.controladordb.cerrarConexion();
+		ArrayList<Album> albums = ventana.getControladordb().obtenerAlbum(nombreArtista);
 
 		if (albums != null && !albums.isEmpty()) {
 			for (Album a : albums) {

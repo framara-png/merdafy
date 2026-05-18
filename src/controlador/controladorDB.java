@@ -417,104 +417,105 @@ public class controladorDB {
 	}
 
 	public void insertarMusico(Musico m) {
+
 		try {
+
 			Statement stmt = conexion.createStatement();
 
-			String queryArtista = "INSERT INTO artista (nombreArtistico, genero, imagen, descripcion) VALUES ('"
-					+ m.getNombreArt() + "', '" + m.getGenero() + "', '" + m.getDescripcion() + "', '" + m.getFoto()
-					+ "')";
-			stmt.executeUpdate(queryArtista, Statement.RETURN_GENERATED_KEYS);
+			String query = "CALL AnadirMusico('" + m.getNombreArt() + "','" + m.getGenero() + "','" + m.getFoto()
+					+ "','" + m.getDescripcion() + "','" + m.getComposicion() + "')";
 
-			ResultSet rs = stmt.getGeneratedKeys();
-			int idArtista = 0;
+			ResultSet rs = stmt.executeQuery(query);
+
+			// messaggio della procedure
 			if (rs.next()) {
-				idArtista = rs.getInt(1);
-			}
 
-			String queryMusico = "INSERT INTO musico (idMusico, caracteristica) VALUES (" + idArtista + ", '"
-					+ m.getComposicion() + "')";
-			stmt.executeUpdate(queryMusico);
+				System.out.println(rs.getString("mensaje"));
+			}
 
 			stmt.close();
+
 		} catch (SQLException e) {
-			if (e.getErrorCode() == 1062) {
-				System.out.println("Error, ye existe un musico con este nombre");
-			} else {
-				e.printStackTrace();
-			}
+
+			e.printStackTrace();
 		}
 	}
 
 	public void insertarPodcaster(Podcaster p) {
-		try {
-			Statement stmt = conexion.createStatement();
-			String queryArtista = "INSERT INTO artista (nombreArtistico, genero, descripcion, imagen) VALUES ('"
-					+ p.getNombreArt() + "', '" + p.getGenero() + "', '" + p.getDescripcion() + "', '" + p.getFoto()
-					+ "')";
-			stmt.executeUpdate(queryArtista, Statement.RETURN_GENERATED_KEYS);
 
-			ResultSet rs = stmt.getGeneratedKeys();
-			int idArtista = 0;
+		try {
+
+			Statement stmt = conexion.createStatement();
+
+			String query = "CALL AnadirPodcaster('" + p.getNombreArt() + "','" + p.getGenero() + "','" + p.getFoto()
+					+ "','" + p.getDescripcion() + "')";
+
+			ResultSet rs = stmt.executeQuery(query);
+
+			// messaggio della procedure
 			if (rs.next()) {
-				idArtista = rs.getInt(1);
+
+				System.out.println(rs.getString("mensaje"));
 			}
-			String queryPodcaster = "INSERT INTO podcaster (idPodcaster) VALUES ('" + idArtista + "')";
-			stmt.executeUpdate(queryPodcaster);
 
 			stmt.close();
-		} catch (SQLException e) {
-			if (e.getErrorCode() == 1062) {
-				System.out.println("Error, ye existe un podcaster con este nombre");
 
-			} else {
-				e.printStackTrace();
-			}
+		} catch (SQLException e) {
+
+			e.printStackTrace();
 		}
 	}
 
 	public void insertarCancion(Cancion c) {
+
 		try {
+
 			Statement stmt = conexion.createStatement();
 
 			int ore = c.getDuratasecondi() / 3600;
 			int minuti = (c.getDuratasecondi() % 3600) / 60;
 			int secondi = c.getDuratasecondi() % 60;
+
 			String durataTime = String.format("%02d:%02d:%02d", ore, minuti, secondi);
 
-			String queryAudio = "INSERT INTO audio (nombreAudio, archivo, duracion, Nreproduciones, tipo) VALUES ('"
-					+ c.getNombreAudio() + "', '" + c.getArchivo() + "', '" + durataTime + "', 0, 'cancion')";
-			stmt.executeUpdate(queryAudio, Statement.RETURN_GENERATED_KEYS);
+			String query = "CALL AnadirCancion('" + c.getNombreAudio() + "','" + c.durataConvertida() + "','"
+					+ c.getArchivo() + "'," + c.getIdAlbum() + ",'" + c.getNombresColaboradores() + "')";
 
-			ResultSet rs = stmt.getGeneratedKeys();
-			int idAudio = 0;
+			ResultSet rs = stmt.executeQuery(query);
+
+			// messaggio della procedure
 			if (rs.next()) {
-				idAudio = rs.getInt(1);
-			}
 
-			String queryCancion = "INSERT INTO cancion (idCancion, idAlbum, artistasInvitados) VALUES (" + idAudio
-					+ ", " + c.getIdAlbum() + ", '" + c.getNombresColaboradores() + "')";
-			stmt.executeUpdate(queryCancion);
+				System.out.println(rs.getString("mensaje"));
+			}
 
 			stmt.close();
 
 		} catch (SQLException e) {
-			if (e.getErrorCode() == 1062) {
-				System.out.println("Error, ye existe una cancion con este nombre");
 
-			} else {
-				e.printStackTrace();
-			}
+			e.printStackTrace();
 		}
 	}
 
 	public void insertarAlbum(Album a) {
+
 		try {
+
 			Statement stmt = conexion.createStatement();
-			String query = "INSERT INTO album (titulo, anno, genero, imagen, idMusico) VALUES ('" + a.getTitulo()
-					+ "', '" + a.getFechaPub() + "', '" + a.getGenero() + "', '" + a.getFoto() + "', " + a.getIdMusico()
-					+ ")";
-			stmt.executeUpdate(query);
+
+			String query = "CALL anadirAlbum('" + a.getTitulo() + "','" + a.getFechaPub() + "','" + a.getGenero()
+					+ "','" + a.getFoto() + "'," + a.getIdMusico() + ")";
+
+			ResultSet rs = stmt.executeQuery(query);
+
+			// messaggio della procedure
+			if (rs.next()) {
+
+				System.out.println(rs.getString("mensaje"));
+			}
+
 			stmt.close();
+
 		} catch (SQLException e) {
 
 			e.printStackTrace();
@@ -522,37 +523,33 @@ public class controladorDB {
 	}
 
 	public void insertarPodcast(Podcast p) {
+
 		try {
+
 			Statement stmt = conexion.createStatement();
 
 			int ore = p.getDuratasecondi() / 3600;
 			int minuti = (p.getDuratasecondi() % 3600) / 60;
 			int secondi = p.getDuratasecondi() % 60;
+
 			String durataTime = String.format("%02d:%02d:%02d", ore, minuti, secondi);
 
-			String queryAudio = "INSERT INTO audio (nombreAudio, archivo, duracion, Nreproduciones, tipo) VALUES ('"
-					+ p.getNombreAudio() + "', '" + p.getArchivo() + "', '" + durataTime + "', 0, 'podcast')";
-			stmt.executeUpdate(queryAudio, Statement.RETURN_GENERATED_KEYS);
+			String query = "CALL AnadirPodcast('" + p.getNombreAudio() + "','" + durataTime + "','" + p.getArchivo()
+					+ "'," + p.getIdPodcaster() + "," + p.getNumeroParticipantes() + ")";
 
-			ResultSet rs = stmt.getGeneratedKeys();
-			int idAudio = 0;
+			ResultSet rs = stmt.executeQuery(query);
+
+			// messaggio della procedure
 			if (rs.next()) {
-				idAudio = rs.getInt(1);
-			}
 
-			String queryPodcast = "INSERT INTO podcast (idPodcast, Ncolaboradores, idPodcaster) VALUES (" + idAudio
-					+ ", " + p.getNumeroParticipantes() + ", " + p.getIdPodcaster() + ")";
-			stmt.executeUpdate(queryPodcast);
+				System.out.println(rs.getString("mensaje"));
+			}
 
 			stmt.close();
 
 		} catch (SQLException e) {
-			if (e.getErrorCode() == 1062) {
-				System.out.println("Error, ye existe un podcast con este nombre");
 
-			} else {
-				e.printStackTrace();
-			}
+			e.printStackTrace();
 		}
 	}
 
@@ -581,38 +578,60 @@ public class controladorDB {
 	}
 
 	public boolean insertarCliente(cliente c) {
+
 		String abonamento = c.isEsPremium() ? "premium" : "free";
 
 		try {
+
 			Statement stmt = conexion.createStatement();
 
-			String queryCliente = "INSERT INTO cliente (nombre,apellidos,idioma,usuario,contrasena,fechaNacimiento,fechaRegistro,tipo) VALUES ('"
-					+ c.getNombre() + "', '" + c.getApellido() + "', '" + c.getIdioma() + "','" + c.getUsuario() + "','"
-					+ c.getContrasena() + "','" + c.getFecNac() + "', CURRENT_DATE, '" + abonamento + "')";
+			String query = "CALL AnadirCliente('" + c.getNombre() + "','" + c.getApellido() + "','" + c.getIdioma()
+					+ "','" + c.getUsuario() + "','" + c.getContrasena() + "','" + c.getFecNac() + "',"
+					+ "CURRENT_DATE," + "'" + abonamento + "')";
 
-			stmt.executeUpdate(queryCliente, Statement.RETURN_GENERATED_KEYS);
+			ResultSet rs = stmt.executeQuery(query);
 
-			if (c.isEsPremium()) {
-				ResultSet rs = stmt.getGeneratedKeys();
-				int idCliente = 0;
-				if (rs.next()) {
-					idCliente = rs.getInt(1);
+			if (rs.next()) {
+
+				String mensaje = rs.getString("mensaje");
+
+				System.out.println(mensaje);
+
+				if (mensaje.contains("sucesso")) {
+
+					// se premium inserisco nella tabella premium
+					if (c.isEsPremium()) {
+
+						ResultSet rid = stmt
+								.executeQuery("SELECT idCliente FROM cliente WHERE usuario='" + c.getUsuario() + "'");
+
+						int idCliente = 0;
+
+						if (rid.next()) {
+
+							idCliente = rid.getInt("idCliente");
+						}
+
+						String queryPremium = "INSERT INTO premium(idCliente) VALUES(" + idCliente + ")";
+
+						stmt.executeUpdate(queryPremium);
+					}
+
+					stmt.close();
+
+					return true;
 				}
-				String queryPremium = "INSERT INTO premium (idCliente) VALUES (" + idCliente + ")";
-				stmt.executeUpdate(queryPremium);
 			}
 
 			stmt.close();
-			return true;
+
+			return false;
 
 		} catch (SQLException e) {
-			if (e.getErrorCode() == 1062) {
-				System.out.println("Error, usuario ya registrado");
-				return false;
-			} else {
-				e.printStackTrace();
-				return false;
-			}
+
+			e.printStackTrace();
+
+			return false;
 		}
 	}
 
@@ -880,49 +899,77 @@ public class controladorDB {
 		}
 	}
 
-	// Eliminar un artista - per nombre artistico
+	// Eliminar un artista
 	public void eliminarArtista(String nombreArtistico) {
+
 		try {
+
 			Statement stmt = conexion.createStatement();
-			String query = "DELETE FROM artista WHERE nombreArtistico = '" + nombreArtistico + "'";
-			stmt.executeUpdate(query);
+
+			String query = "CALL eliminarArtista('" + nombreArtistico + "')";
+
+			ResultSet rs = stmt.executeQuery(query);
+
+			// messaggio della procedure
+			if (rs.next()) {
+
+				System.out.println(rs.getString("mensaje"));
+			}
+
 			stmt.close();
+
 		} catch (SQLException e) {
+
 			e.printStackTrace();
-			if (e.getErrorCode() == 1392) {
-				System.out.println("Error, no hay artistas con este nombre");
-
-			} else {
-				e.printStackTrace();
-			}
 		}
 	}
 
-	// Eliminar una canción - per nombreAudio
+	// Eliminar un audio
 	public void eliminarAudio(String nombreAudio) {
-		try {
-			Statement stmt = conexion.createStatement();
-			String query = "DELETE FROM audio WHERE nombreAudio = '" + nombreAudio + "'";
-			stmt.executeUpdate(query);
-			stmt.close();
-		} catch (SQLException e) {
-			if (e.getErrorCode() == 1392) {
-				System.out.println("Error, no hay audio con este user");
 
-			} else {
-				e.printStackTrace();
+		try {
+
+			Statement stmt = conexion.createStatement();
+
+			String query = "CALL eliminarAudio('" + nombreAudio + "')";
+
+			ResultSet rs = stmt.executeQuery(query);
+
+			// messaggio della procedure
+			if (rs.next()) {
+
+				System.out.println(rs.getString("mensaje"));
 			}
+
+			stmt.close();
+
+		} catch (SQLException e) {
+
+			e.printStackTrace();
 		}
 	}
 
-	// Eliminar un album - per titolo
-	public void eliminarAlbum(String tituloAlbum) {
+	// Eliminar un album
+	public void eliminarAlbum(String tituloAlbum, String nombreMusico) {
+
 		try {
+
 			Statement stmt = conexion.createStatement();
-			String query = "DELETE FROM album WHERE titulo = '" + tituloAlbum + "'";
-			stmt.executeUpdate(query);
+
+			String query = "CALL eliminarAlbum('" + tituloAlbum + "','" + nombreMusico + "')";
+
+			ResultSet rs = stmt.executeQuery(query);
+
+			// messaggio della procedure
+			if (rs.next()) {
+
+				System.out.println(rs.getString("mensaje"));
+			}
+
 			stmt.close();
+
 		} catch (SQLException e) {
+
 			e.printStackTrace();
 		}
 	}
