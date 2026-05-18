@@ -30,7 +30,7 @@ public class PaneloStatisticaAudio extends JPanel {
 		JButton btnAtras = new JButton("Atras");
 		btnAtras.setBounds(20, 20, 120, 40);
 		add(btnAtras);
-
+		btnAtras.addActionListener(e -> ventana.cambiarPanel("Estatisticas"));
 		// BOTONES CENTRALES
 		JButton btnMes = new JButton("Mes");
 		JButton btnSemana = new JButton("Semana");

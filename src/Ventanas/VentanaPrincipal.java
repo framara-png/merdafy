@@ -20,12 +20,9 @@ public class VentanaPrincipal extends JFrame {
 	private Podcaster podcasterSeleccionado;
 	private Album albumSeleccionado;
 
-
 	private Podcast podcastSeleccionado;
 	private Playlist playlistSelecionada;
 	private ArrayList<StastisticaCancion> StatisticaCanciones;
-
-	
 
 	public void setControladordb(controladorDB controladordb) {
 		this.controladordb = controladordb;
@@ -110,9 +107,6 @@ public class VentanaPrincipal extends JFrame {
 		StatisticaCanciones = statisticaCanciones;
 	}
 
-	
-	
-	
 	// ================= NAV =================
 	public void cambiarPanel(String nombrePanel) {
 
@@ -179,13 +173,29 @@ public class VentanaPrincipal extends JFrame {
 		case "Estatisticas":
 			setContentPane(new PanelEstatisticas(this, clientelogeado));
 			break;
-		
+
 		case "StatCancion":
 			setContentPane(new PaneloStatisticaCancion(this, controladordb.StatCancion()));
 			break;
-		
+
 		case "StatAudio":
 			setContentPane(new PaneloStatisticaAudio(this, controladordb.StatAudio()));
+			break;
+
+		case "StatPlaylist":
+			setContentPane(new PanelStatisticaPlaylist(this, controladordb.StatPlaylist()));
+			break;
+		
+		case "StatPodcast":
+			setContentPane(new PanelStatisticaPodcast(this, controladordb.StatPodcast()));
+			break;
+
+		case "GestionPodcast":
+			setContentPane(new PanelGestionPodcast(this, clientelogeado));
+			break;
+		
+		case "GestionMusicos":
+			setContentPane(new PanelGestionMusicos(this, controladordb.obtenerMusicos()));
 			break;
 		}
 

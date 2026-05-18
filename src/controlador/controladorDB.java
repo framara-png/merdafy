@@ -727,13 +727,21 @@ public class controladorDB {
 	}
 
 	// Aggiornare un artista (musico o podcaster)
-	public void actualizarArtista(artista a) { // Assumendo che esista una classe Artista
+	public void actualizarMusico(Musico m) { // Assumendo che esista una classe Artista
 		try {
 			Statement stmt = conexion.createStatement();
-			String query = "UPDATE artista SET nombreArtistico = '" + a.getNombreArt() + "', genero = '" + a.getGenero()
-					+ "', descripcion = '" + a.getDescripcion() + "', imagen = '" + a.getFoto() + "' WHERE idArtista = "
-					+ a.getId();
-			stmt.executeUpdate(query);
+			String queryArtista = "UPDATE artista SET nombreArtistico = '" + m.getNombreArt() + "', genero = '" + m.getGenero()
+					+ "', descripcion = '" + m.getDescripcion() + "', imagen = '" + m.getFoto() + "' WHERE idArtista = "
+					+ m.getId();
+			stmt.executeUpdate(queryArtista); 
+			
+			//update musico 
+			String queryMusico 
+			
+			
+			
+			
+			
 			stmt.close();
 		} catch (SQLException e) {
 			if (e.getErrorCode() == 1062) {
@@ -1165,4 +1173,6 @@ public class controladorDB {
 		return StatisticaPodcast;
 	}
 
+	
+	
 }

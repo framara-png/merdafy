@@ -10,15 +10,18 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 
+import Ventanas.VentanaPrincipal;
 import modelo.StatisticaPlaylist;
 
 public class PanelStatisticaPlaylist extends JPanel {
-
+	private VentanaPrincipal ventana;
+	private ArrayList<StatisticaPlaylist> listaPlaylist = new ArrayList<StatisticaPlaylist>();
 	private JTable tabla;
 	private DefaultTableModel modelo;
 
-	public PanelStatisticaPlaylist(ArrayList<StatisticaPlaylist> listaPlaylist) {
-
+	public PanelStatisticaPlaylist(VentanaPrincipal ventana, ArrayList<StatisticaPlaylist> listaPlaylist) {
+		this.ventana = ventana;
+		this.listaPlaylist = listaPlaylist;
 		setLayout(null);
 		setBackground(Color.WHITE);
 
@@ -26,7 +29,7 @@ public class PanelStatisticaPlaylist extends JPanel {
 		JButton btnAtras = new JButton("Atras");
 		btnAtras.setBounds(20, 20, 120, 40);
 		add(btnAtras);
-
+		btnAtras.addActionListener(e -> ventana.cambiarPanel("Estatisticas"));
 		// BOTONES CENTRALES
 		JButton btnMes = new JButton("Mes");
 		JButton btnSemana = new JButton("Semana");
