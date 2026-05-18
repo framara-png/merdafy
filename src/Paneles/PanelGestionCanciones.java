@@ -107,22 +107,16 @@ public class PanelGestionCanciones extends JPanel {
 		// ================= ACCIONES =================
 
 		// AGREGAR
+		// AGREGAR (CON DIALOG)
 		btnAgregar.addActionListener(e -> {
 
-			String nombre = JOptionPane.showInputDialog(this, "Nombre de la canción:");
+		    DialogCrearCancion dialog = new DialogCrearCancion(ventana);
+		    dialog.setVisible(true);
 
-			if (nombre != null && !nombre.trim().isEmpty()) {
+		    // refresh dopo inserimento nel DB
+		    canciones = ventana.getControladordb().obtenerTodasCanciones();
+		    cargarCanciones();
 
-				Cancion nueva = null;
-
-				nueva.setNombreAudio(nombre);
-
-				canciones.add(nueva);
-
-				cargarCanciones();
-
-				JOptionPane.showMessageDialog(this, "Canción agregada correctamente");
-			}
 		});
 
 		// MODIFICAR

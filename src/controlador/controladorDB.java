@@ -468,33 +468,28 @@ public class controladorDB {
 
 	public void insertarCancion(Cancion c) {
 
-		try {
+	    try {
 
-			Statement stmt = conexion.createStatement();
+	        Statement stmt = conexion.createStatement();
 
-			int ore = c.getDuratasecondi() / 3600;
-			int minuti = (c.getDuratasecondi() % 3600) / 60;
-			int secondi = c.getDuratasecondi() % 60;
+	        String query = "CALL AnadirCancion('"
+	                + c.getNombreAudio() + "','"
+	                + c.durataConvertida() + "','"
+	                + c.getArchivo() + "',"
+	                + c.getIdAlbum() + ",'"
+	                + c.getNombresColaboradores() + "')";
 
-			String durataTime = String.format("%02d:%02d:%02d", ore, minuti, secondi);
+	        ResultSet rs = stmt.executeQuery(query);
 
-			String query = "CALL AnadirCancion('" + c.getNombreAudio() + "','" + c.durataConvertida() + "','"
-					+ c.getArchivo() + "'," + c.getIdAlbum() + ",'" + c.getNombresColaboradores() + "')";
+	        if (rs.next()) {
+	            System.out.println(rs.getString("mensaje"));
+	        }
 
-			ResultSet rs = stmt.executeQuery(query);
+	        stmt.close();
 
-			// messaggio della procedure
-			if (rs.next()) {
-
-				System.out.println(rs.getString("mensaje"));
-			}
-
-			stmt.close();
-
-		} catch (SQLException e) {
-
-			e.printStackTrace();
-		}
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	    }
 	}
 
 	public void insertarAlbum(Album a) {
