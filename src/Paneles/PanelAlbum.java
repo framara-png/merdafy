@@ -15,7 +15,7 @@ public class PanelAlbum extends JPanel {
 	private VentanaPrincipal ventana;
 
 	private Album album;
-	private String nombreMusico;
+	private Musico m;
 
 	private JList<String> listaCanciones;
 	private DefaultListModel<String> modeloLista;
@@ -23,13 +23,13 @@ public class PanelAlbum extends JPanel {
 	private JLabel lblFoto;
 	private JTextArea txtInfoAlbum;
 
-	public PanelAlbum(VentanaPrincipal ventana, String nombreAlbum, String nombreMusico) {
+	public PanelAlbum(VentanaPrincipal ventana, String nombreAlbum, Musico m) {
 
 		this.ventana = ventana;
-		this.nombreMusico = nombreMusico;
+		this.m=m;
 		setLayout(new BorderLayout(10, 10));
 		setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
-		album = ventana.getControladordb().obtenerAlbumPorNombre(nombreAlbum);
+		album = ventana.getControladordb().obtenerAlbumPorNombre(nombreAlbum,m.getId());
 		if (album != null) {
 			ArrayList<Cancion> canciones = ventana.getControladordb().obtenerCanciones(album.getTitulo());
 
@@ -106,7 +106,7 @@ public class PanelAlbum extends JPanel {
 
 		if (album != null) {
 
-			txtInfoAlbum.setText("Álbum: " + album.getTitulo() + "\n" + "Artista: " + nombreMusico + "\n" + "Género: "
+			txtInfoAlbum.setText("Álbum: " + album.getTitulo() + "\n" + "Artista: " + m.getNombreArt() + "\n" + "Género: "
 					+ album.getGenero() + "\n" + "Fecha: " + album.getFechaPub() + "\n" + "Canciones: "
 					+ (album.getCancionesAlbum() != null ? album.getCancionesAlbum().size() : 0));
 
@@ -128,7 +128,7 @@ public class PanelAlbum extends JPanel {
 		modeloLista.clear();
 		if (album != null && album.getCancionesAlbum() != null && !album.getCancionesAlbum().isEmpty()) {
 			for (Cancion c : album.getCancionesAlbum()) {
-				modeloLista.addElement(c.getNombreAudio() + " | " + c.durataConvertida() + " | " + c.getNumRep());
+				modeloLista.addElement(c.getNombreAudio() + " | " + c.getDurata() + " | " + c.getNumRep());
 			}
 
 		} else {

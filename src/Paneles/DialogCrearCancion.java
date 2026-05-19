@@ -2,6 +2,9 @@ package Paneles;
 
 import javax.swing.*;
 import java.awt.*;
+import java.sql.Time;
+import java.util.ArrayList;
+
 import Ventanas.VentanaPrincipal;
 import modelo.Cancion;
 
@@ -46,12 +49,11 @@ public class DialogCrearCancion extends JDialog {
 		add(new JLabel());
 
 		JButton btnCrear = new JButton("Crear Canción");
-
 		btnCrear.addActionListener(e -> {
 
 			try {
 				String nombre = txtNombre.getText().trim();
-				int duracion = Integer.parseInt(txtDuracion.getText().trim());
+				Time duracion = Time.valueOf(txtDuracion.getText().trim());
 				String archivo = txtArchivo.getText().trim();
 				int idAlbum = Integer.parseInt(txtAlbum.getText().trim());
 				String colaboradores = txtColaboradores.getText().trim();
@@ -60,24 +62,18 @@ public class DialogCrearCancion extends JDialog {
 					JOptionPane.showMessageDialog(this, "Completa todos los campos");
 					return;
 				}
-
-				// ================= OBJETO COMPLETO =================
-				Cancion c = new Cancion(0, // id
-						nombre, // nombreAudio
-						archivo, // archivo
-						duracion, // duratasecondi
-						0, // NumRep
-						idAlbum, // idAlbum
-						colaboradores, // nombresColaboradores
-						"cancion" // tipo
-				);
-				// ================= DB INSERT =================
+				if (!ventana.getGestor().controladorAudioDobles(nombre)) {
+					JOptionPane.showMessageDialog(this, "Ya existe una cancion con este nombre");
+					return;
+				}
+				if (!ventana.getControladordb().obtenerAlbumPorId(idAlbum)) {
+					JOptionPane.showMessageDialog(this, "no existe un album con este id");
+					return;
+				}
+				Cancion c = new Cancion(0, nombre, archivo, duracion, 0, idAlbum, colaboradores, "cancion");
 
 				ventana.getControladordb().insertarCancion(c);
-
-				JOptionPane.showMessageDialog(this, "Canción creada correctamente");
-
-				dispose();
+				JOptionPane.showMessageDialog(this, "cancion anadidia");
 
 			} catch (NumberFormatException ex) {
 				JOptionPane.showMessageDialog(this, "Duración e ID deben ser números");

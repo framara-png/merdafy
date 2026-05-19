@@ -22,7 +22,9 @@ public class VentanaPrincipal extends JFrame {
 
 	private Podcast podcastSeleccionado;
 	private Playlist playlistSelecionada;
+
 	private ArrayList<StastisticaCancion> StatisticaCanciones;
+	private GestorAmdin gestor;
 
 	public void setControladordb(controladorDB controladordb) {
 		this.controladordb = controladordb;
@@ -35,8 +37,8 @@ public class VentanaPrincipal extends JFrame {
 		setResizable(false);
 		setTitle("Ventana Principal");
 
-		// 🔥 SOLO DB
 		controladordb = new controladorDB("merdafy");
+		gestor = new GestorAmdin(controladordb);
 
 		if (!controladordb.iniciarConexion()) {
 			JOptionPane.showMessageDialog(this, "Errore connessione DB");
@@ -103,6 +105,14 @@ public class VentanaPrincipal extends JFrame {
 		return StatisticaCanciones;
 	}
 
+	public GestorAmdin getGestor() {
+		return gestor;
+	}
+
+	public void setGestor(GestorAmdin gestor) {
+		this.gestor = gestor;
+	}
+
 	public void setStatisticaCanciones(ArrayList<StastisticaCancion> statisticaCanciones) {
 		StatisticaCanciones = statisticaCanciones;
 	}
@@ -127,7 +137,7 @@ public class VentanaPrincipal extends JFrame {
 		case "artista":
 			if (musicoSeleccionado == null)
 				return;
-			setContentPane(new PanelArtista(this, clientelogeado, musicoSeleccionado.getNombreArt()));
+			setContentPane(new PanelArtista(this, clientelogeado, musicoSeleccionado));
 			break;
 
 		case "podcast":
@@ -139,7 +149,7 @@ public class VentanaPrincipal extends JFrame {
 		case "album":
 			if (albumSeleccionado == null)
 				return;
-			setContentPane(new PanelAlbum(this, albumSeleccionado.getTitulo(), musicoSeleccionado.getNombreArt()));
+			setContentPane(new PanelAlbum(this, albumSeleccionado.getTitulo(), musicoSeleccionado));
 			break;
 
 		case "perfil":
@@ -163,11 +173,11 @@ public class VentanaPrincipal extends JFrame {
 			break;
 
 		case "panelAdmin":
-			setContentPane(new PanelSelecionAdmin(this, clientelogeado));
+			setContentPane(new PanelSelecionAdmin(this, clientelogeado, gestor));
 			break;
 
 		case "GestionCanciones":
-			setContentPane(new PanelGestionCanciones(this, clientelogeado));
+			setContentPane(new PanelGestionCanciones(this, clientelogeado, gestor));
 			break;
 
 		case "Estatisticas":
@@ -185,17 +195,22 @@ public class VentanaPrincipal extends JFrame {
 		case "StatPlaylist":
 			setContentPane(new PanelStatisticaPlaylist(this, controladordb.StatPlaylist()));
 			break;
-		
+
 		case "StatPodcast":
 			setContentPane(new PanelStatisticaPodcast(this, controladordb.StatPodcast()));
 			break;
 
 		case "GestionPodcast":
-			setContentPane(new PanelGestionPodcast(this, clientelogeado));
+			PanelGestionPodcast panel = new PanelGestionPodcast(this, clientelogeado);
+			setContentPane(panel);
 			break;
-		
+
 		case "GestionMusicos":
 			setContentPane(new PanelGestionMusicos(this, controladordb.obtenerMusicos()));
+			break;
+
+		case "GestionPodcasters":
+			setContentPane(new PanelGestionPodcaster(this, controladordb.obtenerPodcasters()));
 			break;
 		}
 

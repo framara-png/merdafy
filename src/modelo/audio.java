@@ -1,25 +1,40 @@
 package modelo;
 
+import java.sql.Time;
 import java.util.Arrays;
 
 public abstract class audio {
-	private int id, NumRep, duratasecondi;
+	private int id, NumRep;
 	private String archivo;
 	private String nombreAudio,tipo;
-
+     private Time durata;
 	
 
-	public audio(int id, String nombreAudio, String archivo ,int NumRep, int duratasecondi,String tipo) {
+	public audio(int id, String nombreAudio, String archivo ,int NumRep, Time durata,String tipo) {
 		this.id = id;
 		this.nombreAudio = nombreAudio;
 		this.NumRep = NumRep;
-		this.duratasecondi = duratasecondi;
+		this.durata = durata;
 		this.archivo = archivo;
 		this.tipo= tipo;
 
 	}
 
 	
+
+
+	public Time getDurata() {
+		return durata;
+	}
+
+
+
+
+	public void setDurata(Time durata) {
+		this.durata = durata;
+	}
+
+
 
 
 	public String getArchivo() {
@@ -32,7 +47,7 @@ public abstract class audio {
 
 	@Override
 	public String toString() {
-		return "audio [id=" + id + ", NumRep=" + NumRep + ", durata" + durataConvertida() + ", archivo="
+		return "audio [id=" + id + ", NumRep=" + NumRep + ", durata" + durata + ", archivo="
 				+ archivo + ", nombreAudio=" + nombreAudio + ", tipo=" + tipo + "]";
 	}
 
@@ -62,13 +77,7 @@ public abstract class audio {
 		NumRep = numRep;
 	}
 
-	public int getDuratasecondi() {
-		return duratasecondi;
-	}
 
-	public void setDuratasecondi(int duratasecondi) {
-		this.duratasecondi = duratasecondi;
-	}
 
 	public String getNombreAudio() {
 		return nombreAudio;
@@ -78,11 +87,6 @@ public abstract class audio {
 		this.nombreAudio = nombreAudio;
 	}
 
-//pensar en hacer un clase de utils donde poner los varios convertidores//
-	public String durataConvertida() {
-		int minuti = duratasecondi / 60;
-		int secondi = duratasecondi % 60;
-		return String.format("%d:%02d", minuti, secondi);
-	}
+//pen
 
 }

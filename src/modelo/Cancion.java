@@ -1,11 +1,13 @@
 package modelo;
 
+import java.sql.Time;
+
 public class Cancion extends audio {
     private int idAlbum;
     private String nombresColaboradores;
 
-    public Cancion(int id, String nombreAudio, String archivo, int duratasecondi, int NumRep, int idAlbum, String nombresColaboradores, String tipo) {
-        super(id, nombreAudio, archivo, NumRep, duratasecondi, tipo);
+    public Cancion(int id, String nombreAudio, String archivo, Time durata, int NumRep, int idAlbum, String nombresColaboradores, String tipo) {
+        super(id, nombreAudio, archivo, NumRep, durata, tipo);
         this.idAlbum = idAlbum;
         this.nombresColaboradores = nombresColaboradores;
     }

@@ -4,12 +4,13 @@ import javax.swing.JButton;
 import javax.swing.JPanel;
 
 import Ventanas.VentanaPrincipal;
+import controlador.GestorAmdin;
 import modelo.cliente;
 
 public class PanelSelecionAdmin extends JPanel {
 	private static final long serialVersionUID = 1L;
 
-	public PanelSelecionAdmin(VentanaPrincipal ventana, cliente clientelogeado) {
+	public PanelSelecionAdmin(VentanaPrincipal ventana, cliente clientelogeado, GestorAmdin gestor) {
 		setLayout(null);
 
 		// BOTONI PICCOLI IN ALTO

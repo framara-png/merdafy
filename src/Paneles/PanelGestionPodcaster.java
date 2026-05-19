@@ -81,9 +81,9 @@ public class PanelGestionPodcaster extends JPanel {
 		panelBotones.setLayout(new GridLayout(3, 1, 10, 20));
 		panelBotones.setPreferredSize(new Dimension(250, 300));
 
-		JButton btnAgregar = new JButton("Agregar Podcast");
-		JButton btnModificar = new JButton("Modificar Podcast");
-		JButton btnEliminar = new JButton("Eliminar Podcast");
+		JButton btnAgregar = new JButton("Agregar Podcaster");
+		JButton btnModificar = new JButton("Modificar Podcaster");
+		JButton btnEliminar = new JButton("Eliminar Podcaster");
 
 		Font font = new Font("Arial", Font.BOLD, 18);
 

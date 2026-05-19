@@ -22,12 +22,12 @@ public class PanelArtista extends JPanel {
 
 	private Musico artistaActual;
 
-	public PanelArtista(VentanaPrincipal ventana, cliente clientelogeado, String nombreArtista) {
+	public PanelArtista(VentanaPrincipal ventana, cliente clientelogeado, Musico m) {
 
 		setLayout(new BorderLayout(10, 10));
 		setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 		this.ventana = ventana;
-		this.artistaActual = ventana.getControladordb().obtenerMusicoPorNombre(nombreArtista);
+		this.artistaActual = ventana.getControladordb().obtenerMusicoPorNombre(m.getNombreArt());
 
 		// ================= TOP =================
 		JPanel panelSuperior = new JPanel(new FlowLayout(FlowLayout.RIGHT));
@@ -76,7 +76,7 @@ public class PanelArtista extends JPanel {
 
 					System.out.println("NOMBRE DISCO = " + nombreDisco);
 
-					Album albumSeleccionado = ventana.getControladordb().obtenerAlbumPorNombre(nombreDisco);
+					Album albumSeleccionado = ventana.getControladordb().obtenerAlbumPorNombre(nombreDisco,m.getId());
 
 					System.out.println("ALBUM = " + albumSeleccionado);
 

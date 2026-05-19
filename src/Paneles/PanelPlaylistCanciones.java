@@ -85,7 +85,7 @@ public class PanelPlaylistCanciones extends JPanel {
 				fila.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
 				// info canziones
-				JLabel lblInfo = new JLabel(c.getNombreAudio() + " | " + c.durataConvertida() + c.getNumRep()
+				JLabel lblInfo = new JLabel(c.getNombreAudio() + " | " + c.getDurata() + c.getNumRep()
 
 				);
 

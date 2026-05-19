@@ -126,7 +126,7 @@ public class PanelPodcast extends JPanel {
 			for (Podcast p : podcastsActuales) {
 
 				listModel.addElement(p.getNombreAudio() + " | " + p.getNumeroParticipantes() + " | "
-						+ p.durataConvertida() + " | " + p.getNumRep());
+						+ p.getDurata() + " | " + p.getNumRep());
 			}
 
 		} else {

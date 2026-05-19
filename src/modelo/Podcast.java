@@ -1,11 +1,13 @@
 package modelo;
 
+import java.sql.Time;
+
 public class Podcast extends audio {
     private int idPodcaster;
     private int numeroParticipantes;
 
-    public Podcast(int id, String nombreAudio, String archivo, int duratasecondi, int NumRep, int idPodcaster, int numeroParticipantes, String tipo) {
-        super(id, nombreAudio, archivo, NumRep, duratasecondi, tipo);
+    public Podcast(int id, String nombreAudio, String archivo, Time durata, int NumRep, int idPodcaster, int numeroParticipantes, String tipo) {
+        super(id, nombreAudio, archivo, NumRep, durata, tipo);
         this.idPodcaster = idPodcaster;
         this.numeroParticipantes = numeroParticipantes;
     }

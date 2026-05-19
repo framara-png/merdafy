@@ -2,6 +2,7 @@ package Paneles;
 
 import modelo.*;
 import Ventanas.*;
+import controlador.GestorAmdin;
 
 import java.awt.*;
 import java.awt.event.MouseAdapter;
@@ -20,7 +21,7 @@ public class PanelGestionCanciones extends JPanel {
 	private JList<String> listCanciones;
 	private DefaultListModel<String> listModel;
 
-	public PanelGestionCanciones(VentanaPrincipal ventana, cliente clienteLogeado) {
+	public PanelGestionCanciones(VentanaPrincipal ventana, cliente clienteLogeado, GestorAmdin gestor) {
 
 		this.ventana = ventana;
 		this.clienteLogeado = clienteLogeado;
@@ -194,7 +195,7 @@ public class PanelGestionCanciones extends JPanel {
 
 			for (Cancion c : canciones) {
 
-				listModel.addElement(c.getNombreAudio() + " | " + c.durataConvertida() + " | "
+				listModel.addElement(c.getNombreAudio() + " | " + c.getDurata() + " | "
 						+ c.getNombresColaboradores() + " | Reproducciones: " + c.getNumRep());
 			}
 

@@ -2,6 +2,8 @@ package Paneles;
 
 import javax.swing.*;
 import java.awt.*;
+import java.sql.Time;
+
 import Ventanas.VentanaPrincipal;
 import modelo.Podcast;
 
@@ -48,7 +50,7 @@ public class DialogCrearPodcast extends JDialog {
 
 			try {
 				String nombre = txtNombre.getText().trim();
-				int duracion = Integer.parseInt(txtDuracion.getText().trim());
+				Time duracion = Time.valueOf(txtDuracion.getText().trim());
 				String archivo = txtArchivo.getText().trim();
 				int idPodcaster = Integer.parseInt(txtPodcaster.getText().trim());
 				int participantes = Integer.parseInt(txtParticipantes.getText().trim());
@@ -58,13 +60,18 @@ public class DialogCrearPodcast extends JDialog {
 					return;
 				}
 
+				if (!ventana.getControladordb().obtenerPodcasterPorId(idPodcaster)) {
+					JOptionPane.showMessageDialog(this, "no existe un Podcaster con este id");
+					return;
+				}
+
+				if (!ventana.getGestor().controladorAudioDobles(nombre)) {
+					JOptionPane.showMessageDialog(this, "Ya existe un podcast  con este nombre");
+					return;
+				}
+
 				Podcast p = new Podcast(0, nombre, archivo, duracion, 0, idPodcaster, participantes, "podcast");
-
 				ventana.getControladordb().insertarPodcast(p);
-
-				JOptionPane.showMessageDialog(this, "Podcast creado correctamente");
-				dispose();
-
 			} catch (NumberFormatException ex) {
 				JOptionPane.showMessageDialog(this, "Duración, ID y participantes deben ser números");
 			}

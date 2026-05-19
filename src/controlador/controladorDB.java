@@ -74,11 +74,11 @@ public class controladorDB {
 		return clientes;
 	}
 
-	public Album obtenerAlbumPorNombre(String nombreAlbum) {
+	public Album obtenerAlbumPorNombre(String nombreAlbum, int idMusico) {
 
 		Album al = null;
 
-		String query = "SELECT * FROM album WHERE titulo ='" + nombreAlbum + "'";
+		String query = "SELECT * FROM album WHERE titulo ='" + nombreAlbum + "' and idMusico = '" + idMusico + "'";
 
 		try {
 
@@ -230,10 +230,9 @@ public class controladorDB {
 
 			while (resultado.next()) {
 				String tipo = "cancion";
-				Time tiempo = resultado.getTime(4); // colonna 4 = duracion
-				int duracionSegundos = tiempo.toLocalTime().toSecondOfDay();
+
 				Cancion nuevaCancion = new Cancion(resultado.getInt(1), resultado.getString(2), resultado.getString(3),
-						duracionSegundos, resultado.getInt(5), resultado.getInt(6), resultado.getString(7), tipo);
+						resultado.getTime(4), resultado.getInt(5), resultado.getInt(6), resultado.getString(7), tipo);
 				canciones.add(nuevaCancion);
 			}
 			consulta.close();
@@ -257,18 +256,10 @@ public class controladorDB {
 
 			while (resultado.next()) {
 				String tipo = "podcast";
-				Time tiempo = resultado.getTime("duracion");
-				int duracionSegundos = tiempo.toLocalTime().toSecondOfDay();
 
-				Podcast nuevoPodcast = new Podcast(resultado.getInt("idAudio"), // id
-						resultado.getString("nombreAudio"), // nombreAudio
-						resultado.getString("archivo"), // archivo
-						duracionSegundos, // duratasecondi
-						resultado.getInt("Nreproduciones"), // NumRep
-						resultado.getInt("idPodcaster"), // idPodcaster
-						resultado.getInt("Ncolaboradores"), // numeroParticipantes
-						tipo // tipo
-				);
+				Podcast nuevoPodcast = new Podcast(resultado.getInt("idAudio"), resultado.getString("nombreAudio"),
+						resultado.getString("archivo"), resultado.getTime(4), resultado.getInt("Nreproduciones"),
+						resultado.getInt("idPodcaster"), resultado.getInt("Ncolaboradores"), tipo);
 
 				podcasts.add(nuevoPodcast);
 			}
@@ -315,10 +306,9 @@ public class controladorDB {
 
 			while (resultado.next()) {
 				String tipo = "cancion";
-				Time tiempo = resultado.getTime(4); // colonna 4 = duracion
-				int duracionSegundos = tiempo.toLocalTime().toSecondOfDay();
+
 				Cancion nuevaCancion = new Cancion(resultado.getInt(1), resultado.getString(2), resultado.getString(3),
-						duracionSegundos, resultado.getInt(5), resultado.getInt(6), resultado.getString(7), tipo);
+						resultado.getTime(4), resultado.getInt(5), resultado.getInt(6), resultado.getString(7), tipo);
 				canciones.add(nuevaCancion);
 			}
 			consulta.close();
@@ -342,18 +332,10 @@ public class controladorDB {
 
 			while (resultado.next()) {
 				String tipo = "podcast";
-				Time tiempo = resultado.getTime("duracion");
-				int duracionSegundos = tiempo.toLocalTime().toSecondOfDay();
 
-				Podcast nuevoPodcast = new Podcast(resultado.getInt("idAudio"), // id
-						resultado.getString("nombreAudio"), // nombreAudio
-						resultado.getString("archivo"), // archivo
-						duracionSegundos, // duratasecondi
-						resultado.getInt("Nreproduciones"), // NumRep
-						resultado.getInt("idPodcaster"), // idPodcaster
-						resultado.getInt("Ncolaboradores"), // numeroParticipantes
-						tipo // tipo
-				);
+				Podcast nuevoPodcast = new Podcast(resultado.getInt("idAudio"), resultado.getString("nombreAudio"),
+						resultado.getString("archivo"), resultado.getTime(4), resultado.getInt("Nreproduciones"),
+						resultado.getInt("idPodcaster"), resultado.getInt("Ncolaboradores"), tipo);
 
 				podcasts.add(nuevoPodcast);
 			}
@@ -400,10 +382,9 @@ public class controladorDB {
 
 			while (resultado.next()) {
 				String tipo = "cancion";
-				Time tiempo = resultado.getTime(4); // colonna 4 = duracion
-				int duracionSegundos = tiempo.toLocalTime().toSecondOfDay();
+
 				Cancion nuevaCancion = new Cancion(resultado.getInt(1), resultado.getString(2), resultado.getString(3),
-						duracionSegundos, resultado.getInt(5), resultado.getInt(6), resultado.getString(7), tipo);
+						resultado.getTime(4), resultado.getInt(5), resultado.getInt(6), resultado.getString(7), tipo);
 
 				cancionesPlaylist.add(nuevaCancion);
 			}
@@ -470,21 +451,19 @@ public class controladorDB {
 
 		try {
 
-			Statement stmt = conexion.createStatement();
+			Statement st = conexion.createStatement();
 
-			String query = "CALL AnadirCancion('" + c.getNombreAudio() + "','" + c.durataConvertida() + "','"
-					+ c.getArchivo() + "'," + c.getIdAlbum() + ",'" + c.getNombresColaboradores() + "')";
+			String sql = "CALL AnadirCancion('" + c.getNombreAudio() + "','" + c.getDurata() + "','" + c.getArchivo()
+					+ "'," + c.getIdAlbum() + ",'" + c.getNombresColaboradores() + "')";
 
-			ResultSet rs = stmt.executeQuery(query);
+			st.execute(sql);
 
-			if (rs.next()) {
-				System.out.println(rs.getString("mensaje"));
-			}
-
-			stmt.close();
+			st.close();
 
 		} catch (SQLException e) {
-			e.printStackTrace();
+
+			System.out.println(e.getMessage());
+
 		}
 	}
 
@@ -517,30 +496,19 @@ public class controladorDB {
 
 		try {
 
-			Statement stmt = conexion.createStatement();
+			Statement st = conexion.createStatement();
 
-			int ore = p.getDuratasecondi() / 3600;
-			int minuti = (p.getDuratasecondi() % 3600) / 60;
-			int secondi = p.getDuratasecondi() % 60;
-
-			String durataTime = String.format("%02d:%02d:%02d", ore, minuti, secondi);
-
-			String query = "CALL AnadirPodcast('" + p.getNombreAudio() + "','" + durataTime + "','" + p.getArchivo()
+			String sql = "CALL AnadirPodcast('" + p.getNombreAudio() + "','" + p.getDurata() + "','" + p.getArchivo()
 					+ "'," + p.getIdPodcaster() + "," + p.getNumeroParticipantes() + ")";
 
-			ResultSet rs = stmt.executeQuery(query);
+			st.execute(sql);
 
-			// messaggio della procedure
-			if (rs.next()) {
-
-				System.out.println(rs.getString("mensaje"));
-			}
-
-			stmt.close();
+			st.close();
 
 		} catch (SQLException e) {
 
-			e.printStackTrace();
+			System.out.println(e.getMessage());
+
 		}
 	}
 
@@ -569,56 +537,38 @@ public class controladorDB {
 	}
 
 	public boolean insertarCliente(cliente c) {
-
 		String abonamento = c.isEsPremium() ? "premium" : "free";
-
 		try {
-
 			Statement stmt = conexion.createStatement();
-
 			String query = "CALL AnadirCliente('" + c.getNombre() + "','" + c.getApellido() + "','" + c.getIdioma()
 					+ "','" + c.getUsuario() + "','" + c.getContrasena() + "','" + c.getFecNac() + "',"
 					+ "CURRENT_DATE," + "'" + abonamento + "')";
-
 			ResultSet rs = stmt.executeQuery(query);
-
 			if (rs.next()) {
-
 				String mensaje = rs.getString("mensaje");
-
 				System.out.println(mensaje);
-
 				if (mensaje.contains("sucesso")) {
-
-					// se premium inserisco nella tabella premium
 					if (c.isEsPremium()) {
-
 						ResultSet rid = stmt
 								.executeQuery("SELECT idCliente FROM cliente WHERE usuario='" + c.getUsuario() + "'");
-
 						int idCliente = 0;
-
 						if (rid.next()) {
-
 							idCliente = rid.getInt("idCliente");
 						}
-
 						String queryPremium = "INSERT INTO premium(idCliente) VALUES(" + idCliente + ")";
-
 						stmt.executeUpdate(queryPremium);
 					}
-
-					stmt.close();
-
+				stmt.close();
 					return true;
 				}
 			}
-
 			stmt.close();
 
 			return false;
 
-		} catch (SQLException e) {
+		} catch (
+
+		SQLException e) {
 
 			e.printStackTrace();
 
@@ -726,8 +676,8 @@ public class controladorDB {
 		}
 	}
 
-	// Aggiornare un musico 
-	public void actualizarMusico(Musico m) { 
+	// Aggiornare un musico
+	public void actualizarMusico(Musico m) {
 		try {
 			Statement stmt = conexion.createStatement();
 			String queryArtista = "UPDATE artista SET nombreArtistico = '" + m.getNombreArt() + "', genero = '"
@@ -751,42 +701,34 @@ public class controladorDB {
 		}
 	}
 
-	
-	
 	// Aggiornare un podcaster
-		public void actualizarPodcaster(Podcaster p) { 
-			try {
-				Statement stmt = conexion.createStatement();
-				String queryArtista = "UPDATE artista SET nombreArtistico = '" + p.getNombreArt() + "', genero = '"
-						+ p.getGenero() + "', descripcion = '" + p.getDescripcion() + "', imagen = '" + p.getFoto()
-						+ "' WHERE idArtista = " + p.getId();
-				stmt.executeUpdate(queryArtista);
+	public void actualizarPodcaster(Podcaster p) {
+		try {
+			Statement stmt = conexion.createStatement();
+			String queryArtista = "UPDATE artista SET nombreArtistico = '" + p.getNombreArt() + "', genero = '"
+					+ p.getGenero() + "', descripcion = '" + p.getDescripcion() + "', imagen = '" + p.getFoto()
+					+ "' WHERE idArtista = " + p.getId();
+			stmt.executeUpdate(queryArtista);
 
-				stmt.close();
-			} catch (SQLException e) {
-				if (e.getErrorCode() == 1062) {
-					System.out.println("Error, ye existe un artista con este nombre");
+			stmt.close();
+		} catch (SQLException e) {
+			if (e.getErrorCode() == 1062) {
+				System.out.println("Error, ye existe un artista con este nombre");
 
-				} else {
-					e.printStackTrace();
-				}
+			} else {
+				e.printStackTrace();
 			}
 		}
-	
+	}
+
 	// Aggiornare una canzone
 	public void actualizarCancion(Cancion c) {
 		try {
 			Statement stmt = conexion.createStatement();
 
-			// Convertir duración
-			int ore = c.getDuratasecondi() / 3600;
-			int minuti = (c.getDuratasecondi() % 3600) / 60;
-			int secondi = c.getDuratasecondi() % 60;
-			String durataTime = String.format("%02d:%02d:%02d", ore, minuti, secondi);
-
 			// Update en audio
 			String queryAudio = "UPDATE audio SET nombreAudio = '" + c.getNombreAudio() + "', archivo = '"
-					+ c.getArchivo() + "', duracion = '" + durataTime + "', Nreproduciones = " + c.getNumRep()
+					+ c.getArchivo() + "', duracion = '" + c.getDurata() + "', Nreproduciones = " + c.getNumRep()
 					+ " WHERE idAudio = " + c.getId();
 			stmt.executeUpdate(queryAudio);
 
@@ -820,15 +762,9 @@ public class controladorDB {
 		try {
 			Statement stmt = conexion.createStatement();
 
-			// Convertir duración
-			int ore = p.getDuratasecondi() / 3600;
-			int minuti = (p.getDuratasecondi() % 3600) / 60;
-			int secondi = p.getDuratasecondi() % 60;
-			String durataTime = String.format("%02d:%02d:%02d", ore, minuti, secondi);
-
 			// Update en audio
 			String queryAudio = "UPDATE audio SET nombreAudio = '" + p.getNombreAudio() + "', archivo = '"
-					+ p.getArchivo() + "', duracion = '" + durataTime + "', Nreproduciones = " + p.getNumRep()
+					+ p.getArchivo() + "', duracion = '" + p.getDurata() + "', Nreproduciones = " + p.getNumRep()
 					+ " WHERE idAudio = " + p.getId();
 			stmt.executeUpdate(queryAudio);
 
@@ -870,23 +806,6 @@ public class controladorDB {
 	// Añadir una canción a una playlist
 	public void añadirCancionAPlaylist(String nombreCancion, String tituloPlaylist, String usuarioCliente) {
 
-		try {
-			Statement stmt = conexion.createStatement();
-			String query = "INSERT INTO playlist_canciones (idPlaylist, idCancion) " + "SELECT p.IDlist, c.idCancion "
-					+ "FROM playlist p " + "JOIN cliente cl ON p.IdCliente = cl.idCliente "
-					+ "JOIN cancion c ON c.idCancion = (SELECT a.idAudio FROM audio a WHERE a.nombreAudio = '"
-					+ nombreCancion + "') " + "WHERE p.titulo = '" + tituloPlaylist + "' " + "AND cl.usuario = '"
-					+ usuarioCliente + "'";
-			stmt.executeUpdate(query);
-			stmt.close();
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-	}
-
-	// Añadir una canción a una playlist
-	public void añadirCancionAFAvoritos(String nombreCancion, String tituloPlaylist, String usuarioCliente) {
-		tituloPlaylist = "favoritos";
 		try {
 			Statement stmt = conexion.createStatement();
 			String query = "INSERT INTO playlist_canciones (idPlaylist, idCancion) " + "SELECT p.IDlist, c.idCancion "
@@ -1193,4 +1112,32 @@ public class controladorDB {
 		return StatisticaPodcast;
 	}
 
+	
+	public boolean obtenerAlbumPorId(int idAlbum){
+		String query="SELECT idAlbum FROM album WHERE idAlbum="+idAlbum;
+		try{
+			Statement consulta=conexion.createStatement();
+			ResultSet resultado=consulta.executeQuery(query);
+			boolean existe=resultado.next();
+			consulta.close();
+			return existe;
+		}catch(SQLException e){
+			e.printStackTrace();
+			return false;
+		}
+	}
+
+	public boolean obtenerPodcasterPorId(int idPodcaster){
+		String query="SELECT idPodcaster FROM porcaster WHERE idPodcaster="+idPodcaster;
+		try{
+			Statement consulta=conexion.createStatement();
+			ResultSet resultado=consulta.executeQuery(query);
+			boolean existe=resultado.next();
+			consulta.close();
+			return existe;
+		}catch(SQLException e){
+			e.printStackTrace();
+			return false;
+		}
+	}
 }
