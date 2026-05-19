@@ -51,19 +51,18 @@ public class PanelMusicos extends JPanel {
 
 		// ================= CLICK =================
 		listMusicos.addMouseListener(new MouseAdapter() {
+
 			@Override
 			public void mouseClicked(MouseEvent e) {
+
 				if (e.getClickCount() == 1) {
 
-					String seleccionado = listMusicos.getSelectedValue();
-					if (seleccionado == null)
+					int index = listMusicos.getSelectedIndex();
+
+					if (index < 0)
 						return;
 
-					// nombe artista
-					String nombreArtista = seleccionado.split(" - Reproducciones: ")[0];
-
-					Musico m = new Musico();
-					m.setNombreArt(nombreArtista);
+					Musico m = musicos.get(index);
 
 					ventana.setMusicoSeleccionado(m);
 					ventana.cambiarPanel("artista");

@@ -20,13 +20,11 @@ public class DialogCrearPodcaster extends JDialog {
 		setLocationRelativeTo(ventana);
 		setLayout(new GridLayout(6, 2, 10, 10));
 
-		// ================= CAMPOS =================
 		JTextField txtNombre = new JTextField();
 		JTextField txtGenero = new JTextField();
 		JTextField txtDescripcion = new JTextField();
 		JTextField txtFoto = new JTextField();
 
-		// ================= LABELS =================
 		add(new JLabel("Nombre podcaster:"));
 		add(txtNombre);
 		add(new JLabel("Genero:"));

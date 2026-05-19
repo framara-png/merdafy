@@ -7,6 +7,7 @@ import controlador.GestorAmdin;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.sql.Time;
 import java.util.ArrayList;
 
 import javax.swing.*;
@@ -34,13 +35,10 @@ public class PanelGestionCanciones extends JPanel {
 		JPanel top = new JPanel(new BorderLayout());
 
 		JButton btnAtras = new JButton("Atrás");
-		JButton btnPerfil = new JButton("Perfil");
 
 		btnAtras.addActionListener(e -> ventana.cambiarPanel("panelAdmin"));
-		btnPerfil.addActionListener(e -> ventana.cambiarPanel("perfil"));
 
 		top.add(btnAtras, BorderLayout.WEST);
-		top.add(btnPerfil, BorderLayout.EAST);
 
 		add(top, BorderLayout.NORTH);
 
@@ -111,12 +109,12 @@ public class PanelGestionCanciones extends JPanel {
 		// AGREGAR (CON DIALOG)
 		btnAgregar.addActionListener(e -> {
 
-		    DialogCrearCancion dialog = new DialogCrearCancion(ventana);
-		    dialog.setVisible(true);
+			DialogCrearCancion dialog = new DialogCrearCancion(ventana);
+			dialog.setVisible(true);
 
-		    // refresh dopo inserimento nel DB
-		    canciones = ventana.getControladordb().obtenerTodasCanciones();
-		    cargarCanciones();
+			// refresh dopo inserimento nel DB
+			canciones = ventana.getControladordb().obtenerTodasCanciones();
+			cargarCanciones();
 
 		});
 
@@ -126,19 +124,46 @@ public class PanelGestionCanciones extends JPanel {
 			int index = listCanciones.getSelectedIndex();
 
 			if (index < 0) {
-
 				JOptionPane.showMessageDialog(this, "Selecciona una canción");
-
 				return;
 			}
 
-			Cancion seleccionada = canciones.get(index);
+			Cancion c = canciones.get(index);
 
-			String nuevoNombre = JOptionPane.showInputDialog(this, "Nuevo nombre:", seleccionada.getNombreAudio());
+			JTextField txtNombre = new JTextField(c.getNombreAudio());
+			JTextField txtArchivo = new JTextField(c.getArchivo());
+			JTextField txtDuracion = new JTextField(c.getDurata().toString());
+			JTextField txtColaboradores = new JTextField(c.getNombresColaboradores());
 
-			if (nuevoNombre != null && !nuevoNombre.trim().isEmpty()) {
+			JPanel panel = new JPanel(new GridLayout(0, 1));
+			panel.add(new JLabel("Nombre:"));
+			panel.add(txtNombre);
+			panel.add(new JLabel("Archivo:"));
+			panel.add(txtArchivo);
+			panel.add(new JLabel("Duración (HH:MM:SS):"));
+			panel.add(txtDuracion);
+			panel.add(new JLabel("Colaboradores:"));
+			panel.add(txtColaboradores);
 
-				seleccionada.setNombreAudio(nuevoNombre);
+			int result = JOptionPane.showConfirmDialog(this, panel, "Modificar canción", JOptionPane.OK_CANCEL_OPTION);
+
+			if (result == JOptionPane.OK_OPTION) {
+
+				String nuevoNombre = txtNombre.getText().trim();
+
+				if (!nuevoNombre.equalsIgnoreCase(c.getNombreAudio())
+						&& !ventana.getGestor().controladorAudioDobles(nuevoNombre)) {
+
+					JOptionPane.showMessageDialog(this, "Ya existe una canción con este nombre");
+					return;
+				}
+
+				c.setNombreAudio(nuevoNombre);
+				c.setArchivo(txtArchivo.getText().trim());
+				c.setDurata(Time.valueOf(txtDuracion.getText().trim()));
+				c.setNombresColaboradores(txtColaboradores.getText().trim());
+
+				ventana.getControladordb().actualizarCancion(c);
 
 				cargarCanciones();
 
@@ -163,7 +188,7 @@ public class PanelGestionCanciones extends JPanel {
 
 			if (confirmacion == JOptionPane.YES_OPTION) {
 
-				ventana.getControladordb().eliminarAudio(seleccionada.getNombreAudio());
+				ventana.getControladordb().eliminarAudio(seleccionada.getId());
 
 				// ricarico lista dopo delete
 				canciones = ventana.getControladordb().obtenerTodasCanciones();
@@ -195,8 +220,8 @@ public class PanelGestionCanciones extends JPanel {
 
 			for (Cancion c : canciones) {
 
-				listModel.addElement(c.getNombreAudio() + " | " + c.getDurata() + " | "
-						+ c.getNombresColaboradores() + " | Reproducciones: " + c.getNumRep());
+				listModel.addElement(c.getNombreAudio() + " | " + c.getDurata() + " | " + c.getNombresColaboradores()
+						+ " | Reproducciones: " + c.getNumRep());
 			}
 
 		} else {

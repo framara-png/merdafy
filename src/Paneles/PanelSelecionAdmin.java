@@ -13,12 +13,8 @@ public class PanelSelecionAdmin extends JPanel {
 	public PanelSelecionAdmin(VentanaPrincipal ventana, cliente clientelogeado, GestorAmdin gestor) {
 		setLayout(null);
 
-		// BOTONI PICCOLI IN ALTO
-		JButton btnProfilo = new JButton("perfil");
 		JButton btnAtras = new JButton("atras");
-
-		btnProfilo.setBounds(10, 10, 80, 30); // alto a sinistra
-		btnAtras.setBounds(710, 10, 80, 30); // alto a destra
+		btnAtras.setBounds(710, 10, 80, 30);
 
 		// 3 BOTONI GRANDI CENTRATI
 		JButton btnGestionMusicos = new JButton("gestion de musicos");
@@ -34,7 +30,7 @@ public class PanelSelecionAdmin extends JPanel {
 		btnGestionPodcast.setBounds(150, 470, 500, 50);
 		btnEstatistica.setBounds(150, 550, 500, 50);
 		// AÑADIR AL PANEL
-		this.add(btnProfilo);
+	
 		this.add(btnAtras);
 		this.add(btnGestionMusicos);
 		this.add(btnGestionPodcasters);
@@ -45,10 +41,9 @@ public class PanelSelecionAdmin extends JPanel {
 
 		// LISTENERS
 		btnAtras.addActionListener(e -> ventana.cambiarPanel("login"));
-		btnProfilo.addActionListener(e -> ventana.cambiarPanel("perfil"));
 		btnGestionMusicos.addActionListener(e -> ventana.cambiarPanel("GestionMusicos"));
 		btnGestionPodcasters.addActionListener(e -> ventana.cambiarPanel("GestionPodcasters"));
-		btnGestionAlbum.addActionListener(e -> ventana.cambiarPanel("GestionALbum"));
+		btnGestionAlbum.addActionListener(e -> ventana.cambiarPanel("GestionAlbum"));
 		btnGestionCanciones.addActionListener(e -> ventana.cambiarPanel("GestionCanciones"));
 		btnGestionPodcast.addActionListener(e -> ventana.cambiarPanel("GestionPodcast"));
 		btnEstatistica.addActionListener(e -> ventana.cambiarPanel("Estatisticas"));

@@ -431,15 +431,10 @@ public class controladorDB {
 			String query = "CALL AnadirPodcaster('" + p.getNombreArt() + "','" + p.getGenero() + "','" + p.getFoto()
 					+ "','" + p.getDescripcion() + "')";
 
-			ResultSet rs = stmt.executeQuery(query);
-
-			// messaggio della procedure
-			if (rs.next()) {
-
-				System.out.println(rs.getString("mensaje"));
-			}
+			stmt.execute(query);
 
 			stmt.close();
+
 
 		} catch (SQLException e) {
 
@@ -558,7 +553,7 @@ public class controladorDB {
 						String queryPremium = "INSERT INTO premium(idCliente) VALUES(" + idCliente + ")";
 						stmt.executeUpdate(queryPremium);
 					}
-				stmt.close();
+					stmt.close();
 					return true;
 				}
 			}
@@ -686,7 +681,7 @@ public class controladorDB {
 			stmt.executeUpdate(queryArtista);
 
 			// update musico
-			String queryMusico = "Update Musico set  caracteristica = '" + m.getComposicion() + "' where idMusico = "
+			String queryMusico = "Update musico set  caracteristica = '" + m.getComposicion() + "' where idMusico = "
 					+ m.getId();
 			stmt.executeUpdate(queryMusico);
 
@@ -838,13 +833,13 @@ public class controladorDB {
 	}
 
 	// Eliminar un artista
-	public void eliminarArtista(String nombreArtistico) {
+	public void eliminarArtista(int idArtista) {
 
 		try {
 
 			Statement stmt = conexion.createStatement();
 
-			String query = "CALL eliminarArtista('" + nombreArtistico + "')";
+			String query = "CALL eliminarArtista('" + idArtista + "')";
 
 			ResultSet rs = stmt.executeQuery(query);
 
@@ -863,13 +858,13 @@ public class controladorDB {
 	}
 
 	// Eliminar un audio
-	public void eliminarAudio(String nombreAudio) {
+	public void eliminarAudio(int idAudio) {
 
 		try {
 
 			Statement stmt = conexion.createStatement();
 
-			String query = "CALL eliminarAudio('" + nombreAudio + "')";
+			String query = "CALL eliminarAudio('" + idAudio + "')";
 
 			ResultSet rs = stmt.executeQuery(query);
 
@@ -888,13 +883,13 @@ public class controladorDB {
 	}
 
 	// Eliminar un album
-	public void eliminarAlbum(String tituloAlbum, String nombreMusico) {
+	public void eliminarAlbum(int idAlbum) {
 
 		try {
 
 			Statement stmt = conexion.createStatement();
 
-			String query = "CALL eliminarAlbum('" + tituloAlbum + "','" + nombreMusico + "')";
+			String query = "CALL eliminarAlbum('" + idAlbum + "')";
 
 			ResultSet rs = stmt.executeQuery(query);
 
@@ -1112,32 +1107,60 @@ public class controladorDB {
 		return StatisticaPodcast;
 	}
 
-	
-	public boolean obtenerAlbumPorId(int idAlbum){
-		String query="SELECT idAlbum FROM album WHERE idAlbum="+idAlbum;
-		try{
-			Statement consulta=conexion.createStatement();
-			ResultSet resultado=consulta.executeQuery(query);
-			boolean existe=resultado.next();
+	public boolean obtenerAlbumPorId(int idAlbum) {
+		String query = "SELECT idAlbum FROM album WHERE idAlbum=" + idAlbum;
+		try {
+			Statement consulta = conexion.createStatement();
+			ResultSet resultado = consulta.executeQuery(query);
+			boolean existe = resultado.next();
 			consulta.close();
 			return existe;
-		}catch(SQLException e){
+		} catch (SQLException e) {
 			e.printStackTrace();
 			return false;
 		}
 	}
 
-	public boolean obtenerPodcasterPorId(int idPodcaster){
-		String query="SELECT idPodcaster FROM porcaster WHERE idPodcaster="+idPodcaster;
-		try{
-			Statement consulta=conexion.createStatement();
-			ResultSet resultado=consulta.executeQuery(query);
-			boolean existe=resultado.next();
+	public boolean obtenerPodcasterPorId(int idPodcaster) {
+		String query = "SELECT idPodcaster FROM porcaster WHERE idPodcaster=" + idPodcaster;
+		try {
+			Statement consulta = conexion.createStatement();
+			ResultSet resultado = consulta.executeQuery(query);
+			boolean existe = resultado.next();
 			consulta.close();
 			return existe;
-		}catch(SQLException e){
+		} catch (SQLException e) {
 			e.printStackTrace();
 			return false;
 		}
+	}
+
+	public Musico obtenerMusicoPorId(int id) {
+
+		String query = "SELECT * FROM artista a " + "JOIN musico m ON a.idArtista = m.idMusico " + "WHERE m.idMusico = "
+				+ id;
+
+		try {
+
+			Statement st = conexion.createStatement();
+			ResultSet rs = st.executeQuery(query);
+
+			if (rs.next()) {
+
+				Musico m = new Musico(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getString(5),
+						rs.getString(6));
+
+				st.close();
+
+				return m;
+			}
+
+			st.close();
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+
+		return null;
 	}
 }

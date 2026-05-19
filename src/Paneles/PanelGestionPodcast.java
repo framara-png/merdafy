@@ -6,196 +6,221 @@ import Ventanas.VentanaPrincipal;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.sql.Time;
 import java.util.ArrayList;
 
 import javax.swing.*;
 
 public class PanelGestionPodcast extends JPanel {
 
-    public VentanaPrincipal ventana;
-    private cliente clienteLogeado;
+	public VentanaPrincipal ventana;
+	private cliente clienteLogeado;
 
-    private ArrayList<Podcast> podcasts;
+	private ArrayList<Podcast> podcasts;
 
-    private JList<String> listPodcasts;
-    private DefaultListModel<String> listModel;
+	private JList<String> listPodcasts;
+	private DefaultListModel<String> listModel;
 
-    public PanelGestionPodcast(VentanaPrincipal ventana, cliente clienteLogeado) {
+	public PanelGestionPodcast(VentanaPrincipal ventana, cliente clienteLogeado) {
 
-        this.ventana = ventana;
-        this.clienteLogeado = clienteLogeado;
+		this.ventana = ventana;
+		this.clienteLogeado = clienteLogeado;
 
-        this.podcasts = ventana.getControladordb().obtenerTodosPodcasts();
+		this.podcasts = ventana.getControladordb().obtenerTodosPodcasts();
 
-        setLayout(new BorderLayout(10, 10));
-        setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+		setLayout(new BorderLayout(10, 10));
+		setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
-        // ================= TOP =================
-        JPanel top = new JPanel(new BorderLayout());
+		// ================= TOP =================
+		JPanel top = new JPanel(new BorderLayout());
 
-        JButton btnAtras = new JButton("Atrás");
-        JButton btnPerfil = new JButton("Perfil");
+		JButton btnAtras = new JButton("Atrás");
+		JButton btnPerfil = new JButton("Perfil");
 
-        btnAtras.addActionListener(e -> ventana.cambiarPanel("panelAdmin"));
-        btnPerfil.addActionListener(e -> ventana.cambiarPanel("perfil"));
+		btnAtras.addActionListener(e -> ventana.cambiarPanel("panelAdmin"));
+		btnPerfil.addActionListener(e -> ventana.cambiarPanel("perfil"));
 
-        top.add(btnAtras, BorderLayout.WEST);
-        top.add(btnPerfil, BorderLayout.EAST);
+		top.add(btnAtras, BorderLayout.WEST);
+		top.add(btnPerfil, BorderLayout.EAST);
 
-        add(top, BorderLayout.NORTH);
+		add(top, BorderLayout.NORTH);
 
-        // ================= CENTER =================
-        JPanel center = new JPanel(new BorderLayout(15, 15));
+		// ================= CENTER =================
+		JPanel center = new JPanel(new BorderLayout(15, 15));
 
-        // ================= LISTA =================
-        JPanel panelLista = new JPanel(new BorderLayout());
-        panelLista.setBorder(BorderFactory.createTitledBorder("Lista Podcast"));
+		// ================= LISTA =================
+		JPanel panelLista = new JPanel(new BorderLayout());
+		panelLista.setBorder(BorderFactory.createTitledBorder("Lista Podcast"));
 
-        listModel = new DefaultListModel<>();
-        listPodcasts = new JList<>(listModel);
+		listModel = new DefaultListModel<>();
+		listPodcasts = new JList<>(listModel);
 
-        listPodcasts.setFont(new Font("Arial", Font.BOLD, 16));
-        listPodcasts.setFixedCellHeight(45);
-        listPodcasts.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		listPodcasts.setFont(new Font("Arial", Font.BOLD, 16));
+		listPodcasts.setFixedCellHeight(45);
+		listPodcasts.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 
-        JScrollPane scroll = new JScrollPane(listPodcasts);
-        panelLista.add(scroll, BorderLayout.CENTER);
+		JScrollPane scroll = new JScrollPane(listPodcasts);
+		panelLista.add(scroll, BorderLayout.CENTER);
 
-        // ================= CLICK =================
-        listPodcasts.addMouseListener(new MouseAdapter() {
+		// ================= CLICK =================
+		listPodcasts.addMouseListener(new MouseAdapter() {
 
-            @Override
-            public void mouseClicked(MouseEvent e) {
+			@Override
+			public void mouseClicked(MouseEvent e) {
 
-                if (e.getClickCount() == 2) {
+				if (e.getClickCount() == 2) {
 
-                    int index = listPodcasts.getSelectedIndex();
-                    if (index < 0 || podcasts == null || index >= podcasts.size()) return;
+					int index = listPodcasts.getSelectedIndex();
+					if (index < 0 || podcasts == null || index >= podcasts.size())
+						return;
 
-                    Podcast seleccionado = podcasts.get(index);
+					Podcast seleccionado = podcasts.get(index);
 
-                    JOptionPane.showMessageDialog(
-                            null,
-                            "Podcast: " + seleccionado.getNombreAudio()
-                    );
-                }
-            }
-        });
+					JOptionPane.showMessageDialog(null, "Podcast: " + seleccionado.getNombreAudio());
+				}
+			}
+		});
 
-        // ================= BOTONES =================
-        JPanel panelBotones = new JPanel();
-        panelBotones.setLayout(new GridLayout(3, 1, 10, 20));
-        panelBotones.setPreferredSize(new Dimension(250, 300));
+		// ================= BOTONES =================
+		JPanel panelBotones = new JPanel();
+		panelBotones.setLayout(new GridLayout(3, 1, 10, 20));
+		panelBotones.setPreferredSize(new Dimension(250, 300));
 
-        JButton btnAgregar = new JButton("Agregar Podcast");
-        JButton btnModificar = new JButton("Modificar Podcast");
-        JButton btnEliminar = new JButton("Eliminar Podcast");
+		JButton btnAgregar = new JButton("Agregar Podcast");
+		JButton btnModificar = new JButton("Modificar Podcast");
+		JButton btnEliminar = new JButton("Eliminar Podcast");
 
-        Font font = new Font("Arial", Font.BOLD, 18);
+		Font font = new Font("Arial", Font.BOLD, 18);
 
-        btnAgregar.setFont(font);
-        btnModificar.setFont(font);
-        btnEliminar.setFont(font);
+		btnAgregar.setFont(font);
+		btnModificar.setFont(font);
+		btnEliminar.setFont(font);
 
-        panelBotones.add(btnAgregar);
-        panelBotones.add(btnModificar);
-        panelBotones.add(btnEliminar);
+		panelBotones.add(btnAgregar);
+		panelBotones.add(btnModificar);
+		panelBotones.add(btnEliminar);
 
-        // ================= AGREGAR (CON DIALOG) =================
-        btnAgregar.addActionListener(e -> {
+		// ================= AGREGAR (CON DIALOG) =================
+		btnAgregar.addActionListener(e -> {
 
-            DialogCrearPodcast dialog = new DialogCrearPodcast(ventana);
-            dialog.setVisible(true);
+			DialogCrearPodcast dialog = new DialogCrearPodcast(ventana);
+			dialog.setVisible(true);
 
-            // refresh dopo creazione
-            podcasts = ventana.getControladordb().obtenerTodosPodcasts();
-            cargarPodcasts();
-        });
+			// refresh dopo creazione
+			podcasts = ventana.getControladordb().obtenerTodosPodcasts();
+			cargarPodcasts();
+		});
 
-        // ================= MODIFICAR =================
-        btnModificar.addActionListener(e -> {
+		// ================= MODIFICAR =================
+		btnModificar.addActionListener(e -> {
 
-            int index = listPodcasts.getSelectedIndex();
-            if (index < 0) {
-                JOptionPane.showMessageDialog(this, "Selecciona un podcast");
-                return;
-            }
+			int index = listPodcasts.getSelectedIndex();
 
-            Podcast p = podcasts.get(index);
+			if (index < 0) {
+				JOptionPane.showMessageDialog(this, "Selecciona un podcast");
+				return;
+			}
 
-            String nuevoNombre = JOptionPane.showInputDialog(
-                    this,
-                    "Nuevo nombre:",
-                    p.getNombreAudio()
-            );
+			Podcast p = podcasts.get(index);
 
-            if (nuevoNombre != null && !nuevoNombre.trim().isEmpty()) {
+			JTextField txtNombre = new JTextField(p.getNombreAudio());
+			JTextField txtArchivo = new JTextField(p.getArchivo());
+			JTextField txtDuracion = new JTextField(p.getDurata().toString());
+			JTextField txtParticipantes = new JTextField(String.valueOf(p.getNumeroParticipantes()));
+			JTextField txtIdPodcaster = new JTextField(p.getIdPodcaster());
 
-                p.setNombreAudio(nuevoNombre);
+			JPanel panel = new JPanel(new GridLayout(0, 1));
+			panel.add(new JLabel("Nombre:"));
+			panel.add(txtNombre);
+			panel.add(new JLabel("Archivo:"));
+			panel.add(txtArchivo);
+			panel.add(new JLabel("Duración (HH:MM:SS):"));
+			panel.add(txtDuracion);
+			panel.add(new JLabel("Participantes:"));
+			panel.add(txtParticipantes);
+			panel.add(new JLabel("IdPodcaster:"));
+			panel.add(txtIdPodcaster);
 
-                ventana.getControladordb().actualizarPodcast(p);
+			int result = JOptionPane.showConfirmDialog(this, panel, "Modificar podcast", JOptionPane.OK_CANCEL_OPTION);
 
-                podcasts = ventana.getControladordb().obtenerTodosPodcasts();
-                cargarPodcasts();
-            }
-        });
+			if (result == JOptionPane.OK_OPTION) {
 
-        // ================= ELIMINAR =================
-        btnEliminar.addActionListener(e -> {
+				String nuevoNombre = txtNombre.getText().trim();
+				int IdPodcaster = Integer.parseInt(txtIdPodcaster.getText());
+				if (ventana.getControladordb().obtenerPodcasterPorId(IdPodcaster)) {
+					JOptionPane.showMessageDialog(this, "No hay podcaster con este id");
+					return;
+				}
 
-            int index = listPodcasts.getSelectedIndex();
+				if (!nuevoNombre.equalsIgnoreCase(p.getNombreAudio())
+						&& !ventana.getGestor().controladorAudioDobles(nuevoNombre)) {
 
-            if (index < 0) {
-                JOptionPane.showMessageDialog(this, "Selecciona un podcast");
-                return;
-            }
+					JOptionPane.showMessageDialog(this, "Ya existe un podcast con este nombre");
+					return;
+				}
 
-            Podcast p = podcasts.get(index);
+				p.setNombreAudio(nuevoNombre);
+				p.setArchivo(txtArchivo.getText().trim());
+				p.setDurata(Time.valueOf(txtDuracion.getText().trim()));
+				p.setNumeroParticipantes(Integer.parseInt(txtParticipantes.getText().trim()));
 
-            int confirm = JOptionPane.showConfirmDialog(
-                    this,
-                    "¿Eliminar " + p.getNombreAudio() + "?",
-                    "Confirmar",
-                    JOptionPane.YES_NO_OPTION
-            );
+				ventana.getControladordb().actualizarPodcast(p);
 
-            if (confirm == JOptionPane.YES_OPTION) {
+				podcasts = ventana.getControladordb().obtenerTodosPodcasts();
+				cargarPodcasts();
 
-                ventana.getControladordb().eliminarAudio(p.getNombreAudio());
+				JOptionPane.showMessageDialog(this, "Podcast modificado correctamente");
+			}
+		});
+		// ================= ELIMINAR =================
+		btnEliminar.addActionListener(e -> {
 
-                podcasts = ventana.getControladordb().obtenerTodosPodcasts();
-                cargarPodcasts();
-            }
-        });
+			int index = listPodcasts.getSelectedIndex();
 
-        // ================= ADD =================
-        center.add(panelLista, BorderLayout.CENTER);
-        center.add(panelBotones, BorderLayout.EAST);
+			if (index < 0) {
+				JOptionPane.showMessageDialog(this, "Selecciona un podcast");
+				return;
+			}
 
-        add(center, BorderLayout.CENTER);
+			Podcast p = podcasts.get(index);
 
-        cargarPodcasts();
-    }
+			int confirm = JOptionPane.showConfirmDialog(this, "¿Eliminar " + p.getNombreAudio() + "?", "Confirmar",
+					JOptionPane.YES_NO_OPTION);
 
-    // ================= LOAD =================
-    private void cargarPodcasts() {
+			if (confirm == JOptionPane.YES_OPTION) {
 
-        listModel.clear();
+				ventana.getControladordb().eliminarAudio(p.getId());
 
-        if (podcasts != null && !podcasts.isEmpty()) {
+				podcasts = ventana.getControladordb().obtenerTodosPodcasts();
+				cargarPodcasts();
+			}
+		});
 
-            for (Podcast p : podcasts) {
+		// ================= ADD =================
+		center.add(panelLista, BorderLayout.CENTER);
+		center.add(panelBotones, BorderLayout.EAST);
 
-                listModel.addElement(
-                        p.getNombreAudio()
-                        + " | Participantes: " + p.getNumeroParticipantes()
-                        + " | Reproducciones: " + p.getNumRep()
-                );
-            }
+		add(center, BorderLayout.CENTER);
 
-        } else {
-            listModel.addElement("No hay podcasts");
-        }
-    }
-   
+		cargarPodcasts();
+	}
+
+	// ================= LOAD =================
+	private void cargarPodcasts() {
+
+		listModel.clear();
+
+		if (podcasts != null && !podcasts.isEmpty()) {
+
+			for (Podcast p : podcasts) {
+
+				listModel.addElement(p.getNombreAudio() + " | Participantes: " + p.getNumeroParticipantes()
+						+ " | Reproducciones: " + p.getNumRep());
+			}
+
+		} else {
+			listModel.addElement("No hay podcasts");
+		}
+	}
+
 }

@@ -14,7 +14,7 @@ public class PanelGestionMusicos extends JPanel {
 	public VentanaPrincipal ventana;
 	private ArrayList<Musico> musicos;
 
-	private JList<String> listPodcasts;
+	private JList<String> listMusicos;
 	private DefaultListModel<String> listModel;
 
 	public PanelGestionMusicos(VentanaPrincipal ventana, ArrayList<Musico> musicos) {
@@ -28,13 +28,10 @@ public class PanelGestionMusicos extends JPanel {
 		JPanel top = new JPanel(new BorderLayout());
 
 		JButton btnAtras = new JButton("Atrás");
-		JButton btnPerfil = new JButton("Perfil");
 
 		btnAtras.addActionListener(e -> ventana.cambiarPanel("panelAdmin"));
-		btnPerfil.addActionListener(e -> ventana.cambiarPanel("perfil"));
 
 		top.add(btnAtras, BorderLayout.WEST);
-		top.add(btnPerfil, BorderLayout.EAST);
 
 		add(top, BorderLayout.NORTH);
 
@@ -43,27 +40,27 @@ public class PanelGestionMusicos extends JPanel {
 
 		// ================= LISTA =================
 		JPanel panelLista = new JPanel(new BorderLayout());
-		panelLista.setBorder(BorderFactory.createTitledBorder("Lista Podcast"));
+		panelLista.setBorder(BorderFactory.createTitledBorder("Lista Musicos"));
 
 		listModel = new DefaultListModel<>();
-		listPodcasts = new JList<>(listModel);
+		listMusicos = new JList<>(listModel);
 
-		listPodcasts.setFont(new Font("Arial", Font.BOLD, 16));
-		listPodcasts.setFixedCellHeight(45);
-		listPodcasts.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		listMusicos.setFont(new Font("Arial", Font.BOLD, 16));
+		listMusicos.setFixedCellHeight(45);
+		listMusicos.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 
-		JScrollPane scroll = new JScrollPane(listPodcasts);
+		JScrollPane scroll = new JScrollPane(listMusicos);
 		panelLista.add(scroll, BorderLayout.CENTER);
 
 		// ================= CLICK =================
-		listPodcasts.addMouseListener(new MouseAdapter() {
+		listMusicos.addMouseListener(new MouseAdapter() {
 
 			@Override
 			public void mouseClicked(MouseEvent e) {
 
 				if (e.getClickCount() == 2) {
 
-					int index = listPodcasts.getSelectedIndex();
+					int index = listMusicos.getSelectedIndex();
 					if (index < 0 || musicos == null || index >= musicos.size())
 						return;
 
@@ -96,44 +93,77 @@ public class PanelGestionMusicos extends JPanel {
 		// ================= AGREGAR (CON DIALOG) =================
 		btnAgregar.addActionListener(e -> {
 
-			DialogCrearPodcast dialog = new DialogCrearPodcast(ventana);
+			DialogCrearMusico dialog = new DialogCrearMusico(ventana);
 			dialog.setVisible(true);
 
 			// refresh dopo creazione
 
-			cargarPodcasts();
+			cargarMusicos();
 		});
 
 		// ================= MODIFICAR =================
 		btnModificar.addActionListener(e -> {
 
-			int index = listPodcasts.getSelectedIndex();
-			if (index < 0) {
-				JOptionPane.showMessageDialog(this, "Selecciona un podcast");
+			int i = listMusicos.getSelectedIndex();
+
+			if (i < 0) {
+				JOptionPane.showMessageDialog(this, "Selecciona un musico");
 				return;
 			}
 
-			Musico m = musicos.get(index);
+			Musico m = musicos.get(i);
 
-			String nuevoNombre = JOptionPane.showInputDialog(this, "Nuevo nombre:", m.getNombreArt());
+			JTextField txtNombre = new JTextField(m.getNombreArt());
+			JTextField txtGenero = new JTextField(m.getGenero());
+			JTextField txtDescripcion = new JTextField(m.getDescripcion());
+			JTextField txtFoto = new JTextField(m.getFoto());
 
-			if (nuevoNombre != null && !nuevoNombre.trim().isEmpty()) {
+			JComboBox<String> combo = new JComboBox<>();
+			combo.addItem("solista");
+			combo.addItem("grupo");
+			combo.setSelectedItem(m.getComposicion());
 
-				m.setNombreArt(nuevoNombre);
+			JPanel panel = new JPanel(new GridLayout(0, 1));
+			panel.add(new JLabel("Nombre:"));
+			panel.add(txtNombre);
+			panel.add(new JLabel("Genero:"));
+			panel.add(txtGenero);
+			panel.add(new JLabel("Descripcion:"));
+			panel.add(txtDescripcion);
+			panel.add(new JLabel("Foto:"));
+			panel.add(txtFoto);
+			panel.add(new JLabel("Composición:"));
+			panel.add(combo);
+
+			int result = JOptionPane.showConfirmDialog(this, panel, "Modificar músico", JOptionPane.OK_CANCEL_OPTION);
+
+			if (result == JOptionPane.OK_OPTION) {
+				String nuevoNombre = txtNombre.getText().trim();
+				if (!nuevoNombre.equalsIgnoreCase(m.getNombreArt())
+						&& !ventana.getGestor().controladorArtistaDoble(nuevoNombre)) {
+
+					JOptionPane.showMessageDialog(this, "Ya existe un músico con este nombre");
+					return;
+				}
+
+				m.setNombreArt(txtNombre.getText().trim());
+				m.setGenero(txtGenero.getText().trim());
+				m.setDescripcion(txtDescripcion.getText().trim());
+				m.setFoto(txtFoto.getText().trim());
+				m.setComposicion(combo.getSelectedItem().toString());
 
 				ventana.getControladordb().actualizarMusico(m);
 
-				cargarPodcasts();
+				cargarMusicos();
 			}
 		});
-
 		// ================= ELIMINAR =================
 		btnEliminar.addActionListener(e -> {
 
-			int index = listPodcasts.getSelectedIndex();
+			int index = listMusicos.getSelectedIndex();
 
 			if (index < 0) {
-				JOptionPane.showMessageDialog(this, "Selecciona un podcast");
+				JOptionPane.showMessageDialog(this, "Selecciona un musico");
 				return;
 			}
 
@@ -144,9 +174,9 @@ public class PanelGestionMusicos extends JPanel {
 
 			if (confirm == JOptionPane.YES_OPTION) {
 
-				ventana.getControladordb().eliminarArtista(m.getNombreArt());
-
-				cargarPodcasts();
+				ventana.getControladordb().eliminarArtista(m.getId());
+				cargarMusicos();
+				ventana.cambiarPanel("GestionMusicos");
 			}
 		});
 
@@ -156,11 +186,11 @@ public class PanelGestionMusicos extends JPanel {
 
 		add(center, BorderLayout.CENTER);
 
-		cargarPodcasts();
+		cargarMusicos();
 	}
 
 	// ================= LOAD =================
-	private void cargarPodcasts() {
+	private void cargarMusicos() {
 
 		listModel.clear();
 
@@ -168,8 +198,8 @@ public class PanelGestionMusicos extends JPanel {
 
 			for (Musico m : musicos) {
 
-				listModel.addElement(m.getNombreArt() + " | genero: "
-						+ m.getGenero() + " | Composicion: " + m.getComposicion());
+				listModel.addElement(
+						m.getNombreArt() + " | genero: " + m.getGenero() + " | Composicion: " + m.getComposicion());
 			}
 
 		} else {

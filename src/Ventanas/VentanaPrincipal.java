@@ -212,6 +212,9 @@ public class VentanaPrincipal extends JFrame {
 		case "GestionPodcasters":
 			setContentPane(new PanelGestionPodcaster(this, controladordb.obtenerPodcasters()));
 			break;
+		case "GestionAlbum":
+			setContentPane(new PanelGestionAlbum(this));
+			break;
 		}
 
 		revalidate();

@@ -26,6 +26,10 @@ public class DialogCrearMusico extends JDialog {
 		JTextField txtDescripcion = new JTextField();
 		JTextField txtFoto = new JTextField();
 		JTextField txtComposicion = new JTextField();
+		JComboBox<String> Jcomposicion = new JComboBox<>();
+		Jcomposicion.addItem("solista");
+		Jcomposicion.addItem("grupo");
+
 
 		// ================= LABELS =================
 		add(new JLabel("Nombre músico:"));
@@ -39,23 +43,25 @@ public class DialogCrearMusico extends JDialog {
 
 		add(new JLabel("Foto (path):"));
 		add(txtFoto);
-
+		
 		add(new JLabel("Composición:"));
-		add(txtComposicion);
+		add(Jcomposicion);
+		
 
 		// ================= BOTON =================
 		JButton btnCrear = new JButton("Crear");
-
+		
 		btnCrear.addActionListener(e -> {
 
 			String nombre = txtNombre.getText().trim();
 			String genero = txtGenero.getText().trim();
 			String descripcion = txtDescripcion.getText().trim();
 			String foto = txtFoto.getText().trim();
-			String composicion = txtComposicion.getText().trim();
+	
+			String composicion = Jcomposicion.getSelectedItem().toString();
 
-			if (nombre.isEmpty() || genero.isEmpty() || descripcion.isEmpty()
-					|| foto.isEmpty() || composicion.isEmpty()) {
+			if (nombre.isEmpty() || genero.isEmpty() || descripcion.isEmpty() || foto.isEmpty()
+					|| composicion.isEmpty()) {
 
 				JOptionPane.showMessageDialog(this, "Completa todos los campos");
 				return;
@@ -67,19 +73,12 @@ public class DialogCrearMusico extends JDialog {
 				return;
 			}
 
-			Musico m = new Musico(
-					0,
-					nombre,
-					genero,
-					descripcion,
-					foto,
-					composicion
-			);
+			Musico m = new Musico(0, nombre, genero, descripcion, foto, composicion);
 
 			ventana.getControladordb().insertarMusico(m);
 
 			JOptionPane.showMessageDialog(this, "Músico creado");
-
+			ventana.cambiarPanel("GestionMusicos");
 			dispose();
 		});
 

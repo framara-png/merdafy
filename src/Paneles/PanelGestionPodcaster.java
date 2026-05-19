@@ -30,13 +30,10 @@ public class PanelGestionPodcaster extends JPanel {
 		JPanel top = new JPanel(new BorderLayout());
 
 		JButton btnAtras = new JButton("Atrás");
-		JButton btnPerfil = new JButton("Perfil");
 
 		btnAtras.addActionListener(e -> ventana.cambiarPanel("panelAdmin"));
-		btnPerfil.addActionListener(e -> ventana.cambiarPanel("perfil"));
 
 		top.add(btnAtras, BorderLayout.WEST);
-		top.add(btnPerfil, BorderLayout.EAST);
 
 		add(top, BorderLayout.NORTH);
 
@@ -98,35 +95,66 @@ public class PanelGestionPodcaster extends JPanel {
 		// ================= AGREGAR (CON DIALOG) =================
 		btnAgregar.addActionListener(e -> {
 
-			DialogCrearPodcast dialog = new DialogCrearPodcast(ventana);
+			DialogCrearPodcaster dialog = new DialogCrearPodcaster(ventana);
 			dialog.setVisible(true);
 
 			// refresh dopo creazione
-			
-			cargarPodcasts();
+
+			cargarPodcasters();
 		});
 
 		// ================= MODIFICAR =================
+
 		btnModificar.addActionListener(e -> {
 
 			int index = listPodcasters.getSelectedIndex();
+
 			if (index < 0) {
-				JOptionPane.showMessageDialog(this, "Selecciona un podcast");
+				JOptionPane.showMessageDialog(this, "Selecciona un podcaster");
 				return;
 			}
 
 			Podcaster p = podcasters.get(index);
 
-			String nuevoNombre = JOptionPane.showInputDialog(this, "Nuevo nombre:", p.getNombreArt());
+			JTextField txtNombre = new JTextField(p.getNombreArt());
+			JTextField txtGenero = new JTextField(p.getGenero());
+			JTextField txtDescripcion = new JTextField(p.getDescripcion());
+			JTextField txtFoto = new JTextField(p.getFoto());
 
-			if (nuevoNombre != null && !nuevoNombre.trim().isEmpty()) {
+			JPanel panel = new JPanel(new GridLayout(0, 1));
+			panel.add(new JLabel("Nombre:"));
+			panel.add(txtNombre);
+			panel.add(new JLabel("Genero:"));
+			panel.add(txtGenero);
+			panel.add(new JLabel("Descripcion:"));
+			panel.add(txtDescripcion);
+			panel.add(new JLabel("Foto:"));
+			panel.add(txtFoto);
+
+			int result = JOptionPane.showConfirmDialog(this, panel, "Modificar podcaster",
+					JOptionPane.OK_CANCEL_OPTION);
+
+			if (result == JOptionPane.OK_OPTION) {
+
+				String nuevoNombre = txtNombre.getText().trim();
+
+				if (!nuevoNombre.equalsIgnoreCase(p.getNombreArt())
+						&& !ventana.getGestor().controladorArtistaDoble(nuevoNombre)) {
+
+					JOptionPane.showMessageDialog(this, "Ya existe un podcaster con este nombre");
+					return;
+				}
 
 				p.setNombreArt(nuevoNombre);
+				p.setGenero(txtGenero.getText().trim());
+				p.setDescripcion(txtDescripcion.getText().trim());
+				p.setFoto(txtFoto.getText().trim());
 
 				ventana.getControladordb().actualizarPodcaster(p);
 
-			
-				cargarPodcasts();
+				cargarPodcasters();
+
+				JOptionPane.showMessageDialog(this, "Podcaster modificado correctamente");
 			}
 		});
 
@@ -136,7 +164,7 @@ public class PanelGestionPodcaster extends JPanel {
 			int index = listPodcasters.getSelectedIndex();
 
 			if (index < 0) {
-				JOptionPane.showMessageDialog(this, "Selecciona un podcast");
+				JOptionPane.showMessageDialog(this, "Selecciona un podcaster");
 				return;
 			}
 
@@ -147,10 +175,9 @@ public class PanelGestionPodcaster extends JPanel {
 
 			if (confirm == JOptionPane.YES_OPTION) {
 
-				ventana.getControladordb().eliminarAudio(p.getNombreArt());
+				ventana.getControladordb().eliminarAudio(p.getId());
 
-			
-				cargarPodcasts();
+				cargarPodcasters();
 			}
 		});
 
@@ -160,11 +187,11 @@ public class PanelGestionPodcaster extends JPanel {
 
 		add(center, BorderLayout.CENTER);
 
-		cargarPodcasts();
+		cargarPodcasters();
 	}
 
 	// ================= LOAD =================
-	private void cargarPodcasts() {
+	private void cargarPodcasters() {
 
 		listModel.clear();
 
